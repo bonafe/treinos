@@ -550,6 +550,11 @@
       flashTela("flash-forte");
     }
 
+    function sinalContagemRegressiva() {
+      // Bipe curto e leve, um por segundo, nos últimos 10s antes da pausa máxima.
+      beep({ frequency: 1046, duration: 0.09, volume: 0.32 });
+    }
+
     function construirSlots(treino) {
       const slots = [];
       treino.blocos.forEach((bloco) => {
@@ -762,6 +767,11 @@
     function tickDescanso() {
       descansoSegundos += 1;
       const pausa = pausaAlvo();
+
+      const restanteParaMaximo = pausa.max - descansoSegundos;
+      if (restanteParaMaximo >= 1 && restanteParaMaximo <= 10) {
+        sinalContagemRegressiva();
+      }
 
       if (!descansoSinalMinimoTocado && descansoSegundos >= pausa.min) {
         descansoSinalMinimoTocado = true;

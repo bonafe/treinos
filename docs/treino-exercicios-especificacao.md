@@ -488,9 +488,15 @@ mesmo texto exibido no "Guia rápido" de `treino_exercicios.html`, seção
 - Ao atingir `pausaSegundos.min` segundos: toca um sinal sonoro (três
   bipes iguais, mesmo tom) + vibração curta, e o cronômetro muda de cor
   (indicando "já pode voltar"). Esse sinal toca uma única vez.
-- Ao atingir `pausaSegundos.max` segundos: toca um sinal parecido, porém
-  mais forte (bipes mais longos e mais altos, vibração mais intensa) e o
-  cronômetro muda para uma cor de alerta. Também toca uma única vez.
+- Nos últimos 10 segundos antes de `pausaSegundos.max` (ou seja, quando
+  `pausaSegundos.max - descansoSegundos` está entre `1` e `10`): toca um
+  bipe curto e leve, um por segundo — uma contagem regressiva avisando
+  que a pausa máxima está chegando. Sem vibração nem flash de tela,
+  pra não ficar exagerado repetindo 10 vezes seguidas.
+- Ao atingir `pausaSegundos.max` segundos: toca um sinal parecido ao do
+  mínimo, porém mais forte (bipes mais longos e mais altos, vibração
+  mais intensa) e o cronômetro muda para uma cor de alerta. Também toca
+  uma única vez.
 - Depois do máximo, a contagem continua normalmente — os sinais não se
   repetem, só marcam a transição de cada limite.
 
