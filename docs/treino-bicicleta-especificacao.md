@@ -147,6 +147,9 @@ treino completo.
 
 ### 5.1 Menu (`treino_bicicleta_menu.html`)
 
+A primeira coisa exibida na tela, antes da lista de treinos, é o gráfico de
+histórico (seção 5.1.1). A lista de treinos disponíveis vem depois.
+
 - Busca `dados/dados_treinos.json` via `TreinosStorage.carregarDadosTreinos()`.
 - Filtra as entradas de `dados.cardios` com `exercicio === "Bicicleta"`,
   converte cada uma com `extrairConfigBicicleta` (seção 4.1) e mostra um
@@ -156,6 +159,44 @@ treino completo.
 - Se não houver nenhuma entrada de bicicleta em `cardios`, mostra uma
   mensagem ("Nenhum treino de bicicleta cadastrado ainda") em vez de lista
   vazia.
+
+#### 5.1.1 Gráfico de histórico (tempo de bicicleta)
+
+Logo abaixo do título da tela e acima da lista de treinos, um gráfico de
+barras (D3.js, usando o mesmo `d3.v7.min.js` vendorizado já usado por
+[treino_exercicio_progresso.html](../treino_exercicio_progresso.html) — sem
+CDN, pra continuar funcionando offline) mostra quanto tempo de bicicleta foi
+feito, agregado por período. Cada barra é um dia (ou mês) e sua altura é a
+soma de `duracaoSegundos` (seção 6.1) das sessões daquele dia/mês, em
+minutos.
+
+- **Fonte dos dados**: `historico.sessaoBicicleta.v1` (seção 6.1), lido
+  direto com `TreinosStorage.lerJSON(...)` — independe de
+  `dados/dados_treinos.json` estar carregado (histórico e dados de treino
+  são chaves separadas no `localStorage`, ver seção 1 de
+  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)).
+  Por isso o gráfico é montado mesmo que a busca de `dados.cardios` (pra
+  lista de treinos) falhe.
+- **Três períodos**, escolhidos por botões acima do gráfico:
+  - **7 dias** (padrão ao abrir a tela) — uma barra por dia, últimos 7 dias
+    corridos incluindo hoje.
+  - **30 dias** — uma barra por dia, últimos 30 dias corridos incluindo
+    hoje. Só uma fração dos rótulos do eixo X é exibida (pra não
+    sobrepor texto), mas todas as 30 barras aparecem.
+  - **Meses** — uma barra por mês, últimos 6 meses corridos incluindo o
+    mês atual.
+  - Dias/meses sem nenhuma sessão registrada aparecem como barra vazia
+    (altura mínima, só pra marcar a posição no eixo) — o eixo sempre
+    mostra o período inteiro, não só os dias com treino.
+- **Tooltip**: passar o mouse/tocar numa barra mostra a data (ou mês) e o
+  tempo total formatado (`"32min"`, `"1h15"`, ou `"sem treino"` se zero).
+- **Estado vazio**: se `historico.sessaoBicicleta.v1` não tiver nenhum
+  registro (nenhum treino de bike concluído ainda neste navegador), o
+  gráfico e os botões de período não aparecem — no lugar, uma mensagem
+  ("Nenhum treino de bicicleta registrado ainda.") é mostrada, no mesmo
+  estilo das outras mensagens de estado vazio da tela.
+- Cor da barra: `#bef264` (mesmo verde-lima usado no resto da UI), única
+  série — sem legenda necessária.
 
 ### 5.2 Motor genérico (`treino_bicicleta.html`)
 
