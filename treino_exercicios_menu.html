@@ -29,17 +29,37 @@
       padding-top: 8px;
     }
 
+    .top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .voltar-icon {
+      flex-shrink: 0;
+      text-decoration: none;
+      color: #cbd5e1;
+      background: rgba(148, 163, 184, 0.14);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
     h1 {
       margin: 0 0 4px;
-      font-size: clamp(1.6rem, 7vw, 2.4rem);
-      letter-spacing: -0.04em;
+      font-size: clamp(1.4rem, 6vw, 2rem);
+      letter-spacing: -0.03em;
       font-weight: 1000;
-      text-align: center;
     }
 
     p.subtitle {
-      margin: 0 0 22px;
-      text-align: center;
+      margin: 0;
       color: #94a3b8;
       font-size: clamp(0.95rem, 3.5vw, 1.05rem);
     }
@@ -206,21 +226,17 @@
     .estado a {
       color: #bef264;
     }
-
-    .voltar {
-      display: block;
-      text-align: center;
-      margin-top: 22px;
-      color: #94a3b8;
-      font-size: 0.92rem;
-      text-decoration: none;
-    }
   </style>
 </head>
 <body>
   <main>
-    <h1>🏋️ Treino de Exercícios</h1>
-    <p class="subtitle">Escolha um treino para começar.</p>
+    <header class="top">
+      <a class="voltar-icon" href="index.html" aria-label="Voltar">←</a>
+      <div>
+        <h1>🏋️ Treino de Exercícios</h1>
+        <p class="subtitle">Escolha um treino para começar.</p>
+      </div>
+    </header>
 
     <a id="continuarBtn" class="continuar" href="#" hidden>
       <span class="continuar-rotulo">Continuar de onde parou</span>
@@ -243,8 +259,6 @@
     <div id="lista" class="lista">
       <div class="estado">Carregando treinos…</div>
     </div>
-
-    <a class="voltar" href="index.html">← Voltar</a>
   </main>
 
   <script src="d3.v7.min.js"></script>
