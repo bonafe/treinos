@@ -185,10 +185,14 @@ Renderização de `repeticoes` conforme `modo`:
 Chave em `cardios` (seção 3.6). Quando presente, o treino tem um cardio
 complementar executado ao final da musculação — a página busca
 `dados.cardios[treino.cardioId]` pra saber os parâmetros e monta o link
-pra `treino_bicicleta.html?cardio=<cardioId>` (não `?treino=<id>` — o
-motor de bicicleta é endereçado por `cardioId`, não pelo `id` do treino de
+pra `treino_bicicleta.html?cardio=<cardioId>&treino=<id>` — o motor de
+bicicleta é endereçado por `cardioId` (não pelo `id` do treino de
 musculação; ver seção 4 de
-[treino-bicicleta-especificacao.md](./treino-bicicleta-especificacao.md)).
+[treino-bicicleta-especificacao.md](./treino-bicicleta-especificacao.md)),
+mas o `id` do treino de musculação também vai como `treino=<id>` pro botão
+de voltar de `treino_bicicleta.html` saber pra onde apontar (seção 5.2.1 do
+mesmo documento) — sem esse parâmetro, ele volta pro menu de bicicleta em
+vez de voltar pro treino de musculação de origem.
 
 ## 4. Tipos de treino (`tipo`)
 
@@ -321,8 +325,8 @@ dia ou mês.
   treino pelo `id` em `treinos` e renderiza aquecimento (se houver),
   blocos/itens e, se `treino.cardioId` existir, o cardio correspondente
   (`dados.cardios[cardioId]`) no final — com um botão "Fazer bicicleta →"
-  que leva a `treino_bicicleta.html?cardio=<cardioId>` (ver seção 3.6 e
-  3.7.3, e seção 4 de
+  que leva a `treino_bicicleta.html?cardio=<cardioId>&treino=<id>` (ver
+  seção 3.6 e 3.7.3, e seção 4 de
   [treino-bicicleta-especificacao.md](./treino-bicicleta-especificacao.md)).
 - Se não houver `treino` na URL, o `id` não existir, ou não houver dados
   carregados ainda, mostrar mensagem de erro com link de volta para o

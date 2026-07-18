@@ -39,14 +39,25 @@ que a versão fixa de 15 minutos, que começava em intensidade baixa).
 O motor não sabe se uma fase é "estímulo" ou "recuperação" para decidir cor e
 som — quem decide é a intensidade daquela fase:
 
-| Intensidade | Cor de fundo | Rótulo grande | Som                                   |
-|-------------|--------------|----------------|----------------------------------------|
-| `leve`      | Azul         | LEVE           | 3 bipes onda quadrada, agudo → grave   |
-| `maxima`    | Vermelho     | MÁXIMA         | 3 bipes onda quadrada, grave → agudo   |
+| Intensidade | Cor de acento (`--accent-rgb`) | Rótulo grande | Som                                   |
+|-------------|----------------------------------|----------------|----------------------------------------|
+| `leve`      | Azul (`56, 189, 248`)             | LEVE           | 3 bipes onda quadrada, agudo → grave   |
+| `maxima`    | Vermelho (`251, 113, 133`)        | MÁXIMA         | 3 bipes onda quadrada, grave → agudo   |
 
 O subtítulo da tela mostra qual fase é essa (`Recuperação` / `Estímulo`),
 enquanto a palavra grande mostra a intensidade (`LEVE` / `MÁXIMA`), já que é
 isso que dita o ritmo que a pessoa deve pedalar.
+
+A tela usa a mesma base escura do resto do site (mesmo gradiente de
+`index.html`/dos menus) em vez de inundar a tela inteira com a cor da
+intensidade — só a variável CSS `--accent-rgb` muda por classe
+(`body.leve`/`body.maxima`/`body.fim`), o que tinge o glow no topo, a
+palavra grande da fase, a borda do balão de instrução e a barra de
+progresso. `fim` (treino concluído) usa `190, 242, 100`, o mesmo
+verde-lima (`#bef264`) usado como acento em todo o resto do site — cards,
+botões, badges, etc. seguem o mesmo estilo visual das outras telas
+(fundo `rgba(15, 23, 42, 0.86)`, bordas `rgba(148, 163, 184, ...)`), só o
+glow e os elementos ligados à fase atual é que mudam de cor.
 
 ## 4. Fonte dos treinos: `cardios` em `dados/dados_treinos.json`
 
@@ -141,9 +152,10 @@ Esse fluxo é independente do fluxo de exercícios
 (`treino_exercicios_menu.html` → `treino_exercicios.html` →
 `treino_execucao.html`) — dá para entrar direto no cronômetro de bicicleta
 sem passar pelo treino de musculação. O card "Cardio complementar" de
-`treino_exercicios.html` também linka pra cá
-(`treino_bicicleta.html?cardio=<cardioId>`), pra quem já está vendo o
-treino completo.
+`treino_exercicios.html` também linka pra cá, mas com um parâmetro extra:
+`treino_bicicleta.html?cardio=<cardioId>&treino=<treinoId>` — o `treino`
+identifica de qual treino de musculação veio, pra saber pra onde voltar
+(seção 5.2).
 
 ### 5.1 Menu (`treino_bicicleta_menu.html`)
 
@@ -216,8 +228,28 @@ minutos.
   converte com `extrairConfigBicicleta` (seção 4.1) para calcular fases,
   tempos e o mapeamento de intensidade descrito na seção 3.
 - Se não houver `cardio` na URL, o `cardioId` não existir em `dados.cardios`,
-  ou o carregamento falhar, mostra uma mensagem de erro com link de volta
-  para o menu.
+  ou o carregamento falhar, mostra uma mensagem de erro.
+
+#### 5.2.1 Botão de voltar (destino dinâmico)
+
+O ícone `←` no topo da tela (mesmo padrão visual de
+`treino_exercicios.html`/`treino_execucao.html`) tem destino diferente
+dependendo de por onde o aluno entrou, lido do parâmetro `?treino=<treinoId>`
+(seção 5, só presente quando o link veio do card "Cardio complementar" de
+`treino_exercicios.html`):
+
+- **Com `?treino=<treinoId>` na URL** (entrou pelo treino de musculação):
+  volta para `treino_exercicios.html?treino=<treinoId>` — o treino de
+  musculação do qual esse cardio é complementar.
+  Mesma ideia do `voltarLink` dinâmico já usado em
+  `treino_exercicio_progresso.html` (seção 9 de
+  [treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md)).
+- **Sem `?treino=`** (entrou direto pelo menu de bicicleta): volta para
+  `treino_bicicleta_menu.html`, o padrão.
+- Esse destino é calculado assim que a página lê os parâmetros da URL,
+  antes mesmo de tentar carregar `dados.cardios[cardioId]` — funciona
+  mesmo nos estados de carregando/erro (seção 5.2), já que independe de o
+  treino carregar com sucesso.
 
 ## 6. Histórico local (localStorage)
 

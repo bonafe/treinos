@@ -6,15 +6,11 @@
   <title>Treino de Bicicleta</title>
   <style>
     :root {
-      --azul-baixa: #0284c7;
-      --azul-baixa-2: #0ea5e9;
-      --vermelho-alta: #be123c;
-      --vermelho-alta-2: #fb7185;
-      --verde-fim: #3f6212;
+      /* Trio RGB (não hex) pra poder compor rgba() dinâmico — cada fase só
+         troca esse valor; o resto do visual (base escura, cards, botões)
+         é o mesmo do restante do site. */
+      --accent-rgb: 148, 163, 184;
       --texto: #ffffff;
-      --escuro: rgba(0, 0, 0, 0.30);
-      --escuro-forte: rgba(0, 0, 0, 0.48);
-      --claro: rgba(255, 255, 255, 0.24);
     }
 
     * {
@@ -36,32 +32,30 @@
       display: flex;
       align-items: stretch;
       justify-content: center;
-      transition: background 0.18s ease, filter 0.18s ease;
+      /* Mesma base escura do resto do site (index.html, menus...); só o
+         glow no topo muda de cor pra indicar a fase, em vez de tomar a
+         tela toda com uma cor sólida. */
+      background:
+        radial-gradient(circle at top, rgba(var(--accent-rgb), 0.34), transparent 40%),
+        linear-gradient(160deg, #020617, #0f172a 50%, #111827);
+      transition: background 0.25s ease, filter 0.18s ease;
     }
 
-    /* INTENSIDADE LEVE: FUNDO AZUL */
     body.leve {
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.26), transparent 28%),
-        linear-gradient(160deg, var(--azul-baixa-2), var(--azul-baixa));
+      --accent-rgb: 56, 189, 248; /* azul: recuperação/leve */
     }
 
-    /* INTENSIDADE MÁXIMA: FUNDO VERMELHO */
     body.maxima {
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.24), transparent 30%),
-        linear-gradient(160deg, var(--vermelho-alta-2), var(--vermelho-alta));
+      --accent-rgb: 251, 113, 133; /* vermelho: intensidade máxima */
     }
 
     body.fim {
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.24), transparent 30%),
-        linear-gradient(160deg, #84cc16, var(--verde-fim));
+      --accent-rgb: 190, 242, 100; /* verde-lima — mesmo acento usado no resto do site */
     }
 
     body.carregando,
     body.erro {
-      background: linear-gradient(160deg, #1e293b, #0f172a);
+      background: linear-gradient(160deg, #020617, #0f172a 50%, #111827);
     }
 
     .screen {
@@ -75,13 +69,29 @@
 
     .top {
       display: flex;
-      justify-content: space-between;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
       margin-bottom: 10px;
     }
 
+    .voltar-icon {
+      flex-shrink: 0;
+      text-decoration: none;
+      color: #cbd5e1;
+      background: rgba(148, 163, 184, 0.14);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
     h1 {
+      flex: 1;
+      min-width: 0;
       margin: 0;
       font-size: clamp(1.15rem, 4vw, 1.6rem);
       letter-spacing: -0.03em;
@@ -89,8 +99,9 @@
     }
 
     .badge {
-      background: var(--escuro);
-      border: 1px solid var(--claro);
+      background: rgba(148, 163, 184, 0.16);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: #cbd5e1;
       border-radius: 999px;
       padding: 9px 12px;
       font-weight: 900;
@@ -114,8 +125,10 @@
       font-weight: 1000;
       letter-spacing: -0.10em;
       text-transform: uppercase;
-      text-shadow: 0 12px 36px rgba(0,0,0,0.36);
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 32px rgba(var(--accent-rgb), 0.45);
       margin: 0;
+      transition: color 0.25s ease;
     }
 
     .instruction {
@@ -124,8 +137,8 @@
       margin: 0 auto;
       padding: 14px 20px;
       border-radius: 24px;
-      background: var(--escuro-forte);
-      border: 1px solid var(--claro);
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(var(--accent-rgb), 0.4);
       font-size: clamp(1.15rem, 5vw, 2rem);
       font-weight: 950;
       text-transform: uppercase;
@@ -149,8 +162,8 @@
     }
 
     .card {
-      background: var(--escuro);
-      border: 1px solid var(--claro);
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.25);
       border-radius: 22px;
       padding: 14px 12px;
       text-align: center;
@@ -174,19 +187,19 @@
 
     .progress-wrap {
       height: 18px;
-      background: rgba(0,0,0,0.25);
+      background: rgba(148, 163, 184, 0.14);
       border-radius: 999px;
       overflow: hidden;
-      border: 1px solid var(--claro);
+      border: 1px solid rgba(148, 163, 184, 0.28);
       margin-top: 8px;
     }
 
     .progress {
       height: 100%;
       width: 0%;
-      background: #ffffff;
+      background: rgb(var(--accent-rgb));
       border-radius: 999px;
-      transition: width 0.2s linear;
+      transition: width 0.2s linear, background 0.25s ease;
     }
 
     .buttons {
@@ -198,9 +211,9 @@
 
     button, .link-button {
       appearance: none;
-      border: 2px solid rgba(255,255,255,0.58);
-      background: rgba(0,0,0,0.32);
-      color: #fff;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(148, 163, 184, 0.12);
+      color: #cbd5e1;
       border-radius: 18px;
       padding: 17px 12px;
       font-size: 1.03rem;
@@ -214,10 +227,11 @@
     }
 
     button.primary {
-      background: #ffffff;
-      color: #111827;
-      border-color: #ffffff;
+      background: #bef264;
+      color: #06110a;
+      border-color: #bef264;
       font-size: 1.16rem;
+      box-shadow: 0 16px 42px rgba(190, 242, 100, 0.22);
     }
 
     button:active, .link-button:active {
@@ -232,9 +246,13 @@
     .hint {
       margin: 12px 4px 0;
       text-align: center;
-      color: rgba(255,255,255,0.88);
+      color: #94a3b8;
       font-size: 0.88rem;
       line-height: 1.35;
+    }
+
+    .hint a {
+      color: #bef264;
     }
 
     .flash {
@@ -278,6 +296,7 @@
 <body class="carregando">
   <main class="screen">
     <header class="top">
+      <a id="voltarIcon" class="voltar-icon" href="treino_bicicleta_menu.html" aria-label="Voltar">←</a>
       <h1 id="titulo">Treino de Bike</h1>
       <div id="cycle" class="badge">Carregando…</div>
     </header>
@@ -341,6 +360,7 @@
     let audioCtx = null;
 
     const bodyEl = document.body;
+    const voltarIconEl = document.getElementById("voltarIcon");
     const tituloEl = document.getElementById("titulo");
     const phaseEl = document.getElementById("phase");
     const instructionEl = document.getElementById("instruction");
@@ -565,10 +585,10 @@
       phaseEl.textContent = "😕";
       instructionEl.textContent = mensagem;
       phaseTimeEl.textContent = "";
-      hintEl.innerHTML = 'Volte ao <a href="treino_bicicleta_menu.html" style="color:#fff;">menu de treinos</a> e escolha um treino.' +
-        (mostrarLinkImportar
-          ? ' Se ainda não carregou os dados neste navegador, <a href="importar_dados.html" style="color:#fff;">carregue o arquivo dados_treinos.json</a> primeiro.'
-          : '');
+      hintEl.hidden = !mostrarLinkImportar;
+      hintEl.innerHTML = mostrarLinkImportar
+        ? 'Se ainda não carregou os dados neste navegador, <a href="importar_dados.html">carregue o arquivo dados_treinos.json</a> primeiro.'
+        : '';
     }
 
     function iniciarComConfig(cfg) {
@@ -583,10 +603,7 @@
       startPauseBtn.disabled = false;
       resetBtn.disabled = false;
 
-      hintEl.innerHTML =
-        `Azul = ${INTENSITY_STYLES.leve.label}. Vermelho = ${INTENSITY_STYLES.maxima.label}. ` +
-        'O som é gerado pelo navegador, sem arquivo de áudio. ' +
-        '<a href="treino_bicicleta_menu.html" style="color:#fff;">Trocar de treino</a>.';
+      hintEl.hidden = true;
 
       render();
     }
@@ -606,6 +623,11 @@
     async function carregarTreino() {
       const params = new URLSearchParams(window.location.search);
       const cardioId = params.get("cardio");
+      const treinoId = params.get("treino");
+
+      voltarIconEl.href = treinoId
+        ? `treino_exercicios.html?treino=${encodeURIComponent(treinoId)}`
+        : "treino_bicicleta_menu.html";
 
       if (!cardioId) {
         mostrarErro("Nenhum treino selecionado.");

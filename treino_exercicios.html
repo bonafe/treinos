@@ -542,7 +542,7 @@
       });
     }
 
-    function montarCardio(cardio, cardioId) {
+    function montarCardio(cardio, cardioId, treinoId) {
       if (!cardio) return;
 
       document.getElementById("cardio").hidden = false;
@@ -554,7 +554,8 @@
         <div class="campo"><strong>Intensidade do estímulo</strong><span>${labelIntensidade(cardio.intensidadeEstimulo)}</span></div>
         <div class="campo"><strong>Intensidade da recuperação</strong><span>${labelIntensidade(cardio.intensidadeRecuperacao)}</span></div>
       `;
-      document.getElementById("cardioLink").href = `treino_bicicleta.html?cardio=${encodeURIComponent(cardioId)}`;
+      document.getElementById("cardioLink").href =
+        `treino_bicicleta.html?cardio=${encodeURIComponent(cardioId)}&treino=${encodeURIComponent(treinoId)}`;
     }
 
     function mostrarErro(mensagem) {
@@ -587,7 +588,7 @@
 
       montarAquecimento(treino, dados.aquecimentoPadrao);
       montarBlocos(treino, dados.exercicios);
-      montarCardio(dados.cardios[treino.cardioId], treino.cardioId);
+      montarCardio(dados.cardios[treino.cardioId], treino.cardioId, treino.id);
 
       if (treino.blocos.some((bloco) => bloco.itens.length)) {
         const iniciarEl = document.getElementById("iniciarTreino");
