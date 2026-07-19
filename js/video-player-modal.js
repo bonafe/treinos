@@ -54,7 +54,9 @@ export function ligarBotaoVideo(botaoEl, fonte, videoModal, deveAtualizar = () =
       if (!deveAtualizar()) return;
       if (estado.estado === "baixando") {
         botaoEl.disabled = true;
-        botaoEl.textContent = `Baixando vídeo… ${Math.round(estado.progresso * 100)}%`;
+        botaoEl.textContent = estado.semPeers
+          ? "Baixando vídeo… procurando outros aparelhos"
+          : `Baixando vídeo… ${Math.round(estado.progresso * 100)}%`;
       } else if (estado.estado === "pronto") {
         blobUrlAtual = estado.blobUrl;
         botaoEl.disabled = false;

@@ -70,36 +70,51 @@ export const VideosTorrent = {
     downloadsEmAndamento.set(infoHash, entrada);
     const notificar = (dados) => entrada.ouvintes.forEach((ouvinte) => ouvinte(dados));
 
+    // Avisa "baixando" já de cara — não espera o primeiro byte chegar
+    // (torrent.on("download")), porque se o swarm estiver frio (sem
+    // nenhum peer alcançável, mais comum em rede de celular por causa de
+    // NAT mais restritivo) esse evento pode nunca disparar, deixando quem
+    // pediu o vídeo sem nenhum retorno.
+    notificar({ estado: "baixando", progresso: 0 });
+
     try {
-      obterCliente().add(magnet, (torrent) => {
-        torrent.on("download", () => {
-          entrada.ultimoProgresso = torrent.progress;
-          notificar({ estado: "baixando", progresso: torrent.progress });
-        });
+      // Usa o retorno de client.add (em vez do callback `ontorrent`, que só
+      // dispara quando os metadados do torrent chegam) pra já anexar os
+      // listeners agora — assim erros/avisos que aconteçam enquanto ainda
+      // procura peers/metadados também são capturados.
+      const torrent = obterCliente().add(magnet);
 
-        torrent.on("error", () => {
-          downloadsEmAndamento.delete(infoHash);
-          notificar({ estado: "erro" });
-        });
+      torrent.on("download", () => {
+        entrada.ultimoProgresso = torrent.progress;
+        notificar({ estado: "baixando", progresso: torrent.progress });
+      });
 
-        torrent.on("done", async () => {
-          try {
-            const blob = await torrent.files[0].blob();
-            await salvarNoCache(infoHash, blob);
-            if (navigator.storage && navigator.storage.persist) {
-              navigator.storage.persist().catch(() => {});
-            }
-            notificar({ estado: "pronto", blobUrl: URL.createObjectURL(blob) });
-          } catch (erro) {
-            notificar({ estado: "erro" });
-          } finally {
-            downloadsEmAndamento.delete(infoHash);
-            // Já salvamos o Blob completo no Cache API (seção 6 da
-            // especificação) — não precisa manter as peças do torrent
-            // guardadas de novo no armazenamento interno do WebTorrent.
-            torrent.destroy({ destroyStore: true });
+      torrent.on("noPeers", () => {
+        notificar({ estado: "baixando", progresso: torrent.progress, semPeers: true });
+      });
+
+      torrent.on("error", () => {
+        downloadsEmAndamento.delete(infoHash);
+        notificar({ estado: "erro" });
+      });
+
+      torrent.on("done", async () => {
+        try {
+          const blob = await torrent.files[0].blob();
+          await salvarNoCache(infoHash, blob);
+          if (navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().catch(() => {});
           }
-        });
+          notificar({ estado: "pronto", blobUrl: URL.createObjectURL(blob) });
+        } catch (erro) {
+          notificar({ estado: "erro" });
+        } finally {
+          downloadsEmAndamento.delete(infoHash);
+          // Já salvamos o Blob completo no Cache API (seção 6 da
+          // especificação) — não precisa manter as peças do torrent
+          // guardadas de novo no armazenamento interno do WebTorrent.
+          torrent.destroy({ destroyStore: true });
+        }
       });
     } catch (erro) {
       downloadsEmAndamento.delete(infoHash);
