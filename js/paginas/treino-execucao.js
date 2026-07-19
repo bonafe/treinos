@@ -2,9 +2,12 @@ import { TreinosStorage } from "../storage.js";
 import { Formatadores } from "../formatadores.js";
 import { SinalSonoro } from "../sinal-sonoro.js";
 import { Cronometro } from "../cronometro.js";
+import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
 
 class TreinoExecucaoController {
   #sinal = new SinalSonoro();
+  #videoModal = criarVideoPlayerModal();
+  #verVideoToken = 0;
   #cronometroSerie = new Cronometro({ aoTick: () => this.#atualizarSerieTimerTela() });
   #cronometroDescanso = new Cronometro({ aoTick: (segundos) => this.#tickDescanso(segundos) });
 
@@ -219,12 +222,9 @@ class TreinoExecucaoController {
     this.#repeticoesInputEl.value =
       ultimoRegistro && ultimoRegistro.repeticoes !== null ? ultimoRegistro.repeticoes : "";
 
-    if (exercicio && exercicio.videoUrl) {
-      this.#verVideoEl.hidden = false;
-      this.#verVideoEl.href = exercicio.videoUrl;
-    } else {
-      this.#verVideoEl.hidden = true;
-    }
+    this.#verVideoToken += 1;
+    const tokenDoVideo = this.#verVideoToken;
+    ligarBotaoVideo(this.#verVideoEl, exercicio, this.#videoModal, () => tokenDoVideo === this.#verVideoToken);
 
     const slot = this.#slots[this.#progresso.slotIndex];
     if (slot.opcoes.length > 1) {

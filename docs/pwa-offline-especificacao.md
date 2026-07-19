@@ -19,11 +19,16 @@ a servir esse cache quando a rede falhar.
 
 Fora de escopo aqui (não mexido nesta rodada — ver pedido original):
 
-- Vídeos dos exercícios (`exercicio.videoUrl`) — sempre externos (S3 etc.),
-  nunca funcionam offline.
 - Cache dos dados de treino via `fetch` — já não existe mais `fetch` pra
   esses dados (seção 3 do doc de armazenamento local); não há nada a
   cachear ali, o service worker não participa dessa parte.
+
+Os vídeos dos exercícios (`exercicio.videoMagnet`) não fazem parte do app
+shell coberto aqui — eles são baixados por torrent e guardados num cache
+próprio (`treinos-videos.v1`, separado do `CACHE_NOME` deste documento), ver
+[torrent-videos-especificacao.md](./torrent-videos-especificacao.md#6-armazenamento-local-cache-api-não-localstorage-nem-indexeddb).
+Diferente da geração anterior deste site, os vídeos **funcionam offline**
+depois de baixados uma vez.
 
 ## 2. Registro (`storage.js`)
 
@@ -60,7 +65,8 @@ const ARQUIVOS_PARA_CACHE = [
   "treino_execucao.html",
   "treino_exercicio_progresso.html",
   "storage.js",
-  "d3.v7.min.js"
+  "d3.v7.min.js",
+  "webtorrent.min.js"
 ];
 ```
 

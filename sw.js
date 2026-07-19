@@ -1,4 +1,4 @@
-const CACHE_NOME = "treinos-shell-v4";
+const CACHE_NOME = "treinos-shell-v5";
 
 const ARQUIVOS_PARA_CACHE = [
   "index.html",
@@ -11,6 +11,7 @@ const ARQUIVOS_PARA_CACHE = [
   "treino_execucao.html",
   "treino_exercicio_progresso.html",
   "d3.v7.min.js",
+  "webtorrent.min.js",
   "css/base.css",
   "css/componentes.css",
   "css/graficos.css",
@@ -30,6 +31,8 @@ const ARQUIVOS_PARA_CACHE = [
   "js/cronometro.js",
   "js/grafico-barras.js",
   "js/grafico-linha.js",
+  "js/videos-torrent.js",
+  "js/video-player-modal.js",
   "js/paginas/index.js",
   "js/paginas/sistema.js",
   "js/paginas/importar-dados.js",

@@ -207,6 +207,11 @@ h1 {
   color: #7dd3fc;
 }
 
+.ver-video:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
 .ver-progresso {
   background: rgba(190, 242, 100, 0.14);
   border-color: rgba(190, 242, 100, 0.4);

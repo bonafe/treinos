@@ -1,5 +1,6 @@
 import { TreinosStorage } from "../storage.js";
 import { Formatadores } from "../formatadores.js";
+import { VideosTorrent } from "../videos-torrent.js";
 
 const CAMPOS_OBRIGATORIOS = ["metadata", "guia", "aquecimentoPadrao", "exercicios", "cardios", "treinos"];
 
@@ -82,6 +83,7 @@ class ImportarDadosController {
         return;
       }
       TreinosStorage.restaurarBackup(dados);
+      VideosTorrent.prefetchTodosOsVideos(dados.dadosTreinos);
       this.#atualizarStatus();
       this.#mostrarMensagem(
         'Backup restaurado — dados do treino, histórico e progresso em andamento recuperados! Já dá pra usar o <a href="treino_exercicios_menu.html">treino de musculação</a> ou o <a href="treino_bicicleta_menu.html">treino de bicicleta</a>.',
@@ -99,6 +101,7 @@ class ImportarDadosController {
     }
 
     TreinosStorage.definirDadosTreinos(dados);
+    VideosTorrent.prefetchTodosOsVideos(dados);
     this.#atualizarStatus();
     this.#mostrarMensagem(
       'Dados salvos! Já dá pra usar o <a href="treino_exercicios_menu.html">treino de musculação</a> ou o <a href="treino_bicicleta_menu.html">treino de bicicleta</a>.',

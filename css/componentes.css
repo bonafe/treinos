@@ -42,3 +42,76 @@
 .estado a {
   color: #bef264;
 }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(2, 6, 23, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.video-card {
+  position: relative;
+  width: min(720px, 100%);
+  background: #000000;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.video-card video {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+}
+
+.video-fechar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  appearance: none;
+  cursor: pointer;
+  color: #ffffff;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.video-fechar:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.video-botao {
+  appearance: none;
+  cursor: pointer;
+  background: rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.video-botao:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.video-botao:not(:disabled):active {
+  transform: translateY(1px) scale(0.99);
+}

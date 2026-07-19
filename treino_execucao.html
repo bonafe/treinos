@@ -61,7 +61,7 @@
 
       <button id="usarSubstituto" class="secondary" hidden></button>
 
-      <a id="verVideo" class="link" href="#" target="_blank" rel="noopener" hidden>Ver vídeo do exercício →</a>
+      <button type="button" id="verVideo" class="video-botao" hidden disabled>Vídeo…</button>
     </section>
 
     <section id="descanso" class="card-exercicio" hidden>
@@ -83,6 +83,13 @@
       <a class="iniciar" href="treino_exercicios_menu.html">Voltar ao menu</a>
     </section>
   </main>
+
+  <div id="videoOverlay" class="overlay" hidden>
+    <div class="video-card">
+      <button id="videoFechar" class="video-fechar" type="button" aria-label="Fechar vídeo">✕</button>
+      <video id="videoPlayer" controls playsinline></video>
+    </div>
+  </div>
 
   <script type="module" src="js/paginas/treino-execucao.js"></script>
 </body>

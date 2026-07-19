@@ -210,14 +210,9 @@ a.iniciar:active {
   transform: translateY(1px) scale(0.99);
 }
 
-.link {
+.video-botao {
   display: block;
-  text-align: center;
-  color: #7dd3fc;
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-decoration: none;
-  margin-top: 4px;
+  margin: 4px auto 0;
 }
 
 #descanso {

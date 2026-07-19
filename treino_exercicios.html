@@ -28,7 +28,7 @@
     <section id="aquecimento" class="secao" hidden>
       <h2>Aquecimento</h2>
       <p id="aquecimentoTexto"></p>
-      <a id="aquecimentoVideo" href="#" target="_blank" rel="noopener">Ver vídeo de mobilidade →</a>
+      <button type="button" id="aquecimentoVideo" class="ver-video" disabled>Vídeo…</button>
     </section>
 
     <div id="blocos"></div>
@@ -45,6 +45,13 @@
 
     <div id="erro" class="estado" hidden></div>
   </main>
+
+  <div id="videoOverlay" class="overlay" hidden>
+    <div class="video-card">
+      <button id="videoFechar" class="video-fechar" type="button" aria-label="Fechar vídeo">✕</button>
+      <video id="videoPlayer" controls playsinline></video>
+    </div>
+  </div>
 
   <script type="module" src="js/paginas/treino-exercicios.js"></script>
 </body>

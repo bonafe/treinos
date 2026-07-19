@@ -1,6 +1,7 @@
 import { TreinosStorage } from "../storage.js";
 import { Formatadores } from "../formatadores.js";
 import { LABEL_TIPO } from "../constantes.js";
+import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
 
 const LABEL_AGRUPAMENTO = {
   superset: "Superset — fazer em sequência",
@@ -9,6 +10,8 @@ const LABEL_AGRUPAMENTO = {
 };
 
 class TreinoExerciciosController {
+  #videoModal = criarVideoPlayerModal();
+
   #gruposMusculares(grupoMuscular) {
     return [grupoMuscular.principal, grupoMuscular.sinergista1, grupoMuscular.sinergista2].filter(Boolean);
   }
@@ -38,7 +41,7 @@ class TreinoExerciciosController {
 
     if (treino.aquecimento.usaPadrao) {
       partes.push(aquecimentoPadrao.texto);
-      videoEl.href = aquecimentoPadrao.videoUrl;
+      ligarBotaoVideo(videoEl, aquecimentoPadrao, this.#videoModal);
     } else {
       videoEl.hidden = true;
     }
@@ -75,7 +78,7 @@ class TreinoExerciciosController {
       </div>
       ${item.tecnica === "isometria" ? '<div class="item-isometria-nota">Isometria de 20s a 50% da amplitude, nas duas últimas séries.</div>' : ""}
       <div class="item-acoes">
-        ${exercicio && exercicio.videoUrl ? '<button type="button" class="ver-video">Ver vídeo →</button>' : ""}
+        <button type="button" class="ver-video" hidden></button>
         <a class="ver-progresso" href="${progressoUrl}">Ver progresso →</a>
       </div>
     `;
@@ -90,13 +93,7 @@ class TreinoExerciciosController {
       }
     });
 
-    const videoBtn = div.querySelector(".ver-video");
-    if (videoBtn) {
-      videoBtn.addEventListener("click", (evento) => {
-        evento.stopPropagation();
-        window.open(exercicio.videoUrl, "_blank", "noopener");
-      });
-    }
+    ligarBotaoVideo(div.querySelector(".ver-video"), exercicio, this.#videoModal);
 
     div.querySelector(".ver-progresso").addEventListener("click", (evento) => {
       evento.stopPropagation();

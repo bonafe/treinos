@@ -49,12 +49,16 @@ Os dois fluxos (bike / musculação) são independentes, mas um treino de muscul
 
 `treino_execucao.html` é a tela mais complexa do projeto: monta uma fila sequencial de "slots" a partir de `treino.blocos` (superset/circuito não são respeitados ainda, tudo roda sequencial — simplificação deliberada, ver seção 8.1 da especificação de exercícios), trata exercício substituto, cronômetro de série/descanso, sinal sonoro e persiste o progresso a cada passo para poder retomar depois de fechar o navegador.
 
+### Vídeos via torrent (WebTorrent), não hospedagem paga
+
+Vídeos de exercício (`exercicio.videoMagnet`/`aquecimentoPadrao.videoMagnet`, magnet URIs) são distribuídos por torrent, não por link externo — princípio de plataforma comunitária/sem custo de hospedagem (ver `index.html`). `js/videos-torrent.js` encapsula o cliente WebTorrent (`webtorrent.min.js` vendorizado, mesmo padrão do `d3.v7.min.js`), com cache em `Cache API` (`treinos-videos.v1`, chaveado pelo infohash — nunca localStorage/IndexedDB, vídeo é Blob binário). `js/video-player-modal.js` é o player embutido compartilhado (`#videoOverlay`/`#videoPlayer`), usado por `treino_exercicios.html` e `treino_execucao.html`. O download de **todos** os vídeos do dataset é disparado assim que o JSON entra no `localStorage` (`importar-dados.js`, reforçado em `sistema.js`), não por treino visitado. Ver `docs/torrent-videos-especificacao.md` para a estratégia completa (trackers, seed fixo, sem fallback externo).
+
 ### Organização de arquivos
 
 - `js/paginas/*.js` — um controller por página HTML (`treino-execucao.js` ↔ `treino_execucao.html`), carregado via `<script type="module">`.
-- `js/*.js` (fora de `paginas/`) — utilitários compartilhados entre páginas: `storage.js` (localStorage), `formatadores.js`, `cronometro.js`, `sinal-sonoro.js`, `grafico-barras.js`/`grafico-linha.js` (D3).
+- `js/*.js` (fora de `paginas/`) — utilitários compartilhados entre páginas: `storage.js` (localStorage), `formatadores.js`, `cronometro.js`, `sinal-sonoro.js`, `grafico-barras.js`/`grafico-linha.js` (D3), `videos-torrent.js`/`video-player-modal.js` (vídeos por torrent).
 - `css/paginas/*.css` — estilos específicos de cada página; `css/base.css` e `css/componentes.css` são compartilhados.
-- `d3.v7.min.js` — D3 vendorizado na raiz (não CDN), para os gráficos funcionarem offline.
+- `d3.v7.min.js`/`webtorrent.min.js` — vendorizados na raiz (não CDN), pra continuar funcionando offline.
 - `docs/*-especificacao.md` — as specs vivas de cada área (armazenamento local, PWA/offline, bike, exercícios). Ao mudar comportamento coberto por uma spec, atualize o documento junto.
 
 ### Convenções

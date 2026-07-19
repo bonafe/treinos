@@ -1,7 +1,15 @@
 import { TreinosStorage } from "../storage.js";
+import { VideosTorrent } from "../videos-torrent.js";
 
-if (!TreinosStorage.lerJSON("dadosTreinos.v1", null)) {
+const dadosTreinos = TreinosStorage.lerJSON("dadosTreinos.v1", null);
+if (!dadosTreinos) {
   document.getElementById("avisoDados").hidden = false;
+} else {
+  // Gatilho de reforço do pré-carregamento (seção 8 de
+  // docs/torrent-videos-especificacao.md) — cobre o caso de já existir JSON
+  // salvo mas nem todo vídeo ter sido baixado ainda. Vídeos já no Cache API
+  // não geram nenhuma requisição de rede, então repetir isso aqui é barato.
+  VideosTorrent.prefetchTodosOsVideos(dadosTreinos);
 }
 
 const TEXTOS_CONFIRMACAO = {

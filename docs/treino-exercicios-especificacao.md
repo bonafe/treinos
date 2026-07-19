@@ -77,17 +77,25 @@ corpo, que devem virar texto de ajuda fixo na UI (não mudam por treino):
 ### 3.4 `aquecimentoPadrao`
 
 ```json
-{ "videoUrl": "...", "texto": "..." }
+{ "videoMagnet": "magnet:?xt=urn:btih:...", "texto": "..." }
 ```
 
 Aquecimento reutilizado por qualquer treino cujo `aquecimento.usaPadrao` seja
-`true` (ver 3.7).
+`true` (ver 3.7). `videoMagnet` é um magnet URI — os vídeos novos são
+distribuídos por torrent, não por link externo, ver
+[torrent-videos-especificacao.md](./torrent-videos-especificacao.md).
+Enquanto o acervo antigo não é todo migrado, um item pode ter só `videoUrl`
+(campo legado, link externo) em vez de `videoMagnet` — os dois campos são
+suportados ao mesmo tempo, `videoMagnet` tem prioridade quando ambos
+existem (ver seção 10 do doc de torrent).
 
 ### 3.5 `exercicios`
 
-Dicionário `exercicioId → { nome, videoUrl }`. É a tabela de referência de
-todos os exercícios citados nos treinos; os blocos dos treinos armazenam
-apenas o `exercicioId` (chave deste dicionário), não o nome/vídeo repetido.
+Dicionário `exercicioId → { nome, videoMagnet }` (ou `videoUrl`, campo
+legado — ver 3.4). É a tabela de referência de todos os exercícios citados
+nos treinos; os blocos dos treinos armazenam apenas o `exercicioId` (chave
+deste dicionário), não o nome/vídeo repetido. `videoMagnet` segue o mesmo
+formato de magnet URI da seção 3.4.
 
 ### 3.6 `cardios`
 
@@ -346,8 +354,11 @@ dia ou mês.
   a página calcula os mesmos índices ao renderizar cada item, na ordem
   em que aparecem nos blocos). Dentro do card, dois botões próprios (cada
   um com `event.stopPropagation()` para não disparar a navegação do
-  card): "Ver vídeo" abre `exercicio.videoUrl` numa nova aba; "Ver
-  progresso" leva para
+  card): "Ver vídeo" mostra o estado do download por torrent (baixando/
+  pronto/indisponível) e abre um player embutido quando o vídeo estiver
+  pronto — ver
+  [torrent-videos-especificacao.md](./torrent-videos-especificacao.md#7-estados-de-carregamento-ui);
+  "Ver progresso" leva para
   `treino_exercicio_progresso.html?exercicio=<exercicioId>&treino=<treinoId>`
   (seção 9).
 
