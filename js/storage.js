@@ -1,50 +1,69 @@
-const TreinosStorage = (() => {
-  const PREFIXO = "treinos.";
+const PREFIXO = "treinos.";
 
-  function lerJSON(chave, padrao) {
-    try {
-      const bruto = localStorage.getItem(PREFIXO + chave);
-      return bruto ? JSON.parse(bruto) : padrao;
-    } catch (erro) {
-      return padrao;
-    }
+function lerJSON(chave, padrao) {
+  try {
+    const bruto = localStorage.getItem(PREFIXO + chave);
+    return bruto ? JSON.parse(bruto) : padrao;
+  } catch (erro) {
+    return padrao;
+  }
+}
+
+function salvarJSON(chave, valor) {
+  try {
+    localStorage.setItem(PREFIXO + chave, JSON.stringify(valor));
+  } catch (erro) {
+    // localStorage indisponível (modo privado, quota cheia etc.) — ignora silenciosamente
+  }
+}
+
+function removerChave(chave) {
+  try {
+    localStorage.removeItem(PREFIXO + chave);
+  } catch (erro) {
+    // idem — ignora silenciosamente
+  }
+}
+
+export class TreinosStorage {
+  static chaves = {
+    historicoSessaoBicicleta: "historico.sessaoBicicleta.v1",
+    historicoSerieMusculacao: "historico.serieMusculacao.v1",
+    historicoSessaoMusculacao: "historico.sessaoMusculacao.v1",
+    execucaoMusculacao: (treinoId) => `execucao.musculacao.${treinoId}.v1`
+  };
+
+  static lerJSON(chave, padrao) {
+    return lerJSON(chave, padrao);
   }
 
-  function salvarJSON(chave, valor) {
-    try {
-      localStorage.setItem(PREFIXO + chave, JSON.stringify(valor));
-    } catch (erro) {
-      // localStorage indisponível (modo privado, quota cheia etc.) — ignora silenciosamente
-    }
+  static salvarJSON(chave, valor) {
+    salvarJSON(chave, valor);
   }
 
-  function removerChave(chave) {
-    try {
-      localStorage.removeItem(PREFIXO + chave);
-    } catch (erro) {
-      // idem — ignora silenciosamente
-    }
+  static removerChave(chave) {
+    removerChave(chave);
   }
 
-  function adicionarAoHistorico(chave, entrada) {
+  static adicionarAoHistorico(chave, entrada) {
     const lista = lerJSON(chave, []);
     lista.push(entrada);
     salvarJSON(chave, lista);
     return lista;
   }
 
-  function definirDadosTreinos(dados) {
+  static definirDadosTreinos(dados) {
     salvarJSON("dadosTreinos.v1", dados);
     salvarJSON("dadosTreinosCarregadoEm.v1", new Date().toISOString());
   }
 
-  async function carregarDadosTreinos() {
+  static async carregarDadosTreinos() {
     const cache = lerJSON("dadosTreinos.v1", null);
     if (cache) return cache;
     throw new Error("Nenhum dado de treino carregado ainda.");
   }
 
-  function listarChavesComPrefixo(prefixo) {
+  static listarChavesComPrefixo(prefixo) {
     const chaves = [];
     for (let i = 0; i < localStorage.length; i++) {
       const chaveCompleta = localStorage.key(i);
@@ -55,9 +74,9 @@ const TreinosStorage = (() => {
     return chaves;
   }
 
-  function montarBackup() {
+  static montarBackup() {
     const execucoesEmAndamento = {};
-    listarChavesComPrefixo("execucao.musculacao.").forEach((chave) => {
+    TreinosStorage.listarChavesComPrefixo("execucao.musculacao.").forEach((chave) => {
       execucoesEmAndamento[chave] = lerJSON(chave, null);
     });
 
@@ -73,8 +92,8 @@ const TreinosStorage = (() => {
     };
   }
 
-  function restaurarBackup(backup) {
-    if (backup.dadosTreinos) definirDadosTreinos(backup.dadosTreinos);
+  static restaurarBackup(backup) {
+    if (backup.dadosTreinos) TreinosStorage.definirDadosTreinos(backup.dadosTreinos);
     salvarJSON("historico.sessaoBicicleta.v1", backup.historicoSessaoBicicleta || []);
     salvarJSON("historico.serieMusculacao.v1", backup.historicoSerieMusculacao || []);
     salvarJSON("historico.sessaoMusculacao.v1", backup.historicoSessaoMusculacao || []);
@@ -82,30 +101,12 @@ const TreinosStorage = (() => {
       salvarJSON(chave, valor);
     });
   }
-
-  return {
-    lerJSON,
-    salvarJSON,
-    removerChave,
-    adicionarAoHistorico,
-    carregarDadosTreinos,
-    definirDadosTreinos,
-    listarChavesComPrefixo,
-    montarBackup,
-    restaurarBackup,
-    chaves: {
-      historicoSessaoBicicleta: "historico.sessaoBicicleta.v1",
-      historicoSerieMusculacao: "historico.serieMusculacao.v1",
-      historicoSessaoMusculacao: "historico.sessaoMusculacao.v1",
-      execucaoMusculacao: (treinoId) => `execucao.musculacao.${treinoId}.v1`
-    }
-  };
-})();
+}
 
 // Registra o service worker (sw.js) que guarda o app shell em cache pra
 // funcionar offline depois do primeiro acesso — ver docs/pwa-offline-especificacao.md.
-// storage.js é carregado em toda página, então isso cobre o site inteiro
-// sem precisar repetir a chamada em cada .html.
+// storage.js é importado por todo módulo de página, então isso cobre o site
+// inteiro sem precisar repetir a chamada em cada .html.
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch(() => {

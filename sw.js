@@ -1,4 +1,4 @@
-const CACHE_NOME = "treinos-shell-v2";
+const CACHE_NOME = "treinos-shell-v3";
 
 const ARQUIVOS_PARA_CACHE = [
   "index.html",
@@ -9,8 +9,33 @@ const ARQUIVOS_PARA_CACHE = [
   "treino_exercicios.html",
   "treino_execucao.html",
   "treino_exercicio_progresso.html",
-  "storage.js",
-  "d3.v7.min.js"
+  "d3.v7.min.js",
+  "css/base.css",
+  "css/componentes.css",
+  "css/graficos.css",
+  "css/paginas/index.css",
+  "css/paginas/importar-dados.css",
+  "css/paginas/treino-bicicleta-menu.css",
+  "css/paginas/treino-bicicleta.css",
+  "css/paginas/treino-exercicios-menu.css",
+  "css/paginas/treino-exercicios.css",
+  "css/paginas/treino-execucao.css",
+  "css/paginas/treino-exercicio-progresso.css",
+  "js/storage.js",
+  "js/formatadores.js",
+  "js/constantes.js",
+  "js/sinal-sonoro.js",
+  "js/cronometro.js",
+  "js/grafico-barras.js",
+  "js/grafico-linha.js",
+  "js/paginas/index.js",
+  "js/paginas/importar-dados.js",
+  "js/paginas/treino-bicicleta-menu.js",
+  "js/paginas/treino-bicicleta.js",
+  "js/paginas/treino-exercicios-menu.js",
+  "js/paginas/treino-exercicios.js",
+  "js/paginas/treino-execucao.js",
+  "js/paginas/treino-exercicio-progresso.js"
 ];
 
 // cache.addAll é tudo-ou-nada: se um único arquivo falhar, nenhum entra no

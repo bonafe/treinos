@@ -1,0 +1,46 @@
+.grafico-secao {
+  background: rgba(15, 23, 42, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 22px;
+}
+
+.grafico-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.grafico-topo h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 950;
+  letter-spacing: -0.02em;
+}
+
+.periodo-botoes {
+  display: flex;
+  gap: 6px;
+}
+
+.periodo-btn {
+  appearance: none;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  color: #cbd5e1;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.8rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.periodo-btn.active {
+  background: #bef264;
+  border-color: #bef264;
+  color: #06110a;
+}

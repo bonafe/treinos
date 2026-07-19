@@ -1,0 +1,114 @@
+main {
+  width: min(680px, 100%);
+  padding-top: 8px;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  letter-spacing: -0.03em;
+  font-weight: 1000;
+}
+
+p.subtitle {
+  margin: 0;
+  color: #94a3b8;
+  font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+}
+
+.continuar {
+  display: block;
+  text-decoration: none;
+  color: #06110a;
+  background: #bef264;
+  border: 2px solid #ecfccb;
+  border-radius: 22px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 16px 42px rgba(190, 242, 100, 0.22);
+}
+
+.continuar:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.continuar-rotulo {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 850;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.continuar-nome {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 1000;
+  letter-spacing: -0.02em;
+}
+
+#graficoExercicios {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.treino {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(15, 23, 42, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.30);
+}
+
+.treino.hoje {
+  border-color: rgba(190, 242, 100, 0.6);
+}
+
+.treino:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.treino h2 {
+  margin: 0;
+  font-size: clamp(1.2rem, 5vw, 1.5rem);
+  font-weight: 1000;
+  letter-spacing: -0.02em;
+  color: #bef264;
+}
+
+.tag {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.tag.hoje {
+  background: rgba(190, 242, 100, 0.18);
+  border-color: rgba(190, 242, 100, 0.5);
+  color: #bef264;
+}
+
+.resumo {
+  color: #94a3b8;
+  font-size: 0.92rem;
+}
