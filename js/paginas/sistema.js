@@ -1,16 +1,24 @@
 import { TreinosStorage } from "../storage.js";
+import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { VideosTorrent } from "../videos-torrent.js";
 
-const dadosTreinos = TreinosStorage.lerJSON("dadosTreinos.v1", null);
+const dadosTreinos = TreinosStorage.lerJSON("dadosTreinos.v2", null);
 if (!dadosTreinos) {
   document.getElementById("avisoDados").hidden = false;
-} else {
-  // Gatilho de reforço do pré-carregamento (seção 8 de
-  // docs/torrent-videos-especificacao.md) — cobre o caso de já existir JSON
-  // salvo mas nem todo vídeo ter sido baixado ainda. Vídeos já no Cache API
-  // não geram nenhuma requisição de rede, então repetir isso aqui é barato.
-  VideosTorrent.prefetchTodosOsVideos(dadosTreinos);
 }
+
+// Gatilho de reforço do pré-carregamento (seção 8 de
+// docs/torrent-videos-especificacao.md) — cobre o caso de nem todo vídeo
+// ter sido baixado ainda. Roda incondicionalmente: a biblioteca vem por
+// fetch, não depende do plano de treino já ter sido importado. Vídeos já
+// no Cache API não geram nenhuma requisição de rede, então repetir isso
+// aqui é barato.
+carregarBiblioteca()
+  .then((bibliotecaExercicios) => VideosTorrent.prefetchTodosOsVideos(bibliotecaExercicios))
+  .catch(() => {
+    // Sem conexão na primeira visita, antes do service worker cachear o
+    // arquivo — o site continua funcionando, só sem o prefetch desta vez.
+  });
 
 const TEXTOS_CONFIRMACAO = {
   "reset-musculacao":

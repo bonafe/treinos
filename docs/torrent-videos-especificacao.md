@@ -2,9 +2,10 @@
 
 ## 1. Objetivo
 
-Hoje `exercicio.videoUrl` e `aquecimentoPadrao.videoUrl` (seções 3.4/3.5 de
-[treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md))
-apontam pra um link externo qualquer, aberto numa nova aba — depende de
+Hoje `bibliotecas.exercicios[exercicioId].midia.videoUrl` (biblioteca de
+exercícios, ver
+[especificacao-biblioteca-exercicios.md](./especificacao-biblioteca-exercicios.md))
+aponta pra um link externo qualquer, aberto numa nova aba — depende de
 alguém pagar hospedagem/banda (ou de uma plataforma de terceiros). Pra
 manter o princípio de plataforma gratuita e comunitária (ver
 [index.html](../index.html)), os vídeos passam a ser distribuídos por
@@ -22,14 +23,16 @@ Decisões já tomadas (não reabrir sem motivo forte):
   garantindo que sempre existe uma fonte disponível, principalmente
   enquanto a comunidade de seeders (alunos com o navegador aberto) ainda é
   pequena.
-- **Pré-carregar tudo assim que o JSON do plano de treino é carregado no
-  `localStorage`** — todos os vídeos de todos os treinos de uma vez, sem
-  precisar entrar em nenhum treino específico primeiro.
+- **Pré-carregar tudo assim que a biblioteca de exercícios é buscada** —
+  todos os vídeos de todos os exercícios de uma vez, sem precisar entrar
+  em nenhum treino específico primeiro. Diferente do plano de treino
+  (dado pessoal, carregado manualmente), a biblioteca é buscada
+  automaticamente a cada visita (ver seção 8).
 
 ## 2. Visão geral do fluxo
 
 ```
-dados_treinos.json (videoMagnet em vez de videoUrl)
+biblioteca-exercicios.json (midia.videoMagnet em vez de midia.videoUrl)
    → WebTorrent client (vendorizado, 1 instância por aba)
         → baixa peças via WebRTC dos peers do swarm (seed(s) fixo(s) + outros alunos)
              → grava o Blob completo no Cache API (cache "treinos-videos.v1")
@@ -70,7 +73,7 @@ seedando de volta ainda é pequena.
 
 - Prática: rodar um cliente WebTorrent em modo semente (`webtorrent seed
   <arquivo> --keep-seeding`, ou equivalente) nessas máquinas, uma vez por
-  vídeo, e usar o magnet gerado ali no `dados_treinos.json` (seção 9).
+  vídeo, e usar o magnet gerado ali em `biblioteca-exercicios.json` (seção 9).
 - Todo aluno que baixa um vídeo também vira seed automático enquanto
   estiver com a aba aberta (comportamento padrão do WebTorrent) — a
   comunidade cresce como fonte com o tempo, sem nenhuma ação manual.
@@ -118,49 +121,50 @@ tela mantém "Baixando vídeo… procurando outros aparelhos" indefinidamente
 até achar um peer — não existe link de vídeo alternativo (decisão da
 seção 1).
 
-## 8. Pré-carregamento: dataset inteiro, no carregamento do JSON
+## 8. Pré-carregamento: biblioteca inteira, a cada carregamento
 
-O gatilho não é entrar num treino específico — é o **JSON do plano de
-treino entrar no `localStorage`**. Nesse momento, todos os vídeos de
-**todos** os treinos já são disparados pra download de uma vez: cada
-entrada de `dados.exercicios[exercicioId].videoMagnet` (dicionário de
-referência, seção 3.5 de
-[treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md#35-exercicios) —
-por definição já é só o que é citado em algum treino) mais
-`dados.aquecimentoPadrao.videoMagnet`. Não é preciso abrir
-`treino_exercicios.html?treino=<id>` de nenhum treino em particular pra
-disparar o download dele.
+O gatilho não é entrar num treino específico — é a **biblioteca de
+exercícios ser buscada**. Nesse momento, todos os vídeos de **todos** os
+exercícios cadastrados já são disparados pra download de uma vez: cada
+entrada de `bibliotecas.exercicios[exercicioId].midia.videoMagnet` e de
+`bibliotecas.cardio.modalidades[modalidadeId].midia.videoMagnet` (se
+houver). Não é preciso abrir `treino_exercicios.html?treino=<id>` de
+nenhum treino em particular pra disparar o download dele — e, diferente
+do plano de treino, nem é preciso o aluno já ter importado nada: a
+biblioteca está sempre disponível.
 
-- **Gatilho principal**: `TreinosStorage.definirDadosTreinos(dados)` —
-  chamado por `importar_dados.html` ao salvar um JSON novo (seção 3.3 de
-  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md#33-treinosstoragedefinirdadostreinosdados)) —
-  dispara o download de todo o dicionário `exercicios` + o aquecimento
-  padrão.
-- **Gatilho de reforço**: `TreinosStorage.carregarDadosTreinos()` bem
-  sucedido em `sistema.html` (a tela por onde toda navegação do sistema
-  passa) também dispara a mesma checagem — cobre o
-  caso de já existir JSON salvo mas nem todo vídeo ter sido baixado ainda
-  (aba fechada no meio do download, backup restaurado num aparelho novo,
-  etc.). Como o download checa o Cache API antes de baixar (seção 6),
-  disparar de novo é barato: vídeo já presente é só um `cache.match`
-  (praticamente instantâneo), sem nenhuma requisição de rede.
+- **Gatilho principal**: `sistema.html` (a tela por onde toda navegação
+  do sistema passa) chama `carregarBiblioteca()` (`fetch`) e, com o
+  resultado, `VideosTorrent.prefetchTodosOsVideos(bibliotecaExercicios)`
+  — dispara o download de toda a biblioteca, incondicionalmente.
+- **Gatilho de reforço**: `importar_dados.html`, depois de salvar um
+  plano novo ou restaurar um backup, faz a mesma chamada. Como o
+  download checa o Cache API antes de baixar (seção 6), disparar de novo
+  é barato: vídeo já presente é só um `cache.match` (praticamente
+  instantâneo), sem nenhuma requisição de rede — cobre o caso de a
+  biblioteca ter mudado (novo exercício, vídeo novo) desde a última
+  visita.
 - Cada card de exercício (em `treino_exercicios.html`, quando o aluno
   chega lá) já mostra o estado real (seção 7) — `pronto` se o
   pré-carregamento global já tiver terminado aquele vídeo específico,
   `baixando X%` se ainda estiver em andamento, sem esperar o aluno entrar
   no treino pra começar.
 
-## 9. Mudança no schema: `videoUrl` → `videoMagnet`
+## 9. Schema: `videoMagnet` ao lado de `videoUrl`
 
-Em `dados/dados_treinos.json`:
-- `exercicios[exercicioId].videoUrl` → `exercicios[exercicioId].videoMagnet`
-- `aquecimentoPadrao.videoUrl` → `aquecimentoPadrao.videoMagnet`
+Em `biblioteca-exercicios.json`:
+- `bibliotecas.exercicios[exercicioId].midia.videoMagnet` (torrent) e
+  `.videoUrl` (link externo legado) coexistem — `videoMagnet` tem
+  prioridade quando ambos existem (seção 10).
+- `bibliotecas.cardio.modalidades[modalidadeId].midia.videoMagnet`/`.videoUrl`,
+  mesmo padrão (hoje sempre `null` nos dados reais).
 
-Valor: uma magnet URI (`magnet:?xt=urn:btih:...`) gerada ao seedar o
-arquivo pela primeira vez (seção 5). Ver
-[treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md#34-aquecimentopadrao)
-(seções 3.4 e 3.5) — atualizar esses trechos junto quando isso for
-implementado.
+Valor de `videoMagnet`: uma magnet URI (`magnet:?xt=urn:btih:...`) gerada
+ao seedar o arquivo pela primeira vez (seção 5). Protocolos de
+aquecimento (`treino.aquecimento.protocolos[]`, ver
+[treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md#341-aquecimentoprotocolos))
+só admitem `videoUrl` (link externo) — não entram no pré-carregamento em
+massa da seção 8, mesmo tratamento de qualquer `videoUrl` sem torrent.
 
 ## 10. Player
 
@@ -172,10 +176,12 @@ Enquanto `baixando`, o botão mostra o progresso em vez de "Ver vídeo →".
 Implementado em `js/video-player-modal.js`, função `ligarBotaoVideo(botaoEl,
 fonte, videoModal, deveAtualizar?)` — compartilhada por
 `treino_exercicios.html` (cards de exercício + aquecimento) e
-`treino_execucao.html` (tela de execução guiada). `fonte` é o objeto do
-exercício/aquecimento; `videoMagnet` tem prioridade (fluxo desta
-especificação). Se só houver `videoUrl` (campo legado — item ainda não
-migrado pra torrent, ver seção 9), o botão mantém o comportamento antigo:
+`treino_execucao.html` (tela de execução guiada). `fonte` é
+`bibliotecas.exercicios[id].midia` (ou `.cardio.modalidades[id].midia`,
+ou `{videoUrl}` solto no caso de protocolo de aquecimento); `videoMagnet`
+tem prioridade (fluxo desta especificação). Se só houver `videoUrl`
+(campo legado — item ainda não migrado pra torrent, ver seção 9), o
+botão mantém o comportamento antigo:
 `window.open(fonte.videoUrl, "_blank", "noopener")`, sem passar pelo
 WebTorrent. Isso não é o fallback rejeitado na seção 1 (que é sobre não
 fugir do torrent quando *aquele mesmo* vídeo não tem seeders) — é
@@ -190,8 +196,8 @@ exercícios pelo stepper enquanto um vídeo anterior ainda está baixando).
 - Múltiplas qualidades/transcodificação de vídeo.
 - Upload de vídeo novo pela interface — o `.torrent`/magnet de cada vídeo
   é gerado manualmente por quem mantém os vídeos, fora do site, e colado
-  no `dados_treinos.json` como qualquer outro campo (mesmo fluxo manual
-  já aceito hoje pro resto do JSON).
+  em `biblioteca-exercicios.json` como qualquer outro campo (mesmo fluxo
+  manual já aceito hoje pro resto do JSON).
 - Descoberta via DHT — o navegador não acessa DHT/UDP, só WebRTC via
   tracker (seção 4).
 - Persistir progresso de download entre reloads no meio de um download —

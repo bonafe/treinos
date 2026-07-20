@@ -24,9 +24,14 @@ h1 {
   color: #bef264;
 }
 
+.iniciar[hidden] {
+  display: none;
+}
+
 .iniciar {
   display: block;
   text-align: center;
+
   text-decoration: none;
   color: #06110a;
   background: #bef264;
@@ -269,6 +274,21 @@ h1 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px 14px;
+}
+
+.cardio-entrada {
+  margin-bottom: 18px;
+}
+
+.cardio-entrada:last-child {
+  margin-bottom: 0;
+}
+
+.cardio-entrada h3 {
+  margin: 0 0 8px;
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: #cbd5e1;
 }
 
 .campo strong {

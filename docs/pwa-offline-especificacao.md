@@ -70,11 +70,15 @@ const ARQUIVOS_PARA_CACHE = [
 ];
 ```
 
-Essa lista é o app shell inteiro: toda página `.html` da raiz do site +
-os dois `.js` compartilhados. **Não inclui** `dados/dados_treinos.json`
-(nem existiria pra cachear — o arquivo é pessoal, fica de fora do
-repositório, nunca é publicado) nem `serve.py` (roda no servidor, o
-navegador nunca busca esse arquivo).
+Essa lista é o app shell inteiro: toda página `.html` da raiz do site,
+os `.js`/`.css` compartilhados, e — diferente de antes —
+`biblioteca-exercicios.json`: não é dado pessoal (ver
+[especificacao-biblioteca-exercicios.md](./especificacao-biblioteca-exercicios.md)
+seção 2.1), é buscado por `fetch` a cada página, então precisa estar no
+app shell pra esse `fetch` funcionar offline depois da primeira visita.
+**Não inclui** o plano de treino (dado pessoal, nunca publicado, só
+existe no `localStorage` de quem importou) nem `serve.py` (roda no
+servidor, o navegador nunca busca esse arquivo).
 
 No evento `install`, cada arquivo da lista é cacheado **individualmente**
 (`cache.add(arquivo)`, um por um, dentro de um `Promise.allSettled`) em vez

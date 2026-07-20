@@ -30,7 +30,7 @@ export class TreinosStorage {
     historicoSessaoBicicleta: "historico.sessaoBicicleta.v1",
     historicoSerieMusculacao: "historico.serieMusculacao.v1",
     historicoSessaoMusculacao: "historico.sessaoMusculacao.v1",
-    execucaoMusculacao: (treinoId) => `execucao.musculacao.${treinoId}.v1`
+    execucaoMusculacao: (treinoId) => `execucao.musculacao.${treinoId}.v2`
   };
 
   static lerJSON(chave, padrao) {
@@ -53,12 +53,12 @@ export class TreinosStorage {
   }
 
   static definirDadosTreinos(dados) {
-    salvarJSON("dadosTreinos.v1", dados);
+    salvarJSON("dadosTreinos.v2", dados);
     salvarJSON("dadosTreinosCarregadoEm.v1", new Date().toISOString());
   }
 
   static async carregarDadosTreinos() {
-    const cache = lerJSON("dadosTreinos.v1", null);
+    const cache = lerJSON("dadosTreinos.v2", null);
     if (cache) return cache;
     throw new Error("Nenhum dado de treino carregado ainda.");
   }
@@ -84,7 +84,7 @@ export class TreinosStorage {
       tipo: "backup-treinos",
       versao: 1,
       exportadoEm: new Date().toISOString(),
-      dadosTreinos: lerJSON("dadosTreinos.v1", null),
+      dadosTreinos: lerJSON("dadosTreinos.v2", null),
       historicoSessaoBicicleta: lerJSON("historico.sessaoBicicleta.v1", []),
       historicoSerieMusculacao: lerJSON("historico.serieMusculacao.v1", []),
       historicoSessaoMusculacao: lerJSON("historico.sessaoMusculacao.v1", []),

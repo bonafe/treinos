@@ -5,12 +5,12 @@
 Hoje o treino de bicicleta (`treino_bicicleta_15_minutos_azul_vermelho.html`) tem os
 parâmetros (duração total, tempo em cada intensidade) fixos no código. Esta
 especificação define como transformar o treino em um "motor" genérico, que
-recebe os parâmetros de fora (arquivo JSON), e como criar um menu que lista os
+recebe os parâmetros de fora (JSON), e como criar um menu que lista os
 treinos disponíveis para o usuário escolher antes de começar.
 
-Os parâmetros de cada treino de bicicleta vêm do dicionário `cardios` em
-`dados/dados_treinos.json` — não existe (nem nunca mais existirá) um
-arquivo `.json` próprio por treino de bicicleta (ver seção 4).
+Os parâmetros de cada treino de bicicleta vêm de dois documentos JSON
+separados (ver seção 4): a modalidade genérica (`biblioteca-exercicios.json`)
+e a prescrição específica daquele treino (o plano de treino, dado pessoal).
 
 ## 2. Parâmetros configuráveis
 
@@ -23,6 +23,9 @@ Cada treino de bicicleta passa a ser descrito por 5 parâmetros:
 | Recuperação                | `tempoRecuperacaoSegundos`| inteiro (segundos)  | `30`    |
 | Intensidade do Estímulo    | `intensidadeEstimulo`     | `"leve"` \| `"maxima"` | `"maxima"` |
 | Intensidade Recuperação    | `intensidadeRecuperacao`  | `"leve"` \| `"maxima"` | `"leve"` |
+
+Essa é a forma "achatada" que o motor (`treino_bicicleta.js`) espera — ver
+seção 4.1 para como ela é extraída do JSON de origem.
 
 Um "ciclo" (série) é sempre `Recuperação` seguida de `Estímulo`. O treino
 repete esse ciclo `series` vezes. A duração total é:
@@ -59,118 +62,131 @@ botões, badges, etc. seguem o mesmo estilo visual das outras telas
 (fundo `rgba(15, 23, 42, 0.86)`, bordas `rgba(148, 163, 184, ...)`), só o
 glow e os elementos ligados à fase atual é que mudam de cor.
 
-## 4. Fonte dos treinos: `cardios` em `dados/dados_treinos.json`
+## 4. Fonte dos treinos: modalidade + prescrição em dois documentos
 
-Não existe um arquivo `.json` dedicado por treino de bicicleta. Cada treino
-de bicicleta é uma entrada do dicionário `cardios`, no mesmo
-`dados/dados_treinos.json` usado pelas páginas de exercícios (ver seção 3.6
-de
-[treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md)
-para o esquema completo).
+Não existe mais um dicionário `cardios` independente. Cardio é modelado em
+dois lugares (ver seção 11.4/14.3 de
+[especificacao-biblioteca-exercicios.md](./especificacao-biblioteca-exercicios.md)):
+
+- **Modalidade** (genérica, ex. "Bicicleta ergométrica"): cadastrada em
+  `bibliotecas.cardio.modalidades[modalidadeId]`, dentro de
+  `biblioteca-exercicios.json` — arquivo estático, versionado, buscado por
+  `fetch` (não é dado pessoal).
+- **Prescrição** (específica de um treino): uma entrada em
+  `treino.cardio[]`, dentro do plano de treino (dado pessoal,
+  `localStorage`) — `{ modalidadeId, momento, treino: {tipo, series,
+  estimulo, recuperacao}, observacao }`.
 
 ```json
-"cardios": {
-  "cardio-a": {
-    "nome": "Cardio A",
-    "exercicio": "Bicicleta",
+{
+  "modalidadeId": "bicicleta-ergometrica",
+  "momento": "apos-musculacao",
+  "treino": {
+    "tipo": "intervalado",
     "series": 15,
-    "tempoEstimulo": { "segundos": 30 },
-    "recuperacao": { "segundos": 30 },
-    "intensidadeEstimulo": "maxima",
-    "intensidadeRecuperacao": "leve"
+    "estimulo": { "duracaoSegundos": 30, "intensidade": { "modo": "percepcao-livre", "valor": "maxima" } },
+    "recuperacao": { "duracaoSegundos": 30, "intensidade": { "modo": "percepcao-livre", "valor": "leve" } }
   }
 }
 ```
 
 Isso quer dizer:
 
-- `cardios` é um dicionário de referência, no mesmo padrão de `exercicios`
-  (seção 3.5 de
-  [treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md)):
-  cada entrada tem `id` próprio (a chave, ex. `cardio-a`) e `nome` próprios,
-  **independentes** de qualquer treino de musculação.
-- Um treino de musculação pode referenciar um cardio via `treinoMusculacao.cardioId`
-  (seção 3.7.3 do mesmo documento) — mas essa referência é opcional e só
-  serve pra linkar "Fazer bicicleta →" a partir da tela do treino completo
-  (`treino_exercicios.html`). O menu de bicicleta (seção 5.1) **não**
-  depende dela: lê `cardios` direto.
-- `exercicio` (hoje sempre `"Bicicleta"`) é o campo usado pra filtrar quais
-  entradas de `cardios` aparecem no menu de bicicleta — deixa aberto pra um
-  dia ter outro tipo de cardio no mesmo dicionário sem aparecer aqui.
-- O JSON vem de `TreinosStorage.carregarDadosTreinos()`, que lê do
-  `localStorage` (sem `fetch` — ver
-  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)),
-  a mesma função usada pelas páginas de exercícios. Os dados só existem
-  ali depois que o aluno os carrega manualmente em
-  [importar_dados.html](../importar_dados.html).
+- Um treino de musculação pode ter **zero, uma ou mais** entradas de
+  `cardio[]` — cada uma com seus próprios parâmetros. Não existe mais uma
+  coleção de cardios independente do treino de origem: a prescrição só
+  existe presa a um `treino.id` específico.
+- Como a prescrição não tem identidade própria fora do treino, ela é
+  sempre endereçada pelo par `(treinoId, modalidadeId)` — nunca só por
+  `modalidadeId` sozinho (dois treinos podem prescrever a mesma modalidade
+  com séries/tempos diferentes, como de fato acontece: treino-a/b/c usam
+  todos `bicicleta-ergometrica`, cada um com parâmetros próprios).
+- O motor hoje só sabe tocar `treino.tipo === "intervalado"` com
+  `estimulo`/`recuperacao` definidos — outros tipos (ex. `continuo`) ficam
+  fora de escopo (seção 8).
+- O plano vem de `TreinosStorage.carregarDadosTreinos()` (`localStorage`,
+  sem `fetch` — carregado manualmente em
+  [importar_dados.html](../importar_dados.html)); a biblioteca vem de
+  `carregarBiblioteca()` (`fetch`, ver
+  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)).
+  Ambos os documentos são carregados antes de montar a config do motor.
 
-### 4.1 Conversão `cardios[cardioId]` → parâmetros do motor
+### 4.1 Conversão para os parâmetros do motor
 
-O esquema de uma entrada de `cardios` (aninhado, com `tempoEstimulo.segundos`
-e `recuperacao.segundos`) é diferente da forma "achatada" que o motor espera
-(seção 2). A conversão é feita por uma função `extrairConfigBicicleta`,
-duplicada em `treino_bicicleta.html` e `treino_bicicleta_menu.html`:
+A função `extrairConfig`, duplicada em `treino_bicicleta.html` e
+`treino_bicicleta_menu.html`, combina as duas fontes:
 
 ```js
-function extrairConfigBicicleta(cardioId, cardio) {
+function extrairConfig(treino, entrada, modalidade) {
+  const cfg = entrada.treino;
   return {
-    id: cardioId,
-    nome: cardio.nome,
-    series: cardio.series,
-    tempoEstimuloSegundos: cardio.tempoEstimulo.segundos,
-    tempoRecuperacaoSegundos: cardio.recuperacao.segundos,
-    intensidadeEstimulo: cardio.intensidadeEstimulo,
-    intensidadeRecuperacao: cardio.intensidadeRecuperacao
+    modalidadeId: entrada.modalidadeId,
+    treinoId: treino.id,
+    nome: `${treino.nome} — ${modalidade.nome}`,
+    series: cfg.series,
+    tempoEstimuloSegundos: cfg.estimulo.duracaoSegundos,
+    tempoRecuperacaoSegundos: cfg.recuperacao.duracaoSegundos,
+    intensidadeEstimulo: cfg.estimulo.intensidade.valor,
+    intensidadeRecuperacao: cfg.recuperacao.intensidade.valor
   };
 }
 ```
 
+`intensidade.valor` já vem como `"leve"`/`"maxima"` — os mesmos valores que
+`#estilosIntensidade` (seção 3) espera, então nenhum mapeamento adicional é
+necessário além de extrair o campo aninhado.
+
 ### 4.2 Treinos hoje cadastrados
 
-| `cardioId` | Nome | Séries | Tempo de Estímulo | Recuperação | Intensidade Estímulo | Intensidade Recuperação |
+| Treino | Modalidade | Séries | Tempo de Estímulo | Recuperação | Intensidade Estímulo | Intensidade Recuperação |
 |---|---|---|---|---|---|---|
-| `cardio-a` | Cardio A | 15 | 30s | 30s | Máxima | Leve |
-| `cardio-b` | Cardio B | 3 | 3min (180s) | 2min (120s) | Máxima | Leve |
-| `cardio-c` | Cardio C | 3 | 4min (240s) | 60s | Máxima | Leve |
+| Treino A | Bicicleta ergométrica | 15 | 30s | 30s | Máxima | Leve |
+| Treino B | Bicicleta ergométrica | 3 | 3min (180s) | 2min (120s) | Máxima | Leve |
+| Treino C | Bicicleta ergométrica | 3 | 4min (240s) | 60s | Máxima | Leve |
 
-Hoje `cardio-a`/`cardio-b`/`cardio-c` são referenciados por
-`treino-a`/`treino-b`/`treino-c` (via `cardioId`), mas isso é incidental —
-adicionar um treino de bicicleta novo = adicionar uma entrada em `cardios`
-em `dados/dados_treinos.json`, com ou sem algum treino de musculação
-apontando pra ela. Nenhum código HTML/JS precisa mudar — o menu (seção 5.1)
-lê a lista direto do JSON.
+Adicionar um treino de bicicleta novo = adicionar uma entrada em
+`treino.cardio[]` no plano, referenciando uma `modalidadeId` já cadastrada
+em `biblioteca-exercicios.json` (ou cadastrando uma modalidade nova ali,
+se for um tipo de aparelho diferente). Nenhum código HTML/JS precisa
+mudar — o menu (seção 5.1) lê a lista direto dos dois documentos.
 
 ## 5. Telas / fluxo
 
 ```
 sistema.html
-   └─> treino_bicicleta_menu.html   (lista dados.cardios com exercicio === "Bicicleta")
-          └─> treino_bicicleta.html?cardio=cardio-a   (motor genérico)
+   └─> treino_bicicleta_menu.html   (lista treino × cardio[] cujas modalidades são de bicicleta)
+          └─> treino_bicicleta.html?treino=<treinoId>&modalidade=<modalidadeId>   (motor genérico)
 ```
 
 Esse fluxo é independente do fluxo de exercícios
 (`treino_exercicios_menu.html` → `treino_exercicios.html` →
 `treino_execucao.html`) — dá para entrar direto no cronômetro de bicicleta
 sem passar pelo treino de musculação. O card "Cardio complementar" de
-`treino_exercicios.html` também linka pra cá, mas com um parâmetro extra:
-`treino_bicicleta.html?cardio=<cardioId>&treino=<treinoId>` — o `treino`
-identifica de qual treino de musculação veio, pra saber pra onde voltar
-(seção 5.2).
+`treino_exercicios.html` também linka pra cá, com os mesmos dois
+parâmetros. `treino=` é **obrigatório** em ambos os casos (diferente do
+modelo anterior) — sem ele não há como saber qual prescrição usar.
 
 ### 5.1 Menu (`treino_bicicleta_menu.html`)
 
 A primeira coisa exibida na tela, antes da lista de treinos, é o gráfico de
 histórico (seção 5.1.1). A lista de treinos disponíveis vem depois.
 
-- Busca `dados/dados_treinos.json` via `TreinosStorage.carregarDadosTreinos()`.
-- Filtra as entradas de `dados.cardios` com `exercicio === "Bicicleta"`,
-  converte cada uma com `extrairConfigBicicleta` (seção 4.1) e mostra um
-  cartão com: Nome, Séries, Tempo de Estímulo, Recuperação, Intensidade do
-  Estímulo, Intensidade de Recuperação.
-- Cada cartão é um link para `treino_bicicleta.html?cardio=<cardioId>`.
-- Se não houver nenhuma entrada de bicicleta em `cardios`, mostra uma
-  mensagem ("Nenhum treino de bicicleta cadastrado ainda") em vez de lista
-  vazia.
+- Carrega o plano (`TreinosStorage.carregarDadosTreinos()`) e a biblioteca
+  (`carregarBiblioteca()`, fetch).
+- Itera `dados.treinos` × `treino.cardio[]`: para cada par, resolve a
+  modalidade em `bibliotecas.cardio.modalidades[modalidadeId]` e filtra
+  pelas que parecem ser de bicicleta (nome/aliases contendo "bicicleta" —
+  heurística equivalente ao antigo filtro por texto livre
+  `cardio.exercicio === "Bicicleta"`, já que o modelo novo não tem um
+  campo dedicado pra "categoria de cardio").
+- Mostra um cartão por par `(treino, entrada de cardio)`, combinando
+  `extrairConfig` (seção 4.1): título `"<nome do treino> — <nome da
+  modalidade>"`, Tipo, Séries, Tempo de Estímulo, Recuperação, Intensidade
+  do Estímulo, Intensidade de Recuperação.
+- Cada cartão é um link para
+  `treino_bicicleta.html?treino=<treinoId>&modalidade=<modalidadeId>`.
+- Se não houver nenhum par correspondente, mostra uma mensagem ("Nenhum
+  treino de bicicleta cadastrado ainda") em vez de lista vazia.
 
 #### 5.1.1 Gráfico de histórico (tempo de bicicleta)
 
@@ -183,12 +199,12 @@ soma de `duracaoSegundos` (seção 6.1) das sessões daquele dia/mês, em
 minutos.
 
 - **Fonte dos dados**: `historico.sessaoBicicleta.v1` (seção 6.1), lido
-  direto com `TreinosStorage.lerJSON(...)` — independe de
-  `dados/dados_treinos.json` estar carregado (histórico e dados de treino
-  são chaves separadas no `localStorage`, ver seção 1 de
+  direto com `TreinosStorage.lerJSON(...)` — independe do plano de treino
+  ou da biblioteca estarem carregados (histórico e dados de treino são
+  chaves separadas no `localStorage`, ver seção 1 de
   [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)).
-  Por isso o gráfico é montado mesmo que a busca de `dados.cardios` (pra
-  lista de treinos) falhe.
+  Por isso o gráfico é montado mesmo que o carregamento do plano/biblioteca
+  (pra lista de treinos) falhe.
 - **Três períodos**, escolhidos por botões acima do gráfico:
   - **7 dias** (padrão ao abrir a tela) — uma barra por dia, últimos 7 dias
     corridos incluindo hoje.
@@ -223,33 +239,29 @@ minutos.
 ### 5.2 Motor genérico (`treino_bicicleta.html`)
 
 - Antigo `treino_bicicleta_15_minutos_azul_vermelho.html`, renomeado.
-- Lê o parâmetro de query `?cardio=<cardioId>`.
-- Busca `dados/dados_treinos.json`, localiza `dados.cardios[cardioId]` e
-  converte com `extrairConfigBicicleta` (seção 4.1) para calcular fases,
-  tempos e o mapeamento de intensidade descrito na seção 3.
-- Se não houver `cardio` na URL, o `cardioId` não existir em `dados.cardios`,
-  ou o carregamento falhar, mostra uma mensagem de erro.
+- Lê os parâmetros de query `?treino=<treinoId>&modalidade=<modalidadeId>`
+  (ambos obrigatórios).
+- Carrega o plano e a biblioteca, localiza
+  `treino.cardio.find(c => c.modalidadeId === modalidadeId)` dentro do
+  treino `treinoId` e a modalidade correspondente em
+  `bibliotecas.cardio.modalidades[modalidadeId]`; converte com
+  `extrairConfig` (seção 4.1) para calcular fases, tempos e o mapeamento
+  de intensidade descrito na seção 3.
+- Se faltar `treino=`/`modalidade=` na URL, o treino/entrada/modalidade
+  não existir, o tipo não for `intervalado`, ou o carregamento falhar,
+  mostra uma mensagem de erro.
 
-#### 5.2.1 Botão de voltar (destino dinâmico)
+#### 5.2.1 Botão de voltar
 
 O ícone `←` no topo da tela (mesmo padrão visual de
-`treino_exercicios.html`/`treino_execucao.html`) tem destino diferente
-dependendo de por onde o aluno entrou, lido do parâmetro `?treino=<treinoId>`
-(seção 5, só presente quando o link veio do card "Cardio complementar" de
-`treino_exercicios.html`):
-
-- **Com `?treino=<treinoId>` na URL** (entrou pelo treino de musculação):
-  volta para `treino_exercicios.html?treino=<treinoId>` — o treino de
-  musculação do qual esse cardio é complementar.
-  Mesma ideia do `voltarLink` dinâmico já usado em
-  `treino_exercicio_progresso.html` (seção 9 de
-  [treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md)).
-- **Sem `?treino=`** (entrou direto pelo menu de bicicleta): volta para
-  `treino_bicicleta_menu.html`, o padrão.
-- Esse destino é calculado assim que a página lê os parâmetros da URL,
-  antes mesmo de tentar carregar `dados.cardios[cardioId]` — funciona
-  mesmo nos estados de carregando/erro (seção 5.2), já que independe de o
-  treino carregar com sucesso.
+`treino_exercicios.html`/`treino_execucao.html`) sempre volta para
+`treino_exercicios.html?treino=<treinoId>` — o treino de musculação do
+qual esse cardio é complementar, já que `treino=` é obrigatório e
+identifica isso diretamente (diferente do modelo anterior, não há mais um
+caso "entrou direto pelo menu de bicicleta" com botão de voltar
+diferente). Esse destino é calculado assim que a página lê os parâmetros
+da URL, antes mesmo de tentar carregar os dados — funciona mesmo nos
+estados de carregando/erro.
 
 ## 6. Histórico local (localStorage)
 
@@ -269,14 +281,18 @@ adicionado um resumo do treino inteiro:
 
 ```json
 {
-  "cardioId": "cardio-a",
-  "cardioNome": "Cardio A",
+  "modalidadeId": "bicicleta-ergometrica",
+  "treinoId": "treino-a",
+  "nome": "Treino A — Bicicleta ergométrica",
   "dataHora": "2026-07-15T18:47:10.482Z",
   "duracaoSegundos": 900,
   "series": 15
 }
 ```
 
+`treinoId` identifica de qual treino de musculação essa sessão de cardio
+veio — novo em relação ao modelo anterior, possível agora que toda
+prescrição de cardio já nasce presa a um `treinoId` (seção 4).
 `duracaoSegundos` é a duração planejada do treino
 (`series * (tempoEstimuloSegundos + tempoRecuperacaoSegundos)`), não o
 tempo de relógio real — pausas feitas com o botão "PAUSAR" não entram na
@@ -288,12 +304,14 @@ isso é uma limitação aceita por ora (ver seção 7 de
 
 ## 7. Observação sobre hospedagem
 
-Como o motor não usa mais `fetch()` para os dados do treino (seção 4 —
-tudo vem do `localStorage`, carregado manualmente em
-[importar_dados.html](../importar_dados.html)), o site não depende mais
-de ser servido por HTTP por causa de CORS. Ainda é conveniente usar um
-servidor local (`serve.py`) durante o desenvolvimento, mas por outros
-motivos de praticidade, não por uma limitação técnica do `fetch`.
+O motor faz `fetch()` da biblioteca de exercícios (`biblioteca-exercicios.json`,
+seção 4) — diferente do plano de treino, que continua vindo só do
+`localStorage`, carregado manualmente em
+[importar_dados.html](../importar_dados.html). Por isso o site precisa ser
+servido por HTTP (não `file://`) pra essa página funcionar, mesmo que só
+localmente — o service worker (`sw.js`) cacheia
+`biblioteca-exercicios.json` como parte do app shell depois da primeira
+visita, então o `fetch` continua funcionando offline em seguida.
 
 Para testar localmente, use o script `serve.py` (stdlib, sem dependências):
 
@@ -306,7 +324,9 @@ python3 serve.py 8934   # porta customizada
 
 - Intensidades além de `leve`/`maxima` (ex.: "moderada") — não usadas em
   nenhum dos 3 treinos definidos, não implementadas agora.
-- Edição dos treinos pela interface (`dados/dados_treinos.json` continua
-  editado manualmente).
+- Tipos de treino cardiovascular além de `intervalado` (ex. `continuo`,
+  ver seção 4) — o motor rejeita com mensagem de erro.
+- Edição dos treinos pela interface (o plano de treino continua editado
+  manualmente; a biblioteca é versionada no repositório).
 - Salvar progresso de um treino pausado/abandonado antes da última série
   (ver seção 6).

@@ -1,66 +1,128 @@
 import { TreinosStorage } from "../storage.js";
+import { carregarBiblioteca } from "../biblioteca-exercicios.js";
+import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { Formatadores } from "../formatadores.js";
 import { LABEL_TIPO } from "../constantes.js";
 import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
 
-const LABEL_AGRUPAMENTO = {
-  superset: "Superset — fazer em sequência",
-  sequencial: "Sequencial",
-  circuito: "Circuito — uma série de cada por volta"
+const MOMENTO_LABEL = {
+  "final-da-serie": "ao final da série",
+  "inicio-da-serie": "no início da série"
 };
+
+function humanizarEnum(valor) {
+  return valor.replace(/-/g, " ");
+}
+
+function capitalizar(texto) {
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+function formatarPosicaoIsometria(posicao) {
+  const combinacao = /^(\d+)-por-cento-da-amplitude$/.exec(posicao);
+  return combinacao ? `${combinacao[1]}% da amplitude` : humanizarEnum(posicao);
+}
 
 class TreinoExerciciosController {
   #videoModal = criarVideoPlayerModal();
 
-  #gruposMusculares(grupoMuscular) {
-    return [grupoMuscular.principal, grupoMuscular.sinergista1, grupoMuscular.sinergista2].filter(Boolean);
-  }
+  #montarGuia(orientacoesGerais) {
+    if (!orientacoesGerais) return "";
 
-  #montarGuia(guia) {
+    const cadencia = orientacoesGerais.cadenciaPadrao;
+    const descanso = orientacoesGerais.descansoPadrao;
+    const isometria = orientacoesGerais.isometria;
+
     const itens = [
-      { titulo: "Ajuste de carga", texto: guia.ajusteCarga },
-      { titulo: "Cadência", texto: guia.cadencia },
-      { titulo: "Pausa entre séries", texto: `${guia.pausaSegundos.min} a ${guia.pausaSegundos.max} segundos.` },
-      { titulo: "Cor cinza", texto: guia.corCinza },
-      { titulo: "Superset", texto: guia.superSet },
-      { titulo: "Isometria", texto: guia.isometria },
-      { titulo: "Circuito", texto: guia.circuito }
+      { titulo: "Ajuste de carga", texto: orientacoesGerais.ajusteCarga && orientacoesGerais.ajusteCarga.regra },
+      { titulo: "Cadência", texto: cadencia && `Concêntrica ${cadencia.concentrica}, excêntrica ${cadencia.excentrica}.` },
+      {
+        titulo: "Pausa entre séries",
+        texto: descanso && `${descanso.minSegundos} a ${descanso.maxSegundos} segundos.`
+      },
+      { titulo: "Superset", texto: orientacoesGerais.superset && orientacoesGerais.superset.regra },
+      {
+        titulo: "Isometria",
+        texto: isometria &&
+          `Segurar ${isometria.duracaoSegundos}s a ${formatarPosicaoIsometria(isometria.posicao)}, ` +
+          `${MOMENTO_LABEL[isometria.momento] || humanizarEnum(isometria.momento)}` +
+          (isometria.aplicacao && isometria.aplicacao.ultimasSeries
+            ? `, nas últimas ${isometria.aplicacao.ultimasSeries} séries.`
+            : ".")
+      },
+      { titulo: "Circuito", texto: orientacoesGerais.circuito && orientacoesGerais.circuito.regra }
     ];
 
-    return itens.map((i) => `<li><strong>${i.titulo}:</strong> ${i.texto}</li>`).join("");
+    return itens
+      .filter((item) => item.texto)
+      .map((item) => `<li><strong>${item.titulo}:</strong> ${item.texto}</li>`)
+      .join("");
   }
 
-  #montarAquecimento(treino, aquecimentoPadrao) {
+  #montarAquecimento(treino) {
     const secaoEl = document.getElementById("aquecimento");
-    if (!treino.aquecimento) return;
+    const protocolos = treino.aquecimento && treino.aquecimento.protocolos;
+    if (!protocolos || !protocolos.length) return;
 
     secaoEl.hidden = false;
-    const textoEl = document.getElementById("aquecimentoTexto");
-    const videoEl = document.getElementById("aquecimentoVideo");
-    const partes = [];
+    const containerEl = document.getElementById("aquecimentoProtocolos");
+    containerEl.innerHTML = "";
 
-    if (treino.aquecimento.usaPadrao) {
-      partes.push(aquecimentoPadrao.texto);
-      ligarBotaoVideo(videoEl, aquecimentoPadrao, this.#videoModal);
-    } else {
-      videoEl.hidden = true;
-    }
+    protocolos.forEach((protocolo) => {
+      const partes = [];
+      if (protocolo.series) partes.push(`${protocolo.series} série${protocolo.series === 1 ? "" : "s"}`);
+      if (protocolo.dosagem) {
+        partes.push(`de ${protocolo.dosagem.valor} ${humanizarEnum(protocolo.dosagem.unidade)}`);
+      } else if (protocolo.metrica) {
+        partes.push(`de ${PrescricaoFormatadores.metrica(protocolo.metrica)}`);
+      }
+      if (protocolo.alvo) partes.push(`— ${humanizarEnum(protocolo.alvo)}`);
 
-    if (treino.aquecimento.extra) partes.push(treino.aquecimento.extra);
+      const textoEl = document.createElement("p");
+      textoEl.innerHTML =
+        `<strong>${capitalizar(humanizarEnum(protocolo.tipo))}:</strong> ${partes.join(" ")}.` +
+        (protocolo.observacao ? ` ${protocolo.observacao}` : "");
+      containerEl.appendChild(textoEl);
 
-    textoEl.textContent = partes.join(" ");
+      if (protocolo.videoUrl) {
+        const botaoEl = document.createElement("button");
+        botaoEl.type = "button";
+        botaoEl.className = "ver-video";
+        botaoEl.hidden = true;
+        containerEl.appendChild(botaoEl);
+        ligarBotaoVideo(botaoEl, { videoUrl: protocolo.videoUrl }, this.#videoModal);
+      }
+    });
   }
 
-  #itemCard(item, exercicios, treinoId, slotIndex, opcaoIndex) {
-    const exercicio = exercicios[item.exercicioId];
-    const classes = ["item"];
-    if (item.tecnica === "isometria") classes.push("isometria");
-    if (item.substituto) classes.push("substituto");
+  #notaIsometria(tecnicas) {
+    const tecnica = tecnicas.find((t) => t.tipo === "isometria");
+    if (!tecnica) return "";
 
-    const grupos = this.#gruposMusculares(item.grupoMuscular);
-    const nome = exercicio ? exercicio.nome : item.exercicioId;
-    const execucaoUrl = `treino_execucao.html?treino=${encodeURIComponent(treinoId)}&exercicio=${slotIndex}&opcao=${opcaoIndex}`;
-    const progressoUrl = `treino_exercicio_progresso.html?exercicio=${encodeURIComponent(item.exercicioId)}&treino=${encodeURIComponent(treinoId)}`;
+    const partes = [`Isometria de ${tecnica.duracaoSegundos}s`];
+    if (tecnica.posicao) partes.push(`a ${formatarPosicaoIsometria(tecnica.posicao)}`);
+    if (tecnica.momento) partes.push(MOMENTO_LABEL[tecnica.momento] || humanizarEnum(tecnica.momento));
+    if (tecnica.aplicacao && tecnica.aplicacao.ultimasSeries) {
+      partes.push(`nas últimas ${tecnica.aplicacao.ultimasSeries} séries`);
+    }
+    return `${partes.join(", ")}.`;
+  }
+
+  #itemCard({ exercicioId, prescricao, ehAlternativa, slotExercicioId, bibliotecaExercicios, treinoId }) {
+    const exercicio = bibliotecaExercicios.bibliotecas.exercicios[exercicioId];
+    const isometria = PrescricaoFormatadores.ehIsometria(prescricao.tecnicas);
+    const classes = ["item"];
+    if (isometria) classes.push("isometria");
+    if (ehAlternativa) classes.push("substituto");
+
+    const grupos = exercicio
+      ? PrescricaoFormatadores.gruposMusculares(exercicio.gruposMusculares, bibliotecaExercicios.gruposMusculares)
+      : [];
+    const nome = exercicio ? exercicio.nome : exercicioId;
+    const execucaoUrl =
+      `treino_execucao.html?treino=${encodeURIComponent(treinoId)}` +
+      `&exercicio=${encodeURIComponent(slotExercicioId)}&opcao=${encodeURIComponent(exercicioId)}`;
+    const progressoUrl = `treino_exercicio_progresso.html?exercicio=${encodeURIComponent(exercicioId)}&treino=${encodeURIComponent(treinoId)}`;
 
     const div = document.createElement("div");
     div.className = classes.join(" ");
@@ -69,14 +131,14 @@ class TreinoExerciciosController {
     div.innerHTML = `
       <div class="item-cabecalho">
         <span class="item-nome">${nome}</span>
-        ${item.substituto ? '<span class="item-substituto-label">Substituto</span>' : ""}
+        ${ehAlternativa ? '<span class="item-substituto-label">Substituto</span>' : ""}
       </div>
       ${grupos.length ? `<div class="item-grupos">${grupos.map((g) => `<span>${g}</span>`).join("")}</div>` : ""}
       <div class="item-detalhes">
-        <span><strong>${item.series}</strong> séries</span>
-        <span>${this.#formatarRepeticoes(item.repeticoes)}</span>
+        <span><strong>${prescricao.series}</strong> séries</span>
+        <span>${PrescricaoFormatadores.metrica(prescricao.metrica)}</span>
       </div>
-      ${item.tecnica === "isometria" ? '<div class="item-isometria-nota">Isometria de 20s a 50% da amplitude, nas duas últimas séries.</div>' : ""}
+      ${isometria ? `<div class="item-isometria-nota">${this.#notaIsometria(prescricao.tecnicas)}</div>` : ""}
       <div class="item-acoes">
         <button type="button" class="ver-video" hidden></button>
         <a class="ver-progresso" href="${progressoUrl}">Ver progresso →</a>
@@ -93,7 +155,7 @@ class TreinoExerciciosController {
       }
     });
 
-    ligarBotaoVideo(div.querySelector(".ver-video"), exercicio, this.#videoModal);
+    ligarBotaoVideo(div.querySelector(".ver-video"), exercicio && exercicio.midia, this.#videoModal);
 
     div.querySelector(".ver-progresso").addEventListener("click", (evento) => {
       evento.stopPropagation();
@@ -102,63 +164,138 @@ class TreinoExerciciosController {
     return div;
   }
 
-  #formatarRepeticoes(repeticoes) {
-    if (repeticoes.modo === "faixa") return `${repeticoes.min} a ${repeticoes.max} repetições`;
-    if (repeticoes.modo === "tempo") return `${repeticoes.segundos} segundos`;
-    return "Máximo de repetições";
+  // Os exercícios ficam em lista plana; supersets/circuitos são só
+  // marcadores numéricos (`superset`/`circuito`) em cada item — itens
+  // consecutivos com o mesmo marcador viram um grupo visual, mesma
+  // aparência de "bloco" de antes, só que calculado aqui em vez de vir
+  // pronto no JSON.
+  #agruparPorMarcador(exercicios) {
+    const ordenados = [...exercicios].sort((a, b) => a.ordem - b.ordem);
+    const grupos = [];
+
+    ordenados.forEach((item) => {
+      const marcador =
+        item.superset != null
+          ? { tipo: "superset", numero: item.superset }
+          : item.circuito != null
+            ? { tipo: "circuito", numero: item.circuito }
+            : null;
+
+      const anterior = grupos[grupos.length - 1];
+      const mesmoGrupo =
+        anterior &&
+        ((marcador === null && anterior.marcador === null) ||
+          (marcador &&
+            anterior.marcador &&
+            anterior.marcador.tipo === marcador.tipo &&
+            anterior.marcador.numero === marcador.numero));
+
+      if (mesmoGrupo) {
+        anterior.itens.push(item);
+      } else {
+        grupos.push({ marcador, itens: [item] });
+      }
+    });
+
+    return grupos.map((grupo) => ({
+      rotulo: grupo.marcador
+        ? grupo.marcador.tipo === "superset"
+          ? `Superset ${grupo.marcador.numero} — fazer em sequência`
+          : `Circuito ${grupo.marcador.numero} — uma série de cada por volta`
+        : null,
+      itens: grupo.itens
+    }));
   }
 
-  #montarBlocos(treino, exercicios) {
+  #montarExercicios(treino, bibliotecaExercicios) {
     const blocosEl = document.getElementById("blocos");
     const vazioEl = document.getElementById("vazio");
 
-    if (!treino.blocos.length) {
+    if (!treino.exercicios.length) {
       vazioEl.hidden = false;
       return;
     }
 
-    let slotIndex = -1;
-    let opcaoIndex = 0;
-
-    treino.blocos.forEach((bloco) => {
+    this.#agruparPorMarcador(treino.exercicios).forEach((grupo) => {
       const blocoEl = document.createElement("div");
       blocoEl.className = "bloco";
-
-      const rotulo = bloco.grupo ? `Bloco ${bloco.grupo} · ` : "";
-      const agrupamento = LABEL_AGRUPAMENTO[bloco.tipoAgrupamento] || bloco.tipoAgrupamento;
+      if (grupo.rotulo) {
+        blocoEl.innerHTML = `<h3 class="bloco-titulo">${grupo.rotulo}</h3>`;
+      }
 
       const itensEl = document.createElement("div");
       itensEl.className = "itens";
-      bloco.itens.forEach((item) => {
-        if (item.substituto && slotIndex >= 0) {
-          opcaoIndex += 1;
-        } else {
-          slotIndex += 1;
-          opcaoIndex = 0;
-        }
-        itensEl.appendChild(this.#itemCard(item, exercicios, treino.id, slotIndex, opcaoIndex));
+      grupo.itens.forEach((item) => {
+        itensEl.appendChild(
+          this.#itemCard({
+            exercicioId: item.exercicioId,
+            prescricao: item.prescricao,
+            ehAlternativa: false,
+            slotExercicioId: item.exercicioId,
+            bibliotecaExercicios,
+            treinoId: treino.id
+          })
+        );
+
+        (item.alternativas || []).forEach((alt) => {
+          itensEl.appendChild(
+            this.#itemCard({
+              exercicioId: alt.exercicioId,
+              prescricao: alt.prescricao || item.prescricao,
+              ehAlternativa: true,
+              slotExercicioId: item.exercicioId,
+              bibliotecaExercicios,
+              treinoId: treino.id
+            })
+          );
+        });
       });
 
-      blocoEl.innerHTML = `<h3 class="bloco-titulo">${rotulo}${agrupamento}</h3>`;
       blocoEl.appendChild(itensEl);
       blocosEl.appendChild(blocoEl);
     });
   }
 
-  #montarCardio(cardio, cardioId, treinoId) {
-    if (!cardio) return;
+  #montarCardio(cardioEntradas, bibliotecaExercicios, treinoId) {
+    if (!cardioEntradas || !cardioEntradas.length) return;
 
     document.getElementById("cardio").hidden = false;
-    document.getElementById("cardioCampos").innerHTML = `
-      <div class="campo"><strong>Exercício</strong><span>${cardio.exercicio}</span></div>
-      <div class="campo"><strong>Séries</strong><span>${cardio.series}</span></div>
-      <div class="campo"><strong>Tempo de estímulo</strong><span>${Formatadores.tempoCurto(cardio.tempoEstimulo.segundos)}</span></div>
-      <div class="campo"><strong>Recuperação</strong><span>${Formatadores.tempoCurto(cardio.recuperacao.segundos)}</span></div>
-      <div class="campo"><strong>Intensidade do estímulo</strong><span>${Formatadores.labelIntensidade(cardio.intensidadeEstimulo)}</span></div>
-      <div class="campo"><strong>Intensidade da recuperação</strong><span>${Formatadores.labelIntensidade(cardio.intensidadeRecuperacao)}</span></div>
-    `;
-    document.getElementById("cardioLink").href =
-      `treino_bicicleta.html?cardio=${encodeURIComponent(cardioId)}&treino=${encodeURIComponent(treinoId)}`;
+    const listaEl = document.getElementById("cardioLista");
+    listaEl.innerHTML = "";
+
+    cardioEntradas.forEach((entrada) => {
+      const modalidade = bibliotecaExercicios.bibliotecas.cardio.modalidades[entrada.modalidadeId];
+      const nomeModalidade = modalidade ? modalidade.nome : entrada.modalidadeId;
+      const cfg = entrada.treino;
+
+      const campos = [
+        { titulo: "Tipo", valor: cfg.tipo === "intervalado" ? "Intervalado" : "Contínuo" },
+        cfg.series != null && { titulo: "Séries", valor: cfg.series },
+        cfg.estimulo && { titulo: "Tempo de estímulo", valor: Formatadores.tempoCurto(cfg.estimulo.duracaoSegundos) },
+        cfg.estimulo &&
+          cfg.estimulo.intensidade && {
+            titulo: "Intensidade do estímulo",
+            valor: Formatadores.labelIntensidade(cfg.estimulo.intensidade.valor)
+          },
+        cfg.recuperacao && { titulo: "Recuperação", valor: Formatadores.tempoCurto(cfg.recuperacao.duracaoSegundos) },
+        cfg.recuperacao &&
+          cfg.recuperacao.intensidade && {
+            titulo: "Intensidade da recuperação",
+            valor: Formatadores.labelIntensidade(cfg.recuperacao.intensidade.valor)
+          }
+      ].filter(Boolean);
+
+      const divEl = document.createElement("div");
+      divEl.className = "cardio-entrada";
+      divEl.innerHTML = `
+        <h3>${nomeModalidade}</h3>
+        <div class="campos">
+          ${campos.map((c) => `<div class="campo"><strong>${c.titulo}</strong><span>${c.valor}</span></div>`).join("")}
+        </div>
+        <a class="iniciar" href="treino_bicicleta.html?treino=${encodeURIComponent(treinoId)}&modalidade=${encodeURIComponent(entrada.modalidadeId)}" style="margin-top: 14px;">Fazer bicicleta →</a>
+      `;
+      listaEl.appendChild(divEl);
+    });
   }
 
   #mostrarErro(mensagem) {
@@ -169,7 +306,7 @@ class TreinoExerciciosController {
     document.getElementById("titulo").textContent = "Treino de Exercícios";
   }
 
-  #iniciarComDados(dados, treinoId) {
+  #iniciarComDados(dados, bibliotecaExercicios, treinoId) {
     const treino = dados.treinos.find((t) => t.id === treinoId);
     if (!treino) {
       this.#mostrarErro("Este treino não foi encontrado.");
@@ -185,21 +322,23 @@ class TreinoExerciciosController {
     tipoTagEl.hidden = false;
     tipoTagEl.textContent = LABEL_TIPO[treino.tipo] || treino.tipo;
 
-    const guiaEl = document.getElementById("guiaDetails");
-    guiaEl.hidden = false;
-    document.getElementById("guiaLista").innerHTML = this.#montarGuia(dados.guia);
+    const guiaHtml = this.#montarGuia(dados.orientacoesGerais);
+    if (guiaHtml) {
+      document.getElementById("guiaDetails").hidden = false;
+      document.getElementById("guiaLista").innerHTML = guiaHtml;
+    }
 
-    this.#montarAquecimento(treino, dados.aquecimentoPadrao);
-    this.#montarBlocos(treino, dados.exercicios);
-    this.#montarCardio(dados.cardios[treino.cardioId], treino.cardioId, treino.id);
+    this.#montarAquecimento(treino);
+    this.#montarExercicios(treino, bibliotecaExercicios);
+    this.#montarCardio(treino.cardio, bibliotecaExercicios, treino.id);
 
-    if (treino.blocos.some((bloco) => bloco.itens.length)) {
+    if (treino.exercicios.length) {
       const iniciarEl = document.getElementById("iniciarTreino");
       iniciarEl.hidden = false;
       iniciarEl.href = `treino_execucao.html?treino=${encodeURIComponent(treino.id)}`;
 
       const progressoSalvo = TreinosStorage.lerJSON(TreinosStorage.chaves.execucaoMusculacao(treino.id), null);
-      const emAndamento = progressoSalvo && progressoSalvo.slotIndex >= 0 && progressoSalvo.serieAtual >= 1;
+      const emAndamento = progressoSalvo && progressoSalvo.exercicioId && progressoSalvo.serieAtual >= 1;
       iniciarEl.textContent = emAndamento ? "Continuar treino →" : "Iniciar treino →";
     }
   }
@@ -213,12 +352,25 @@ class TreinoExerciciosController {
       return;
     }
 
+    let dados;
     try {
-      const dados = await TreinosStorage.carregarDadosTreinos();
-      this.#iniciarComDados(dados, treinoId);
+      dados = await TreinosStorage.carregarDadosTreinos();
     } catch (erro) {
-      this.#mostrarErro('Nenhum dado de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo dados_treinos.json</a> pra começar.');
+      this.#mostrarErro(
+        'Nenhum plano de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo do seu plano</a> pra começar.'
+      );
+      return;
     }
+
+    let bibliotecaExercicios;
+    try {
+      bibliotecaExercicios = await carregarBiblioteca();
+    } catch (erro) {
+      this.#mostrarErro("Não foi possível carregar a biblioteca de exercícios. Verifique sua conexão e tente novamente.");
+      return;
+    }
+
+    this.#iniciarComDados(dados, bibliotecaExercicios, treinoId);
   }
 }
 

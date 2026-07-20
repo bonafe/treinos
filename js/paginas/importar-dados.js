@@ -1,8 +1,12 @@
 import { TreinosStorage } from "../storage.js";
+import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { Formatadores } from "../formatadores.js";
 import { VideosTorrent } from "../videos-torrent.js";
 
-const CAMPOS_OBRIGATORIOS = ["metadata", "guia", "aquecimentoPadrao", "exercicios", "cardios", "treinos"];
+// Só o plano de treino (dado pessoal) passa por aqui — a biblioteca de
+// exercícios vem embutida no site e é carregada sozinha via fetch (ver
+// js/biblioteca-exercicios.js).
+const CAMPOS_OBRIGATORIOS = ["schema", "metadata", "distribuicaoSemanal", "treinos"];
 
 class ImportarDadosController {
   #statusEl = document.getElementById("statusAtual");
@@ -24,11 +28,11 @@ class ImportarDadosController {
   }
 
   #atualizarStatus() {
-    const dados = TreinosStorage.lerJSON("dadosTreinos.v1", null);
+    const dados = TreinosStorage.lerJSON("dadosTreinos.v2", null);
     const carregadoEm = TreinosStorage.lerJSON("dadosTreinosCarregadoEm.v1", null);
 
     if (!dados) {
-      this.#statusEl.innerHTML = "Nenhum dado carregado neste navegador ainda.";
+      this.#statusEl.innerHTML = "Nenhum plano de treino carregado neste navegador ainda.";
       return;
     }
 
@@ -79,14 +83,14 @@ class ImportarDadosController {
 
     if (dados && dados.tipo === "backup-treinos") {
       if (!this.#validarDados(dados.dadosTreinos)) {
-        this.#mostrarMensagem("Esse backup não tem dados de treino válidos.", "erro");
+        this.#mostrarMensagem("Esse backup não tem um plano de treino válido.", "erro");
         return;
       }
       TreinosStorage.restaurarBackup(dados);
-      VideosTorrent.prefetchTodosOsVideos(dados.dadosTreinos);
+      this.#prefetchVideosDaBiblioteca();
       this.#atualizarStatus();
       this.#mostrarMensagem(
-        'Backup restaurado — dados do treino, histórico e progresso em andamento recuperados! Já dá pra usar o <a href="treino_exercicios_menu.html">treino de musculação</a> ou o <a href="treino_bicicleta_menu.html">treino de bicicleta</a>.',
+        'Backup restaurado — plano de treino, histórico e progresso em andamento recuperados! Já dá pra usar o <a href="treino_exercicios_menu.html">treino de musculação</a> ou o <a href="treino_bicicleta_menu.html">treino de bicicleta</a>.',
         "sucesso"
       );
       return;
@@ -94,25 +98,34 @@ class ImportarDadosController {
 
     if (!this.#validarDados(dados)) {
       this.#mostrarMensagem(
-        "Esse JSON não parece ser um dados_treinos.json nem um backup válido — faltam campos como treinos, exercicios ou cardios.",
+        "Esse JSON não parece ser um plano de treino nem um backup válido — faltam campos como treinos, metadata ou distribuicaoSemanal.",
         "erro"
       );
       return;
     }
 
     TreinosStorage.definirDadosTreinos(dados);
-    VideosTorrent.prefetchTodosOsVideos(dados);
+    this.#prefetchVideosDaBiblioteca();
     this.#atualizarStatus();
     this.#mostrarMensagem(
-      'Dados salvos! Já dá pra usar o <a href="treino_exercicios_menu.html">treino de musculação</a> ou o <a href="treino_bicicleta_menu.html">treino de bicicleta</a>.',
+      'Plano salvo! Já dá pra usar o <a href="treino_exercicios_menu.html">treino de musculação</a> ou o <a href="treino_bicicleta_menu.html">treino de bicicleta</a>.',
       "sucesso"
     );
+  }
+
+  #prefetchVideosDaBiblioteca() {
+    carregarBiblioteca()
+      .then((bibliotecaExercicios) => VideosTorrent.prefetchTodosOsVideos(bibliotecaExercicios))
+      .catch(() => {
+        // Sem conexão — a biblioteca ainda não deve ter sido cacheada pelo
+        // service worker na primeira visita. O plano continua salvo normalmente.
+      });
   }
 
   #aoBaixarBackup() {
     const backup = TreinosStorage.montarBackup();
     if (!backup.dadosTreinos) {
-      this.#mostrarMensagem("Carregue os dados do treino antes de baixar um backup.", "erro");
+      this.#mostrarMensagem("Carregue o plano de treino antes de baixar um backup.", "erro");
       return;
     }
 

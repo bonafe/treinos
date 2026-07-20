@@ -1,6 +1,6 @@
 export const LABEL_TIPO = {
   musculacao: "Musculação",
-  "peso-do-corpo": "Peso do corpo",
-  funcional: "Funcional",
+  calistenia: "Peso do corpo",
+  condicionamento: "Funcional",
   flexibilidade: "Flexibilidade"
 };

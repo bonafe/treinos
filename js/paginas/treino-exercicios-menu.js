@@ -2,7 +2,15 @@ import { TreinosStorage } from "../storage.js";
 import { LABEL_TIPO } from "../constantes.js";
 import { GraficoBarrasHistorico } from "../grafico-barras.js";
 
-const DIAS_SEMANA = ["domingo", "segunda", "terca", "quarta", "quinta", "sexta", "sabado"];
+const DIAS_SEMANA = [
+  "domingo",
+  "segunda-feira",
+  "terca-feira",
+  "quarta-feira",
+  "quinta-feira",
+  "sexta-feira",
+  "sabado"
+];
 
 class TreinoExerciciosMenuController {
   #listaEl = document.getElementById("lista");
@@ -26,10 +34,10 @@ class TreinoExerciciosMenuController {
   async #iniciarBotaoContinuar() {
     const emAndamento = TreinosStorage.listarChavesComPrefixo("execucao.musculacao.")
       .map((chave) => ({
-        treinoId: chave.replace(/^execucao\.musculacao\./, "").replace(/\.v1$/, ""),
+        treinoId: chave.replace(/^execucao\.musculacao\./, "").replace(/\.v2$/, ""),
         progresso: TreinosStorage.lerJSON(chave, null)
       }))
-      .filter(({ progresso }) => progresso && progresso.slotIndex >= 0 && progresso.serieAtual >= 1)
+      .filter(({ progresso }) => progresso && progresso.exercicioId && progresso.serieAtual >= 1)
       .sort((a, b) => new Date(b.progresso.iniciadoEm) - new Date(a.progresso.iniciadoEm));
 
     if (!emAndamento.length) return;
@@ -52,7 +60,7 @@ class TreinoExerciciosMenuController {
   }
 
   #contarExercicios(treino) {
-    return treino.blocos.reduce((total, bloco) => total + bloco.itens.length, 0);
+    return treino.exercicios.length;
   }
 
   #diaDeHoje() {
@@ -95,7 +103,7 @@ class TreinoExerciciosMenuController {
       dados.treinos.forEach((treino) => this.#listaEl.appendChild(this.#cartaoTreino(treino, idTreinoHoje)));
     } catch (erro) {
       this.#listaEl.innerHTML =
-        '<div class="estado">Nenhum dado de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo dados_treinos.json</a> pra começar.</div>';
+        '<div class="estado">Nenhum plano de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo do seu plano</a> pra começar.</div>';
     }
   }
 }

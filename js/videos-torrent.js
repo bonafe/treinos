@@ -123,19 +123,19 @@ export const VideosTorrent = {
   },
 
   /**
-   * Dispara o download de todos os vídeos do plano de treino inteiro —
-   * chamado assim que o JSON é carregado no localStorage (ver seção 8 de
+   * Dispara o download de todos os vídeos da biblioteca de exercícios —
+   * chamada assim que biblioteca-exercicios.json é buscada (ver seção 8 de
    * docs/torrent-videos-especificacao.md), não vídeo por vídeo sob demanda.
    * Vídeos já presentes no Cache API não geram nenhuma requisição de rede.
    */
-  prefetchTodosOsVideos(dados) {
+  prefetchTodosOsVideos(bibliotecaExercicios) {
     const magnets = new Set();
 
-    if (dados.aquecimentoPadrao && dados.aquecimentoPadrao.videoMagnet) {
-      magnets.add(dados.aquecimentoPadrao.videoMagnet);
-    }
-    Object.values(dados.exercicios || {}).forEach((exercicio) => {
-      if (exercicio.videoMagnet) magnets.add(exercicio.videoMagnet);
+    Object.values(bibliotecaExercicios.bibliotecas.exercicios || {}).forEach((exercicio) => {
+      if (exercicio.midia && exercicio.midia.videoMagnet) magnets.add(exercicio.midia.videoMagnet);
+    });
+    Object.values((bibliotecaExercicios.bibliotecas.cardio || {}).modalidades || {}).forEach((modalidade) => {
+      if (modalidade.midia && modalidade.midia.videoMagnet) magnets.add(modalidade.midia.videoMagnet);
     });
 
     magnets.forEach((magnet) => this.garantirVideo(magnet, () => {}));

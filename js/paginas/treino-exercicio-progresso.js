@@ -1,4 +1,5 @@
 import { TreinosStorage } from "../storage.js";
+import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { Formatadores } from "../formatadores.js";
 import { GraficoProgressoExercicio } from "../grafico-linha.js";
 
@@ -122,15 +123,15 @@ class TreinoExercicioProgressoController {
       return;
     }
 
-    let dados;
+    let bibliotecaExercicios;
     try {
-      dados = await TreinosStorage.carregarDadosTreinos();
+      bibliotecaExercicios = await carregarBiblioteca();
     } catch (erro) {
-      this.#mostrarErro('Nenhum dado de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo dados_treinos.json</a> pra começar.');
+      this.#mostrarErro("Não foi possível carregar a biblioteca de exercícios. Verifique sua conexão e tente novamente.");
       return;
     }
 
-    const exercicio = dados.exercicios[exercicioId];
+    const exercicio = bibliotecaExercicios.bibliotecas.exercicios[exercicioId];
     const nomeExercicio = exercicio ? exercicio.nome : exercicioId;
 
     document.title = `${nomeExercicio} — Progresso`;

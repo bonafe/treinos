@@ -1,0 +1,3534 @@
+{
+  "schema": "biblioteca-exercicios-cardio",
+  "schemaVersion": "1.2",
+  "bibliotecas": {
+    "exercicios": {
+      "supino-reto-com-halter": {
+        "id": "supino-reto-com-halter",
+        "nome": "Supino reto com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "empurrar-horizontal",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "peitoral"
+          ],
+          "sinergistas": [
+            "triceps",
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            },
+            {
+              "equipamentoId": "banco-reto"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "flexao-de-bracos",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "peitoral",
+          "triceps",
+          "ombros",
+          "musculacao",
+          "empurrar-horizontal",
+          "halter",
+          "banco-reto"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "flexao-de-bracos": {
+        "id": "flexao-de-bracos",
+        "nome": "Flexão de braços",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "empurrar-horizontal",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "peitoral"
+          ],
+          "sinergistas": [
+            "triceps",
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "peitoral",
+          "triceps",
+          "ombros",
+          "calistenia",
+          "empurrar-horizontal"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "remada-unilateral-com-halter": {
+        "id": "remada-unilateral-com-halter",
+        "nome": "Remada unilateral com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "puxar-horizontal",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "costas"
+          ],
+          "sinergistas": [
+            "biceps"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "costas",
+          "biceps",
+          "musculacao",
+          "puxar-horizontal",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "triceps-frances-com-halter": {
+        "id": "triceps-frances-com-halter",
+        "nome": "Tríceps francês com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-cotovelo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "triceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "triceps-pulley-com-barra",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "triceps",
+          "musculacao",
+          "extensao-de-cotovelo",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "triceps-pulley-com-barra": {
+        "id": "triceps-pulley-com-barra",
+        "nome": "Tríceps pulley com barra",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-cotovelo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "triceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "polia-alta"
+            },
+            {
+              "equipamentoId": "barra-reta"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "triceps",
+          "musculacao",
+          "extensao-de-cotovelo",
+          "polia-alta",
+          "barra-reta"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "agachamento-sumo-com-halter": {
+        "id": "agachamento-sumo-com-halter",
+        "nome": "Agachamento sumô com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos",
+            "abdomen"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "abdomen",
+          "musculacao",
+          "agachamento",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "slide-leg-na-bola": {
+        "id": "slide-leg-na-bola",
+        "nome": "Slide leg na bola",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-de-joelho",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "posteriores-de-coxa"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "bola-suica"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "posteriores-de-coxa",
+          "musculacao",
+          "flexao-de-joelho",
+          "bola-suica"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "prancha-isometrica": {
+        "id": "prancha-isometrica",
+        "nome": "Prancha isométrica",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isometrico",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "anti-extensao",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "abdomen"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "reverse-bird-dog",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "abdomen",
+          "calistenia",
+          "anti-extensao"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "reverse-bird-dog": {
+        "id": "reverse-bird-dog",
+        "nome": "Reverse Bird dog",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "anti-rotacao",
+          "lateralidade": "alternado"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "abdomen"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "abdomen",
+          "calistenia",
+          "anti-rotacao"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "remada-curvada-com-halter": {
+        "id": "remada-curvada-com-halter",
+        "nome": "Remada curvada com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "puxar-horizontal",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "costas"
+          ],
+          "sinergistas": [
+            "biceps"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "costas",
+          "biceps",
+          "musculacao",
+          "puxar-horizontal",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "crucifixo-reto-com-halter": {
+        "id": "crucifixo-reto-com-halter",
+        "nome": "Crucifixo reto com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "aducao-horizontal-de-ombro",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "peitoral"
+          ],
+          "sinergistas": [
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            },
+            {
+              "equipamentoId": "banco-reto"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "peitoral",
+          "ombros",
+          "musculacao",
+          "aducao-horizontal-de-ombro",
+          "halter",
+          "banco-reto"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "rosca-scott-na-bola": {
+        "id": "rosca-scott-na-bola",
+        "nome": "Rosca scott na bola",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-de-cotovelo",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "biceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            },
+            {
+              "equipamentoId": "bola-suica"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "rosca-concentrada",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "biceps",
+          "musculacao",
+          "flexao-de-cotovelo",
+          "halter",
+          "bola-suica"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "rosca-concentrada": {
+        "id": "rosca-concentrada",
+        "nome": "Rosca concentrada",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-de-cotovelo",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "biceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "biceps",
+          "musculacao",
+          "flexao-de-cotovelo",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "flexao-nordica-reversa": {
+        "id": "flexao-nordica-reversa",
+        "nome": "Flexão nórdica reversa",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-joelho",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "cadeirinha",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "calistenia",
+          "extensao-de-joelho"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "cadeirinha": {
+        "id": "cadeirinha",
+        "nome": "Cadeirinha",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isometrico",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "parede"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "calistenia",
+          "agachamento",
+          "parede"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "panturrilha-unilateral-no-step": {
+        "id": "panturrilha-unilateral-no-step",
+        "nome": "Panturrilha unilateral no step",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-plantar",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "panturrilhas"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "step"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "panturrilhas",
+          "calistenia",
+          "flexao-plantar",
+          "step"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "superman": {
+        "id": "superman",
+        "nome": "Superman",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-tronco",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "lombar"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "extensao-de-coluna-sob-a-bola",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "lombar",
+          "calistenia",
+          "extensao-de-tronco"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "extensao-de-coluna-sob-a-bola": {
+        "id": "extensao-de-coluna-sob-a-bola",
+        "nome": "Extensão de coluna sob a bola",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-tronco",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "lombar"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "bola-suica"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "lombar",
+          "musculacao",
+          "extensao-de-tronco",
+          "bola-suica"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "pull-over-com-halter": {
+        "id": "pull-over-com-halter",
+        "nome": "Pull over com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-ombro",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "peitoral"
+          ],
+          "sinergistas": [
+            "costas"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            },
+            {
+              "equipamentoId": "banco-reto"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "peitoral",
+          "costas",
+          "musculacao",
+          "extensao-de-ombro",
+          "halter",
+          "banco-reto"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "elevacao-lateral-com-halter": {
+        "id": "elevacao-lateral-com-halter",
+        "nome": "Elevação lateral com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "abducao-de-ombro",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "ombros"
+          ],
+          "sinergistas": [
+            "trapezio"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "remada-alta-com-halter",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "ombros",
+          "trapezio",
+          "musculacao",
+          "abducao-de-ombro",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "remada-alta-com-halter": {
+        "id": "remada-alta-com-halter",
+        "nome": "Remada alta com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "puxar-vertical",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "ombros"
+          ],
+          "sinergistas": [
+            "trapezio"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "ombros",
+          "trapezio",
+          "musculacao",
+          "puxar-vertical",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "agachamento-bulgaro": {
+        "id": "agachamento-bulgaro",
+        "nome": "Agachamento búlgaro",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos",
+            "abdomen"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "banco-ou-apoio"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "afundo-com-halter",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "abdomen",
+          "calistenia",
+          "agachamento",
+          "banco-ou-apoio"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "afundo-com-halter": {
+        "id": "afundo-com-halter",
+        "nome": "Afundo com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos",
+            "abdomen"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "abdomen",
+          "musculacao",
+          "agachamento",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "abducao-de-quadril-no-solo": {
+        "id": "abducao-de-quadril-no-solo",
+        "nome": "Abdução de quadril no solo",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "abducao-de-quadril",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "gluteos"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "gluteos",
+          "calistenia",
+          "abducao-de-quadril"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "prancha-lateral": {
+        "id": "prancha-lateral",
+        "nome": "Prancha lateral",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isometrico",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "anti-flexao-lateral",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "abdomen"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [
+            {
+              "exercicioId": "bird-dog",
+              "motivo": "alternativa-prescrita-no-planejamento"
+            }
+          ],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "abdomen",
+          "calistenia",
+          "anti-flexao-lateral"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "bird-dog": {
+        "id": "bird-dog",
+        "nome": "Bird dog",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "anti-rotacao",
+          "lateralidade": "alternado"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "abdomen"
+          ],
+          "sinergistas": [
+            "lombar"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "abdomen",
+          "lombar",
+          "calistenia",
+          "anti-rotacao"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "rosca-direta-com-halter": {
+        "id": "rosca-direta-com-halter",
+        "nome": "Rosca direta com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-de-cotovelo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "biceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "biceps",
+          "musculacao",
+          "flexao-de-cotovelo",
+          "halter"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "triceps-testa-com-halter": {
+        "id": "triceps-testa-com-halter",
+        "nome": "Tríceps testa com halter",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "musculacao",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-cotovelo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "triceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "halter"
+            },
+            {
+              "equipamentoId": "banco-reto"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "triceps",
+          "musculacao",
+          "extensao-de-cotovelo",
+          "halter",
+          "banco-reto"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "step-up": {
+        "id": "step-up",
+        "nome": "Step up",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "gluteos"
+          ],
+          "sinergistas": [
+            "quadriceps"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "step"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "gluteos",
+          "quadriceps",
+          "calistenia",
+          "agachamento",
+          "step"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "flexao-declinada": {
+        "id": "flexao-declinada",
+        "nome": "Flexão declinada",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "empurrar-horizontal",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "peitoral"
+          ],
+          "sinergistas": [
+            "triceps",
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "banco-ou-apoio"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "peitoral",
+          "triceps",
+          "ombros",
+          "calistenia",
+          "empurrar-horizontal",
+          "banco-ou-apoio"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "drop-squat": {
+        "id": "drop-squat",
+        "nome": "Drop Squat",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "pliometria",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "pliometria",
+          "agachamento"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "slide-leg": {
+        "id": "slide-leg",
+        "nome": "Slide leg",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-de-joelho",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "posteriores-de-coxa"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "discos-deslizantes"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "posteriores-de-coxa",
+          "calistenia",
+          "flexao-de-joelho",
+          "discos-deslizantes"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "triceps-testa-na-parede": {
+        "id": "triceps-testa-na-parede",
+        "nome": "Tríceps testa na parede",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-cotovelo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "triceps"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "parede"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "triceps",
+          "calistenia",
+          "extensao-de-cotovelo",
+          "parede"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "afundo-com-salto": {
+        "id": "afundo-com-salto",
+        "nome": "Afundo com salto",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "pliometria",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos",
+            "abdomen"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes",
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "abdomen",
+          "pliometria",
+          "agachamento"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "panturrilha-unilateral-em-pe": {
+        "id": "panturrilha-unilateral-em-pe",
+        "nome": "Panturrilha unilateral em pé",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "flexao-plantar",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "panturrilhas"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "panturrilhas",
+          "calistenia",
+          "flexao-plantar"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "alpinista": {
+        "id": "alpinista",
+        "nome": "Alpinista",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "locomocao-no-solo",
+          "lateralidade": "alternado"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "abdomen"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "abdomen",
+          "calistenia",
+          "locomocao-no-solo"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "avanco-retrocesso": {
+        "id": "avanco-retrocesso",
+        "nome": "Avanço + retrocesso",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos",
+            "abdomen"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "abdomen",
+          "calistenia",
+          "agachamento"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "triceps-banco": {
+        "id": "triceps-banco",
+        "nome": "Tríceps banco",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "isolado",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "extensao-de-cotovelo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "triceps"
+          ],
+          "sinergistas": [
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [
+            {
+              "equipamentoId": "banco-ou-apoio"
+            }
+          ],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "repeticoes",
+          "permitidas": [
+            "repeticoes"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "triceps",
+          "ombros",
+          "calistenia",
+          "extensao-de-cotovelo",
+          "banco-ou-apoio"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "agachamento-com-salto": {
+        "id": "agachamento-com-salto",
+        "nome": "Agachamento com salto",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "pliometria",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "gluteos",
+            "panturrilhas"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "gluteos",
+          "panturrilhas",
+          "pliometria",
+          "agachamento"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "mountain-climber": {
+        "id": "mountain-climber",
+        "nome": "Mountain climber",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "locomocao-no-solo",
+          "lateralidade": "alternado"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "abdomen"
+          ],
+          "sinergistas": [
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "abdomen",
+          "ombros",
+          "calistenia",
+          "locomocao-no-solo"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "sprawl": {
+        "id": "sprawl",
+        "nome": "Sprawl",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "calistenia",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "locomocao-no-solo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "abdomen"
+          ],
+          "sinergistas": [
+            "ombros"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "abdomen",
+          "ombros",
+          "calistenia",
+          "locomocao-no-solo"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "agachamento-arranque-unilateral": {
+        "id": "agachamento-arranque-unilateral",
+        "nome": "Agachamento + arranque unilateral",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "condicionamento",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "agachamento-com-empurrar-vertical",
+          "lateralidade": "unilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "quadriceps"
+          ],
+          "sinergistas": [
+            "ombros",
+            "triceps"
+          ],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "quadriceps",
+          "ombros",
+          "triceps",
+          "condicionamento",
+          "agachamento-com-empurrar-vertical"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "polichinelo": {
+        "id": "polichinelo",
+        "nome": "Polichinelo",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "cardio",
+          "tipo": "locomocao",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "locomocao",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [
+            "panturrilhas"
+          ],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "panturrilhas",
+          "cardio",
+          "locomocao"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes"
+          ]
+        }
+      },
+      "burpee-sobe-e-desce": {
+        "id": "burpee-sobe-e-desce",
+        "nome": "Burpee + Sobe e Desce",
+        "aliases": [],
+        "classificacao": {
+          "categoria": "condicionamento",
+          "tipo": "composto",
+          "nivelTecnico": null
+        },
+        "movimento": {
+          "padrao": "locomocao-no-solo",
+          "lateralidade": "bilateral"
+        },
+        "gruposMusculares": {
+          "principais": [],
+          "sinergistas": [],
+          "estabilizadores": []
+        },
+        "equipamentos": {
+          "obrigatorios": [],
+          "opcionais": []
+        },
+        "metricas": {
+          "padrao": "tempo",
+          "permitidas": [
+            "tempo"
+          ]
+        },
+        "execucao": {
+          "instrucoes": [],
+          "errosComuns": [],
+          "cuidados": []
+        },
+        "relacoes": {
+          "substitutos": [],
+          "progressoes": [],
+          "regressoes": [],
+          "variacoes": []
+        },
+        "restricoes": [],
+        "midia": {
+          "videoUrl": null,
+          "videoMagnet": null,
+          "thumbnail": null
+        },
+        "tags": [
+          "condicionamento",
+          "locomocao-no-solo"
+        ],
+        "status": "ativo",
+        "versao": 1,
+        "qualidadeDados": {
+          "fonte": "planejamento-em-pdf",
+          "camposInferidos": [
+            "classificacao",
+            "movimento",
+            "equipamentos",
+            "metricas"
+          ],
+          "camposNaoInformados": [
+            "nivelTecnico",
+            "execucao",
+            "restricoes",
+            "gruposMusculares"
+          ]
+        }
+      }
+    },
+    "cardio": {
+      "modalidades": {
+        "bicicleta-ergometrica": {
+          "id": "bicicleta-ergometrica",
+          "nome": "Bicicleta ergométrica",
+          "aliases": [
+            "Bicicleta",
+            "Bike indoor"
+          ],
+          "equipamentoId": "bicicleta-ergometrica",
+          "tiposTreinoPermitidos": [
+            "continuo",
+            "intervalado"
+          ],
+          "metricasPermitidas": [
+            "tempo",
+            "distancia",
+            "calorias",
+            "frequencia-cardiaca",
+            "potencia"
+          ],
+          "status": "ativo",
+          "versao": 1,
+          "qualidadeDados": {
+            "fonte": "planejamento-em-pdf",
+            "camposInferidos": [
+              "equipamentoId",
+              "tiposTreinoPermitidos",
+              "metricasPermitidas"
+            ]
+          },
+          "midia": {
+            "videoUrl": null,
+            "videoMagnet": null,
+            "thumbnail": null
+          }
+        }
+      }
+    }
+  },
+  "gruposMusculares": {
+    "peitoral": {
+      "nome": "Peitoral",
+      "regiaoCorporal": "tronco",
+      "subgrupos": [
+        "peitoral-maior",
+        "peitoral-menor"
+      ]
+    },
+    "triceps": {
+      "nome": "Tríceps",
+      "regiaoCorporal": "membros-superiores",
+      "subgrupos": [
+        "triceps-braquial"
+      ]
+    },
+    "ombros": {
+      "nome": "Ombros",
+      "regiaoCorporal": "membros-superiores",
+      "subgrupos": [
+        "deltoide-anterior",
+        "deltoide-lateral",
+        "deltoide-posterior"
+      ]
+    },
+    "costas": {
+      "nome": "Costas",
+      "regiaoCorporal": "tronco",
+      "subgrupos": [
+        "latissimo-do-dorso",
+        "romboides"
+      ]
+    },
+    "biceps": {
+      "nome": "Bíceps",
+      "regiaoCorporal": "membros-superiores",
+      "subgrupos": [
+        "biceps-braquial",
+        "braquial"
+      ]
+    },
+    "quadriceps": {
+      "nome": "Quadríceps",
+      "regiaoCorporal": "membros-inferiores",
+      "subgrupos": [
+        "reto-femoral",
+        "vasto-lateral",
+        "vasto-medial",
+        "vasto-intermedio"
+      ]
+    },
+    "gluteos": {
+      "nome": "Glúteos",
+      "regiaoCorporal": "quadril",
+      "subgrupos": [
+        "gluteo-maximo",
+        "gluteo-medio",
+        "gluteo-minimo"
+      ]
+    },
+    "abdomen": {
+      "nome": "Abdômen",
+      "regiaoCorporal": "tronco",
+      "subgrupos": [
+        "reto-abdominal",
+        "obliquos",
+        "transverso-do-abdomen"
+      ]
+    },
+    "posteriores-de-coxa": {
+      "nome": "Posteriores de coxa",
+      "regiaoCorporal": "membros-inferiores",
+      "subgrupos": [
+        "biceps-femoral",
+        "semitendinoso",
+        "semimembranoso"
+      ]
+    },
+    "panturrilhas": {
+      "nome": "Panturrilhas",
+      "regiaoCorporal": "membros-inferiores",
+      "subgrupos": [
+        "gastrocnemio",
+        "soleo"
+      ]
+    },
+    "lombar": {
+      "nome": "Lombar",
+      "regiaoCorporal": "tronco",
+      "subgrupos": [
+        "eretores-da-espinha"
+      ]
+    },
+    "trapezio": {
+      "nome": "Trapézio",
+      "regiaoCorporal": "tronco",
+      "subgrupos": [
+        "trapezio-superior",
+        "trapezio-medio",
+        "trapezio-inferior"
+      ]
+    }
+  },
+  "equipamentos": {
+    "halter": {
+      "nome": "Halter",
+      "categoria": "peso-livre"
+    },
+    "banco-reto": {
+      "nome": "Banco reto",
+      "categoria": "banco"
+    },
+    "banco-ou-apoio": {
+      "nome": "Banco ou apoio elevado",
+      "categoria": "estrutura"
+    },
+    "barra-reta": {
+      "nome": "Barra reta para polia",
+      "categoria": "acessorio"
+    },
+    "polia-alta": {
+      "nome": "Polia alta",
+      "categoria": "maquina"
+    },
+    "bola-suica": {
+      "nome": "Bola suíça",
+      "categoria": "acessorio"
+    },
+    "step": {
+      "nome": "Step",
+      "categoria": "estrutura"
+    },
+    "parede": {
+      "nome": "Parede",
+      "categoria": "ambiente"
+    },
+    "colchonete": {
+      "nome": "Colchonete",
+      "categoria": "acessorio"
+    },
+    "discos-deslizantes": {
+      "nome": "Discos deslizantes",
+      "categoria": "acessorio"
+    },
+    "bicicleta-ergometrica": {
+      "nome": "Bicicleta ergométrica",
+      "categoria": "cardio"
+    }
+  },
+  "tecnicas": {
+    "tradicional": {
+      "nome": "Tradicional",
+      "descricao": "Execução sem técnica avançada adicional.",
+      "parametrosPermitidos": []
+    },
+    "isometria": {
+      "nome": "Isometria",
+      "descricao": "Pausa isométrica ao final da série.",
+      "parametrosPermitidos": [
+        "duracaoSegundos",
+        "posicao",
+        "momento",
+        "aplicacao"
+      ]
+    }
+  }
+}

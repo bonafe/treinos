@@ -1,4 +1,6 @@
 import { TreinosStorage } from "../storage.js";
+import { carregarBiblioteca } from "../biblioteca-exercicios.js";
+import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { Formatadores } from "../formatadores.js";
 import { SinalSonoro } from "../sinal-sonoro.js";
 import { Cronometro } from "../cronometro.js";
@@ -12,10 +14,10 @@ class TreinoExecucaoController {
   #cronometroDescanso = new Cronometro({ aoTick: (segundos) => this.#tickDescanso(segundos) });
 
   #treino = null;
-  #exercicios = null;
+  #bibliotecaExercicios = null;
   #slots = null;
   #progresso = null;
-  #guia = null;
+  #orientacoesGerais = null;
   #ajusteCargaAtual = null;
   #serieJaIniciada = false;
   #descansoSegundos = 0;
@@ -60,28 +62,33 @@ class TreinoExecucaoController {
     this.#concluirSerieEl.addEventListener("click", () => this.#concluirSerie());
     this.#usarSubstitutoEl.addEventListener("click", () => this.#usarSubstituto());
     this.#iniciarSerieEl.addEventListener("click", () => this.#finalizarDescanso());
-    this.#exercicioAnteriorEl.addEventListener("click", () => this.#irParaExercicio(this.#progresso.slotIndex - 1));
-    this.#exercicioProximoEl.addEventListener("click", () => this.#irParaExercicio(this.#progresso.slotIndex + 1));
+    this.#exercicioAnteriorEl.addEventListener("click", () => this.#irParaExercicio(this.#slotIndexAtual() - 1));
+    this.#exercicioProximoEl.addEventListener("click", () => this.#irParaExercicio(this.#slotIndexAtual() + 1));
 
     this.#carregar();
   }
 
-  #gruposMusculares(grupoMuscular) {
-    return [grupoMuscular.principal, grupoMuscular.sinergista1, grupoMuscular.sinergista2].filter(Boolean);
+  // A cada item de treino.exercicios (lista plana) vira um slot; a opção
+  // primária é o próprio item, e cada alternativa (item.alternativas)
+  // vira uma opção extra do mesmo slot — herdando a prescrição principal
+  // quando não define a própria (seção 10.10 da especificação).
+  #construirSlots(treino) {
+    return [...treino.exercicios]
+      .sort((a, b) => a.ordem - b.ordem)
+      .map((item) => ({
+        exercicioId: item.exercicioId,
+        opcoes: [
+          { exercicioId: item.exercicioId, prescricao: item.prescricao },
+          ...(item.alternativas || []).map((alt) => ({
+            exercicioId: alt.exercicioId,
+            prescricao: alt.prescricao || item.prescricao
+          }))
+        ]
+      }));
   }
 
-  #construirSlots(treino) {
-    const slots = [];
-    treino.blocos.forEach((bloco) => {
-      bloco.itens.forEach((item) => {
-        if (item.substituto && slots.length) {
-          slots[slots.length - 1].opcoes.push(item);
-        } else {
-          slots.push({ opcoes: [item] });
-        }
-      });
-    });
-    return slots;
+  #slotIndexAtual() {
+    return this.#slots.findIndex((slot) => slot.exercicioId === this.#progresso.exercicioId);
   }
 
   #sinalPausaMinima() {
@@ -107,8 +114,20 @@ class TreinoExecucaoController {
     this.#sinal.beep({ frequency: 1046, duration: 0.09, volume: 0.32 });
   }
 
+  // Descanso alvo: primeiro o valor específico do exercício
+  // (prescricao.descansoSegundos), senão o padrão do plano
+  // (orientacoesGerais.descansoPadrao), senão 60–120s.
   #pausaAlvo() {
-    return (this.#guia && this.#guia.pausaSegundos) || { min: 60, max: 120 };
+    const item = this.#itemAtual();
+    const descansoItem = item.prescricao.descansoSegundos;
+    if (descansoItem != null) {
+      return { min: descansoItem, max: descansoItem };
+    }
+
+    const descansoPadrao = this.#orientacoesGerais && this.#orientacoesGerais.descansoPadrao;
+    return descansoPadrao
+      ? { min: descansoPadrao.minSegundos, max: descansoPadrao.maxSegundos }
+      : { min: 60, max: 120 };
   }
 
   #ultimoRegistroDoExercicio(exercicioId) {
@@ -126,17 +145,28 @@ class TreinoExecucaoController {
     TreinosStorage.salvarJSON(this.#chaveExecucao(), this.#progresso);
   }
 
+  #progressoInicial() {
+    return {
+      exercicioId: this.#slots[0].exercicioId,
+      opcaoExercicioId: this.#slots[0].opcoes[0].exercicioId,
+      serieAtual: 1,
+      iniciadoEm: new Date().toISOString(),
+      tempoAcumuladoSegundos: 0
+    };
+  }
+
   #carregarOuIniciarProgresso() {
     const salvo = TreinosStorage.lerJSON(this.#chaveExecucao(), null);
-    const valido = salvo &&
-      salvo.slotIndex >= 0 && salvo.slotIndex < this.#slots.length &&
-      salvo.opcaoIndex >= 0 && salvo.opcaoIndex < this.#slots[salvo.slotIndex].opcoes.length &&
-      salvo.serieAtual >= 1;
+    const slot = salvo && this.#slots.find((s) => s.exercicioId === salvo.exercicioId);
+    const opcaoValida = slot && slot.opcoes.some((o) => o.exercicioId === salvo.opcaoExercicioId);
+    const valido = slot && opcaoValida && salvo.serieAtual >= 1;
 
     if (valido) {
       this.#progresso = salvo;
     } else {
-      this.#progresso = { slotIndex: 0, opcaoIndex: 0, serieAtual: 1, iniciadoEm: new Date().toISOString(), tempoAcumuladoSegundos: 0 };
+      // Progresso ausente ou apontando pra um exercício que não existe mais
+      // no plano — mesmo tratamento de hoje pra "índice fora do intervalo".
+      this.#progresso = this.#progressoInicial();
       this.#salvarProgresso();
     }
   }
@@ -170,7 +200,8 @@ class TreinoExecucaoController {
   }
 
   #itemAtual() {
-    return this.#slots[this.#progresso.slotIndex].opcoes[this.#progresso.opcaoIndex];
+    const slot = this.#slots[this.#slotIndexAtual()];
+    return slot.opcoes.find((o) => o.exercicioId === this.#progresso.opcaoExercicioId);
   }
 
   #atualizarBotaoSerie() {
@@ -203,18 +234,20 @@ class TreinoExecucaoController {
 
   #renderExercicioAtual() {
     const item = this.#itemAtual();
-    const exercicio = this.#exercicios[item.exercicioId];
+    const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[item.exercicioId];
 
     this.#exercicioNomeEl.textContent = exercicio ? exercicio.nome : item.exercicioId;
 
-    const grupos = this.#gruposMusculares(item.grupoMuscular);
+    const grupos = exercicio
+      ? PrescricaoFormatadores.gruposMusculares(exercicio.gruposMusculares, this.#bibliotecaExercicios.gruposMusculares)
+      : [];
     this.#exercicioGruposEl.innerHTML = grupos.map((g) => `<span>${g}</span>`).join("");
 
-    this.#serieAtualLabelEl.textContent = `Série ${this.#progresso.serieAtual} de ${item.series}`;
-    this.#alvoRepeticoesEl.textContent = this.#formatarRepeticoes(item.repeticoes);
-    this.#isometriaNotaEl.hidden = item.tecnica !== "isometria";
+    this.#serieAtualLabelEl.textContent = `Série ${this.#progresso.serieAtual} de ${item.prescricao.series}`;
+    this.#alvoRepeticoesEl.textContent = PrescricaoFormatadores.metrica(item.prescricao.metrica);
+    this.#isometriaNotaEl.hidden = !PrescricaoFormatadores.ehIsometria(item.prescricao.tecnicas);
 
-    this.#repeticoesCampoEl.hidden = item.repeticoes.modo === "tempo";
+    this.#repeticoesCampoEl.hidden = item.prescricao.metrica.tipo === "tempo";
 
     const ultimoRegistro = this.#ultimoRegistroDoExercicio(item.exercicioId);
     this.#cargaInputEl.value =
@@ -224,12 +257,14 @@ class TreinoExecucaoController {
 
     this.#verVideoToken += 1;
     const tokenDoVideo = this.#verVideoToken;
-    ligarBotaoVideo(this.#verVideoEl, exercicio, this.#videoModal, () => tokenDoVideo === this.#verVideoToken);
+    ligarBotaoVideo(this.#verVideoEl, exercicio && exercicio.midia, this.#videoModal, () => tokenDoVideo === this.#verVideoToken);
 
-    const slot = this.#slots[this.#progresso.slotIndex];
+    const slotIndex = this.#slotIndexAtual();
+    const slot = this.#slots[slotIndex];
     if (slot.opcoes.length > 1) {
-      const proximo = slot.opcoes[(this.#progresso.opcaoIndex + 1) % slot.opcoes.length];
-      const proximoExercicio = this.#exercicios[proximo.exercicioId];
+      const opcaoAtualIndex = slot.opcoes.findIndex((o) => o.exercicioId === this.#progresso.opcaoExercicioId);
+      const proximo = slot.opcoes[(opcaoAtualIndex + 1) % slot.opcoes.length];
+      const proximoExercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[proximo.exercicioId];
       this.#usarSubstitutoEl.hidden = false;
       this.#usarSubstitutoEl.textContent = `Usar substituto: ${proximoExercicio ? proximoExercicio.nome : proximo.exercicioId}`;
     } else {
@@ -237,9 +272,9 @@ class TreinoExecucaoController {
     }
 
     this.#stepperEl.hidden = false;
-    this.#progressoTagEl.textContent = `Exercício ${this.#progresso.slotIndex + 1} de ${this.#slots.length}`;
-    this.#exercicioAnteriorEl.disabled = this.#progresso.slotIndex === 0;
-    this.#exercicioProximoEl.disabled = this.#progresso.slotIndex === this.#slots.length - 1;
+    this.#progressoTagEl.textContent = `Exercício ${slotIndex + 1} de ${this.#slots.length}`;
+    this.#exercicioAnteriorEl.disabled = slotIndex === 0;
+    this.#exercicioProximoEl.disabled = slotIndex === this.#slots.length - 1;
 
     this.#cronometroSerie.reiniciar();
     this.#serieJaIniciada = false;
@@ -249,16 +284,11 @@ class TreinoExecucaoController {
     this.#atualizarBotaoSerie();
   }
 
-  #formatarRepeticoes(repeticoes) {
-    if (repeticoes.modo === "faixa") return `${repeticoes.min} a ${repeticoes.max} repetições`;
-    if (repeticoes.modo === "tempo") return `${repeticoes.segundos} segundos`;
-    return "Máximo de repetições";
-  }
-
   #irParaExercicio(novoSlotIndex) {
     if (novoSlotIndex < 0 || novoSlotIndex >= this.#slots.length) return;
-    this.#progresso.slotIndex = novoSlotIndex;
-    this.#progresso.opcaoIndex = 0;
+    const slot = this.#slots[novoSlotIndex];
+    this.#progresso.exercicioId = slot.exercicioId;
+    this.#progresso.opcaoExercicioId = slot.opcoes[0].exercicioId;
     this.#progresso.serieAtual = 1;
     // Pulou pro exercício sem concluir o atual — descarta o tempo parcial.
     this.#progresso.tempoAcumuladoSegundos = 0;
@@ -277,9 +307,9 @@ class TreinoExecucaoController {
     this.#descansoMaxEl.textContent = Formatadores.tempoCurto(pausa.max);
 
     const item = this.#itemAtual();
-    const exercicio = this.#exercicios[item.exercicioId];
+    const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[item.exercicioId];
     this.#descansoProximoEl.textContent =
-      `Próximo: ${exercicio ? exercicio.nome : item.exercicioId} — série ${this.#progresso.serieAtual} de ${item.series}`;
+      `Próximo: ${exercicio ? exercicio.nome : item.exercicioId} — série ${this.#progresso.serieAtual} de ${item.prescricao.series}`;
 
     if (this.#ajusteCargaAtual) {
       const emoji = this.#ajusteCargaAtual.direcao === "aumentar" ? "💪" : "⚠️";
@@ -340,13 +370,14 @@ class TreinoExecucaoController {
 
   #concluirSerie() {
     const item = this.#itemAtual();
-    const exercicio = this.#exercicios[item.exercicioId];
+    const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[item.exercicioId];
+    const metrica = item.prescricao.metrica;
 
     const cargaRaw = this.#cargaInputEl.value;
     const repeticoesRaw = this.#repeticoesInputEl.value;
 
     const cargaKg = cargaRaw === "" ? null : Number(cargaRaw);
-    const repeticoes = (item.repeticoes.modo === "tempo" || repeticoesRaw === "") ? null : Number(repeticoesRaw);
+    const repeticoes = metrica.tipo === "tempo" || repeticoesRaw === "" ? null : Number(repeticoesRaw);
 
     const serieFoiIniciada = this.#serieJaIniciada;
     const duracaoSerieSegundos = serieFoiIniciada ? this.#cronometroSerie.segundos() : 0;
@@ -354,11 +385,12 @@ class TreinoExecucaoController {
     this.#adicionarTempoExercicio(duracaoSerieSegundos);
 
     this.#ajusteCargaAtual = null;
-    if (item.repeticoes.modo === "faixa" && repeticoes !== null) {
-      if (repeticoes > item.repeticoes.max) {
-        this.#ajusteCargaAtual = { direcao: "aumentar", exercicioNome: exercicio ? exercicio.nome : item.exercicioId, repeticoes, min: item.repeticoes.min, max: item.repeticoes.max };
-      } else if (repeticoes < item.repeticoes.min) {
-        this.#ajusteCargaAtual = { direcao: "diminuir", exercicioNome: exercicio ? exercicio.nome : item.exercicioId, repeticoes, min: item.repeticoes.min, max: item.repeticoes.max };
+    if (metrica.modo === "faixa" && repeticoes !== null) {
+      const nomeExercicio = exercicio ? exercicio.nome : item.exercicioId;
+      if (repeticoes > metrica.max) {
+        this.#ajusteCargaAtual = { direcao: "aumentar", exercicioNome: nomeExercicio, repeticoes, min: metrica.min, max: metrica.max };
+      } else if (repeticoes < metrica.min) {
+        this.#ajusteCargaAtual = { direcao: "diminuir", exercicioNome: nomeExercicio, repeticoes, min: metrica.min, max: metrica.max };
       }
     }
 
@@ -374,7 +406,7 @@ class TreinoExecucaoController {
       dataHora: new Date().toISOString()
     });
 
-    if (this.#progresso.serieAtual < item.series) {
+    if (this.#progresso.serieAtual < item.prescricao.series) {
       this.#progresso.serieAtual += 1;
       this.#salvarProgresso();
       this.#iniciarDescanso();
@@ -384,9 +416,11 @@ class TreinoExecucaoController {
     // Última série do exercício atual — registra o tempo dele antes de seguir.
     this.#registrarExercicioConcluido(item, exercicio);
 
-    if (this.#progresso.slotIndex < this.#slots.length - 1) {
-      this.#progresso.slotIndex += 1;
-      this.#progresso.opcaoIndex = 0;
+    const slotIndexAtual = this.#slotIndexAtual();
+    if (slotIndexAtual < this.#slots.length - 1) {
+      const proximoSlot = this.#slots[slotIndexAtual + 1];
+      this.#progresso.exercicioId = proximoSlot.exercicioId;
+      this.#progresso.opcaoExercicioId = proximoSlot.opcoes[0].exercicioId;
       this.#progresso.serieAtual = 1;
       // O descanso que vem agora é antes da primeira série do PRÓXIMO
       // exercício, então zera o acumulador pra contar a favor dele.
@@ -400,8 +434,10 @@ class TreinoExecucaoController {
   }
 
   #usarSubstituto() {
-    const slot = this.#slots[this.#progresso.slotIndex];
-    this.#progresso.opcaoIndex = (this.#progresso.opcaoIndex + 1) % slot.opcoes.length;
+    const slot = this.#slots[this.#slotIndexAtual()];
+    const opcaoAtualIndex = slot.opcoes.findIndex((o) => o.exercicioId === this.#progresso.opcaoExercicioId);
+    const proximaOpcao = slot.opcoes[(opcaoAtualIndex + 1) % slot.opcoes.length];
+    this.#progresso.opcaoExercicioId = proximaOpcao.exercicioId;
     this.#progresso.serieAtual = 1;
     // Descarta o tempo parcial do exercício trocado — ele não foi concluído.
     this.#progresso.tempoAcumuladoSegundos = 0;
@@ -411,7 +447,7 @@ class TreinoExecucaoController {
 
   #concluirTreino() {
     const item = this.#itemAtual();
-    const exercicio = this.#exercicios[item.exercicioId];
+    const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[item.exercicioId];
     this.#registrarExercicioConcluido(item, exercicio);
 
     // Soma os exercícios concluídos nesta execução (podem vir de antes de um
@@ -439,16 +475,15 @@ class TreinoExecucaoController {
   #aplicarSaltoParaExercicio(params) {
     if (!params.has("exercicio")) return;
 
-    const slotAlvo = Number(params.get("exercicio"));
-    if (!Number.isInteger(slotAlvo) || slotAlvo < 0 || slotAlvo >= this.#slots.length) return;
+    const exercicioAlvo = params.get("exercicio");
+    const slot = this.#slots.find((s) => s.exercicioId === exercicioAlvo);
+    if (!slot) return;
 
-    const opcaoAlvo = Number(params.get("opcao"));
-    const opcaoValida = Number.isInteger(opcaoAlvo) && opcaoAlvo >= 0 && opcaoAlvo < this.#slots[slotAlvo].opcoes.length
-      ? opcaoAlvo
-      : 0;
+    const opcaoAlvo = params.get("opcao");
+    const opcaoValida = slot.opcoes.some((o) => o.exercicioId === opcaoAlvo) ? opcaoAlvo : slot.opcoes[0].exercicioId;
 
-    this.#progresso.slotIndex = slotAlvo;
-    this.#progresso.opcaoIndex = opcaoValida;
+    this.#progresso.exercicioId = slot.exercicioId;
+    this.#progresso.opcaoExercicioId = opcaoValida;
     this.#progresso.serieAtual = 1;
     this.#progresso.tempoAcumuladoSegundos = 0;
     this.#salvarProgresso();
@@ -472,7 +507,9 @@ class TreinoExecucaoController {
     try {
       dados = await TreinosStorage.carregarDadosTreinos();
     } catch (erro) {
-      this.#mostrarErro('Nenhum dado de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo dados_treinos.json</a> pra começar.');
+      this.#mostrarErro(
+        'Nenhum plano de treino carregado ainda neste navegador. <a href="importar_dados.html">Carregue o arquivo do seu plano</a> pra começar.'
+      );
       return;
     }
 
@@ -482,8 +519,14 @@ class TreinoExecucaoController {
       return;
     }
 
-    this.#exercicios = dados.exercicios;
-    this.#guia = dados.guia;
+    try {
+      this.#bibliotecaExercicios = await carregarBiblioteca();
+    } catch (erro) {
+      this.#mostrarErro("Não foi possível carregar a biblioteca de exercícios. Verifique sua conexão e tente novamente.");
+      return;
+    }
+
+    this.#orientacoesGerais = dados.orientacoesGerais;
     this.#slots = this.#construirSlots(this.#treino);
 
     if (!this.#slots.length) {

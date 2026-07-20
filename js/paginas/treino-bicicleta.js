@@ -1,4 +1,5 @@
 import { TreinosStorage } from "../storage.js";
+import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { SinalSonoro } from "../sinal-sonoro.js";
 import { Cronometro } from "../cronometro.js";
 import { Formatadores } from "../formatadores.js";
@@ -138,8 +139,9 @@ class TreinoBicicletaController {
 
   #registrarSessaoConcluida() {
     TreinosStorage.adicionarAoHistorico(TreinosStorage.chaves.historicoSessaoBicicleta, {
-      cardioId: this.#config.id,
-      cardioNome: this.#config.nome,
+      modalidadeId: this.#config.modalidadeId,
+      treinoId: this.#config.treinoId,
+      nome: this.#config.nome,
       dataHora: new Date().toISOString(),
       duracaoSegundos: this.#totalSegundos,
       series: this.#config.series
@@ -205,7 +207,7 @@ class TreinoBicicletaController {
     this.#phaseTimeEl.textContent = "";
     this.#hintEl.hidden = !mostrarLinkImportar;
     this.#hintEl.innerHTML = mostrarLinkImportar
-      ? 'Se ainda não carregou os dados neste navegador, <a href="importar_dados.html">carregue o arquivo dados_treinos.json</a> primeiro.'
+      ? 'Se ainda não carregou os dados neste navegador, <a href="importar_dados.html">carregue o arquivo do seu plano</a> primeiro.'
       : "";
   }
 
@@ -225,40 +227,61 @@ class TreinoBicicletaController {
     this.#render();
   }
 
-  #extrairConfig(cardioId, cardio) {
+  #extrairConfig(treino, entrada, modalidade) {
+    const cfg = entrada.treino;
     return {
-      id: cardioId,
-      nome: cardio.nome,
-      series: cardio.series,
-      tempoEstimuloSegundos: cardio.tempoEstimulo.segundos,
-      tempoRecuperacaoSegundos: cardio.recuperacao.segundos,
-      intensidadeEstimulo: cardio.intensidadeEstimulo,
-      intensidadeRecuperacao: cardio.intensidadeRecuperacao
+      modalidadeId: entrada.modalidadeId,
+      treinoId: treino.id,
+      nome: `${treino.nome} — ${modalidade.nome}`,
+      series: cfg.series,
+      tempoEstimuloSegundos: cfg.estimulo.duracaoSegundos,
+      tempoRecuperacaoSegundos: cfg.recuperacao.duracaoSegundos,
+      intensidadeEstimulo: cfg.estimulo.intensidade.valor,
+      intensidadeRecuperacao: cfg.recuperacao.intensidade.valor
     };
   }
 
   async #carregarTreino() {
     const params = new URLSearchParams(window.location.search);
-    const cardioId = params.get("cardio");
     const treinoId = params.get("treino");
+    const modalidadeId = params.get("modalidade");
 
     this.#voltarIconEl.href = treinoId
       ? `treino_exercicios.html?treino=${encodeURIComponent(treinoId)}`
       : "treino_bicicleta_menu.html";
 
-    if (!cardioId) {
+    if (!treinoId || !modalidadeId) {
       this.#mostrarErro("Nenhum treino selecionado.");
       return;
     }
 
+    let dados;
+    let bibliotecaExercicios;
     try {
-      const dados = await TreinosStorage.carregarDadosTreinos();
-      const cardio = dados.cardios[cardioId];
-      if (!cardio) throw new Error("Treino não encontrado");
-      this.#iniciarComConfig(this.#extrairConfig(cardioId, cardio));
+      dados = await TreinosStorage.carregarDadosTreinos();
+      bibliotecaExercicios = await carregarBiblioteca();
     } catch (erro) {
       this.#mostrarErro("Não foi possível carregar este treino.", true);
+      return;
     }
+
+    const treino = dados.treinos.find((t) => t.id === treinoId);
+    const entrada = treino && treino.cardio && treino.cardio.find((c) => c.modalidadeId === modalidadeId);
+    const modalidade = bibliotecaExercicios.bibliotecas.cardio.modalidades[modalidadeId];
+
+    if (!treino || !entrada || !modalidade) {
+      this.#mostrarErro("Não foi possível carregar este treino.", true);
+      return;
+    }
+
+    // O motor só sabe tocar o ciclo intervalado estímulo/recuperação —
+    // outros tipos (ex. contínuo) ficam fora de escopo por enquanto.
+    if (entrada.treino.tipo !== "intervalado" || !entrada.treino.estimulo || !entrada.treino.recuperacao) {
+      this.#mostrarErro("Este tipo de treino de bicicleta ainda não é suportado.");
+      return;
+    }
+
+    this.#iniciarComConfig(this.#extrairConfig(treino, entrada, modalidade));
   }
 }
 
