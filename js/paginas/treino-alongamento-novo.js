@@ -4,6 +4,7 @@ import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { LABEL_TIPO_ALONGAMENTO } from "../constantes.js";
 import { normalizar, gerarIdUnico } from "../identificadores.js";
 import { criarDetalhesModal } from "../detalhes-modal.js";
+import { criarVideoPlayerModal } from "../video-player-modal.js";
 
 const LABEL_METRICA = {
   repeticoes: "Repetições",
@@ -19,7 +20,8 @@ class TreinoAlongamentoNovoController {
   #alongamentos = [];
   #editandoIndex = null;
   #alongamentoEscolhidoId = null;
-  #detalhesModal = criarDetalhesModal();
+  #videoModal = criarVideoPlayerModal();
+  #detalhesModal = criarDetalhesModal(this.#videoModal);
 
   #carregandoEl = document.getElementById("carregando");
   #erroEl = document.getElementById("erro");
@@ -66,7 +68,7 @@ class TreinoAlongamentoNovoController {
     this.#salvarBtnEl.addEventListener("click", () => this.#salvarTreino());
     this.#pickerInfoBtnEl.addEventListener("click", () => {
       const alongamento = this.#bibliotecaExercicios.bibliotecas.alongamentos[this.#alongamentoEscolhidoId];
-      if (alongamento) this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios);
+      if (alongamento) this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios, "alongamento");
     });
 
     this.#pickerBuscaInputEl.addEventListener("input", () => this.#filtrarResultados());
@@ -246,7 +248,7 @@ class TreinoAlongamentoNovoController {
       });
       item.querySelector(".info-btn").addEventListener("click", (evento) => {
         evento.stopPropagation();
-        this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios);
+        this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios, "alongamento");
       });
       this.#pickerResultadosEl.appendChild(item);
     });
@@ -368,7 +370,7 @@ class TreinoAlongamentoNovoController {
       div.querySelector('[data-acao="editar"]').addEventListener("click", () => this.#editarAlongamento(index));
       div.querySelector('[data-acao="remover"]').addEventListener("click", () => this.#removerAlongamento(index));
       if (alongamento) {
-        div.querySelector(".info-btn").addEventListener("click", () => this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios));
+        div.querySelector(".info-btn").addEventListener("click", () => this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios, "alongamento"));
       }
 
       this.#alongamentoListaEl.appendChild(div);

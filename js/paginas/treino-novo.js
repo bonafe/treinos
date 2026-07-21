@@ -4,6 +4,7 @@ import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { LABEL_CATEGORIA_EXERCICIO } from "../constantes.js";
 import { normalizar, gerarIdUnico } from "../identificadores.js";
 import { criarDetalhesModal } from "../detalhes-modal.js";
+import { criarVideoPlayerModal } from "../video-player-modal.js";
 
 const LABEL_METRICA = {
   repeticoes: "Repetições",
@@ -16,7 +17,8 @@ class TreinoNovoController {
   #exercicios = [];
   #editandoIndex = null;
   #exercicioEscolhidoId = null;
-  #detalhesModal = criarDetalhesModal();
+  #videoModal = criarVideoPlayerModal();
+  #detalhesModal = criarDetalhesModal(this.#videoModal);
 
   #carregandoEl = document.getElementById("carregando");
   #erroEl = document.getElementById("erro");

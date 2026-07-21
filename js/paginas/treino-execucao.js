@@ -12,7 +12,7 @@ import { deveExibirPedidoApoio, renderizarPedidoApoio } from "../apoio.js";
 class TreinoExecucaoController {
   #sinal = new SinalSonoro();
   #videoModal = criarVideoPlayerModal();
-  #detalhesModal = criarDetalhesModal();
+  #detalhesModal = criarDetalhesModal(this.#videoModal);
   #verVideoToken = 0;
   #imagemToken = 0;
   #cronometroSerie = new Cronometro({ aoTick: () => this.#atualizarSerieTimerTela() });

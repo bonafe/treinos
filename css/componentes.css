@@ -195,6 +195,10 @@
   font-weight: 900;
 }
 
+.detalhes-card .video-botao {
+  margin-bottom: 12px;
+}
+
 .detalhes-conteudo p {
   margin: 0 0 10px;
   font-size: 0.9rem;
@@ -216,6 +220,20 @@
 
 .detalhes-vazio {
   color: #94a3b8;
+}
+
+.detalhes-imagem {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border-radius: 14px;
+  margin-top: 14px;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.detalhes-imagem[hidden] {
+  display: none;
 }
 
 .apoio-banner {

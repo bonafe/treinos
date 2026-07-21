@@ -1,6 +1,9 @@
+import { caminhoImagemExercicio } from "./imagem-exercicio.js";
+import { ligarBotaoVideo } from "./video-player-modal.js";
+
 // Exercícios (bibliotecas.exercicios) e alongamentos (bibliotecas.alongamentos)
 // têm o mesmo formato pros campos usados aqui (nome, descricao,
-// gruposMusculares, equipamentos, execucao, restricoes — ver
+// gruposMusculares, equipamentos, execucao, restricoes, midia — ver
 // docs/especificacao-biblioteca-exercicios.md e
 // docs/estrutura-biblioteca-alongamentos.md), então um único renderizador
 // serve pros dois catálogos.
@@ -67,11 +70,18 @@ function montarSecaoRestricoes(restricoes) {
   );
 }
 
-export function criarDetalhesModal() {
+/**
+ * `videoModal` é a instância de `criarVideoPlayerModal()` (video-player-modal.js)
+ * já criada pela página hospedeira — reaproveitada aqui pro botão "Ver
+ * vídeo" em vez de cada página precisar tratar isso por conta própria.
+ */
+export function criarDetalhesModal(videoModal) {
   const overlayEl = document.getElementById("detalhesOverlay");
   const nomeEl = document.getElementById("detalhesNome");
   const conteudoEl = document.getElementById("detalhesConteudo");
   const fecharEl = document.getElementById("detalhesFechar");
+  const videoBtnEl = document.getElementById("detalhesVideoBtn");
+  const imagemEl = document.getElementById("detalhesImagem");
 
   function fechar() {
     overlayEl.hidden = true;
@@ -82,14 +92,18 @@ export function criarDetalhesModal() {
     if (evento.target === overlayEl) fechar();
   });
 
+  let imagemToken = 0;
+
   return {
     /**
      * `item` é uma entrada de `bibliotecas.exercicios` ou
      * `bibliotecas.alongamentos`; `bibliotecaExercicios` é o documento
      * inteiro da biblioteca (pra resolver nomes de grupo
-     * muscular/equipamento).
+     * muscular/equipamento); `dominio` decide a subpasta de imagem
+     * (`"musculacao"` default ou `"alongamento"`, ver
+     * `js/imagem-exercicio.js#caminhoImagemExercicio`).
      */
-    abrir(item, bibliotecaExercicios) {
+    abrir(item, bibliotecaExercicios, dominio = "musculacao") {
       nomeEl.textContent = item.nome;
 
       const partes = [
@@ -103,6 +117,23 @@ export function criarDetalhesModal() {
       conteudoEl.innerHTML = partes.length
         ? partes.join("")
         : '<p class="detalhes-vazio">Nenhum detalhe cadastrado ainda.</p>';
+
+      ligarBotaoVideo(videoBtnEl, item.midia, videoModal);
+
+      // Foto sempre por último — mesmo padrão de "tentar carregar e tratar
+      // ausência" de ligarImagemExercicio (nem todo item tem imagem gerada).
+      imagemEl.hidden = true;
+      imagemToken += 1;
+      const tokenAtual = imagemToken;
+      const src = caminhoImagemExercicio(item.id, dominio);
+      const probe = new Image();
+      probe.onload = () => {
+        if (tokenAtual !== imagemToken) return;
+        imagemEl.src = src;
+        imagemEl.alt = item.nome || "";
+        imagemEl.hidden = false;
+      };
+      probe.src = src;
 
       overlayEl.hidden = false;
     }

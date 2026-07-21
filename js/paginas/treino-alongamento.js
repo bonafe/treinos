@@ -17,7 +17,7 @@ import { deveExibirPedidoApoio, renderizarPedidoApoio } from "../apoio.js";
 class TreinoAlongamentoController {
   #sinal = new SinalSonoro();
   #videoModal = criarVideoPlayerModal();
-  #detalhesModal = criarDetalhesModal();
+  #detalhesModal = criarDetalhesModal(this.#videoModal);
   #verVideoToken = 0;
   #imagemToken = 0;
   #cronometroSerie = new Cronometro({ aoTick: () => this.#atualizarSerieTimerTela() });
@@ -71,7 +71,7 @@ class TreinoAlongamentoController {
     this.#alongamentoProximoEl.addEventListener("click", () => this.#irParaAlongamento(this.#slotIndexAtual() + 1));
     this.#infoAlongamentoBtnEl.addEventListener("click", () => {
       const alongamento = this.#bibliotecaExercicios.bibliotecas.alongamentos[this.#itemAtual().alongamentoId];
-      if (alongamento) this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios);
+      if (alongamento) this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios, "alongamento");
     });
 
     this.#carregar();

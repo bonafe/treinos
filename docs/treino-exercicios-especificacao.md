@@ -451,11 +451,15 @@ Para a opção atual do slot atual, mostrar:
   botão "ⓘ" ao lado do nome (`js/detalhes-modal.js#criarDetalhesModal`) que
   abre um overlay com descrição (posição inicial/movimento/posição final),
   grupos musculares detalhados (principais/secundários/estabilizadores),
-  equipamentos, instruções de execução, respiração, erros comuns, cuidados
-  e restrições do exercício atual — mesmo componente reaproveitado em
-  `treino_novo.html` (picker de busca e lista de exercícios já
-  adicionados) e no motor de alongamento
+  equipamentos, instruções de execução, respiração, erros comuns,
+  cuidados e restrições do exercício atual — mesmo componente
+  reaproveitado em `treino_novo.html` (picker de busca e lista de
+  exercícios já adicionados) e no motor de alongamento
   ([treino-alongamento-especificacao.md](./treino-alongamento-especificacao.md)).
+  O overlay também tem um botão "Ver vídeo" (`ligarBotaoVideo`, quando
+  `midia.videoMagnet`/`.videoUrl` existir — reaproveita o mesmo
+  `videoModal` já criado pela página) e, ao final, a imagem do exercício
+  (`caminhoImagemExercicio`, oculta quando ainda não existe uma gerada).
 - Imagem do exercício (`#imagemExercicio`, `js/imagem-exercicio.js`),
   **sempre visível** na tela (não atrás de um botão, diferente do vídeo) —
   atualizada a cada troca de exercício/opção/slot e também na tela de
@@ -761,8 +765,11 @@ Dois passos dentro do mesmo `.overlay`:
    seleções. Filtragem client-side contra toda a biblioteca. Cada
    resultado tem um botão "ⓘ" (`js/detalhes-modal.js#criarDetalhesModal`,
    `event.stopPropagation()` pra não selecionar o exercício) que mostra
-   descrição, grupos musculares detalhados, equipamentos, execução e
-   restrições antes de decidir adicionar. Clicar no resto do resultado
+   descrição, grupos musculares detalhados, equipamentos, execução,
+   restrições, vídeo (se houver) e a imagem do exercício (ao final) antes
+   de decidir adicionar — a tela ganha seu próprio `#videoOverlay`
+   (`criarVideoPlayerModal()`) só pra isso, já que o formulário de
+   prescrição em si não tem vídeo. Clicar no resto do resultado
    abre o passo 2 pra aquele exercício.
 2. **Prescrição**: séries; métrica (tipo limitado a
    `exercicio.metricas.permitidas`, modo faixa/fixo/máximo — unidade é

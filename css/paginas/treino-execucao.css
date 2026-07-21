@@ -225,6 +225,10 @@ a.iniciar:active {
   margin: 4px auto 0;
 }
 
+.video-botao[hidden] {
+  display: none;
+}
+
 .imagem-exercicio {
   display: block;
   width: 100%;

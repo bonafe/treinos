@@ -98,11 +98,14 @@ prescrição), trocando a fonte do picker para `bibliotecas.alongamentos`:
 - Formulário de prescrição: série + métrica (mesmo controle de
   `treino_novo.html`, mas sem os campos de isometria/agrupamento —
   alongamento não usa técnica nem superset/circuito).
-- Botão "ⓘ" (`js/detalhes-modal.js`) ao lado do nome — em cada resultado
-  da busca, no título da prescrição depois de escolher um alongamento, e
-  em cada item já adicionado à lista — abre os detalhes (descrição,
-  grupos musculares, equipamentos, execução, restrições) sem precisar
-  adicionar o alongamento primeiro.
+- Botão "ⓘ" (`js/detalhes-modal.js`, domínio `"alongamento"` — ver seção
+  2.1) ao lado do nome — em cada resultado da busca, no título da
+  prescrição depois de escolher um alongamento, e em cada item já
+  adicionado à lista — abre os detalhes (descrição, grupos musculares,
+  equipamentos, execução, restrições, vídeo se houver e a imagem ao
+  final) sem precisar adicionar o alongamento primeiro. A tela também
+  ganha seu próprio `#videoOverlay` (`criarVideoPlayerModal()`) só pra
+  esse botão de vídeo.
 - Ao salvar, gera um `id` único (`js/identificadores.js`, mesmo helper de
   `treino_novo.html`/`treino_bicicleta_novo.html`) e dá `push` em
   `dados.treinosAlongamento`, depois volta para
@@ -138,7 +141,8 @@ essas opções, seção 2):
   slot tem uma única opção).
 - Pra cada slot: nome do alongamento (com botão "ⓘ" ao lado, abrindo o
   mesmo `js/detalhes-modal.js` da musculação — descrição, grupos
-  musculares detalhados, equipamentos, execução, restrições) e grupos
+  musculares detalhados, equipamentos, execução, restrições, vídeo se
+  houver e a imagem ao final, domínio `"alongamento"`) e grupos
   musculares (resolvidos via
   `bibliotecas.alongamentos[id]` + `bibliotecas.gruposMusculares`, mesmo
   padrão da musculação), "Série `serieAtual` de `prescricao.series`", alvo
