@@ -76,7 +76,7 @@ Vídeos de exercício (`bibliotecas.exercicios[id].midia.videoMagnet`, magnet UR
 ### Organização de arquivos
 
 - `js/paginas/*.js` — um controller por página HTML (`treino-execucao.js` ↔ `treino_execucao.html`), carregado via `<script type="module">`.
-- `js/*.js` (fora de `paginas/`) — utilitários compartilhados entre páginas: `storage.js` (localStorage), `biblioteca-exercicios.js` (fetch da biblioteca), `prescricao-formatadores.js`, `formatadores.js`, `cronometro.js`, `sinal-sonoro.js`, `grafico-barras.js`/`grafico-linha.js` (D3), `videos-torrent.js`/`video-player-modal.js` (vídeos por torrent).
+- `js/*.js` (fora de `paginas/`) — utilitários compartilhados entre páginas: `storage.js` (localStorage), `biblioteca-exercicios.js` (fetch da biblioteca), `prescricao-formatadores.js`, `formatadores.js`, `cronometro.js`, `sinal-sonoro.js`, `grafico-barras.js`/`grafico-linha.js` (D3), `videos-torrent.js`/`video-player-modal.js` (vídeos por torrent), `imagem-exercicio.js` (imagens de exercício geradas por IA).
 - `css/paginas/*.css` — estilos específicos de cada página; `css/base.css` e `css/componentes.css` são compartilhados.
 - `biblioteca-exercicios/` (json + `imagens-exercicios/`) / `d3.v7.min.js` / `webtorrent.min.js` — vendorizados/versionados na raiz (não CDN, não gitignorado), pra continuar funcionando offline.
 - `docs/*-especificacao.md` — as specs vivas de cada área (armazenamento local, PWA/offline, bike, exercícios, biblioteca de exercícios). Ao mudar comportamento coberto por uma spec, atualize o documento junto.

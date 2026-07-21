@@ -1,6 +1,7 @@
 import { TreinosStorage } from "../storage.js";
 import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { VideosTorrent } from "../videos-torrent.js";
+import { obterGeneroImagem, definirGeneroImagem } from "../imagem-exercicio.js";
 
 const dadosTreinos = TreinosStorage.lerJSON("dadosTreinos.v2", null);
 if (!dadosTreinos) {
@@ -35,6 +36,7 @@ class ConfiguracoesController {
   #confirmOk = document.getElementById("confirmOk");
   #confirmCancelar = document.getElementById("confirmCancelar");
   #toastEl = document.getElementById("toast");
+  #generoImagemSelectEl = document.getElementById("generoImagemSelect");
   #acaoConfirmada = null;
   #toastTimeout = null;
 
@@ -48,6 +50,11 @@ class ConfiguracoesController {
 
     this.#confirmCancelar.addEventListener("click", () => this.#fecharConfirmacao());
     this.#confirmOk.addEventListener("click", () => this.#executarAcaoConfirmada());
+
+    this.#generoImagemSelectEl.value = obterGeneroImagem();
+    this.#generoImagemSelectEl.addEventListener("change", () => {
+      definirGeneroImagem(this.#generoImagemSelectEl.value);
+    });
   }
 
   #alternarMenu() {

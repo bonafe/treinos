@@ -37,6 +37,16 @@
 > [treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md) e
 > [treino-bicicleta-especificacao.md](./treino-bicicleta-especificacao.md)
 > para a semântica de cada página.
+>
+> As imagens em `imagens-exercicios/` são geradas fora do site
+> (`src/python/gerar_imagens_treino.py`) e nomeadas por convenção —
+> `<exercicioId>__<genero>.png`, `genero` sendo `masculino` ou `feminino` —
+> em vez de referenciadas por um campo no JSON. Não existe registro de
+> quais exercícios já têm imagem gerada, então o código sempre tenta
+> carregar e trata a ausência como "sem imagem ainda" (`js/imagem-exercicio.js`).
+> A variante exibida vem da preferência `preferencias.generoImagem.v1`
+> (engrenagem de configurações em `sistema.html`), ver seção 2 de
+> [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md).
 
 ---
 

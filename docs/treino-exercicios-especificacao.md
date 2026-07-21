@@ -291,13 +291,19 @@ distingue) por dia ou mês.
   exercício específico em
   `treino_execucao.html?treino=<id>&exercicio=<exercicioId>&opcao=<opcaoExercicioId>`
   (o item principal usa `opcao` igual ao próprio `exercicioId`; cada
-  alternativa usa o seu). Dentro do card, dois botões próprios (cada
+  alternativa usa o seu). Dentro do card, três botões próprios (cada
   um com `event.stopPropagation()` para não disparar a navegação do
   card): "Ver vídeo" mostra o estado do download por torrent (baixando/
   pronto/indisponível) e abre um player embutido quando o vídeo estiver
   pronto — ver
   [torrent-videos-especificacao.md](./torrent-videos-especificacao.md#7-estados-de-carregamento-ui);
-  "Ver progresso" leva para
+  "Ver imagem" (`js/imagem-exercicio.js#ligarBotaoImagem`) só aparece se a
+  imagem daquele `exercicioId` existir em
+  `biblioteca-exercicios/imagens-exercicios/` (tentativa de carregamento,
+  sem registro prévio de quais exercícios já têm imagem — ver seção 2.1 de
+  [especificacao-biblioteca-exercicios.md](./especificacao-biblioteca-exercicios.md))
+  e abre a imagem num overlay próprio (`#imagemOverlay`); "Ver progresso"
+  leva para
   `treino_exercicio_progresso.html?exercicio=<exercicioId>&treino=<treinoId>`
   (seção 9).
 
@@ -408,6 +414,12 @@ Para a opção atual do slot atual, mostrar:
 
 - Nome do exercício (com link para o vídeo, via
   `bibliotecas.exercicios[exercicioId].midia`) e grupos musculares.
+- Imagem do exercício (`#imagemExercicio`, `js/imagem-exercicio.js`),
+  **sempre visível** na tela (não atrás de um botão, diferente do vídeo) —
+  atualizada a cada troca de exercício/opção/slot e também na tela de
+  descanso (mostra a imagem do próximo exercício, seção 8.6). Fica oculta
+  quando não existe imagem gerada para aquele `exercicioId`/gênero, e
+  também na tela de conclusão do treino (seção 8.7).
 - "Série `serieAtual` de `prescricao.series`".
 - Alvo da série, formatado conforme `prescricao.metrica` (mesma regra
   da seção 3.4.2 deste documento).
