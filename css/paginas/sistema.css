@@ -72,6 +72,10 @@ p {
   font-weight: 700;
 }
 
+.aviso-dados[hidden] {
+  display: none;
+}
+
 .aviso-dados {
   display: block;
   text-decoration: none;

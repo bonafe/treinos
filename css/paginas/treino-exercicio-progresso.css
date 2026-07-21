@@ -18,6 +18,10 @@ h1 {
   padding: 40px 10px;
 }
 
+.tabs[hidden] {
+  display: none;
+}
+
 .tabs {
   display: flex;
   gap: 8px;

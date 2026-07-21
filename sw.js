@@ -1,4 +1,4 @@
-const CACHE_NOME = "treinos-shell-v6";
+const CACHE_NOME = "treinos-shell-v7";
 
 const ARQUIVOS_PARA_CACHE = [
   "index.html",
@@ -10,6 +10,7 @@ const ARQUIVOS_PARA_CACHE = [
   "treino_exercicios.html",
   "treino_execucao.html",
   "treino_exercicio_progresso.html",
+  "treino_novo.html",
   "biblioteca-exercicios.json",
   "d3.v7.min.js",
   "webtorrent.min.js",
@@ -25,6 +26,7 @@ const ARQUIVOS_PARA_CACHE = [
   "css/paginas/treino-exercicios.css",
   "css/paginas/treino-execucao.css",
   "css/paginas/treino-exercicio-progresso.css",
+  "css/paginas/treino-novo.css",
   "js/storage.js",
   "js/biblioteca-exercicios.js",
   "js/prescricao-formatadores.js",
@@ -44,7 +46,8 @@ const ARQUIVOS_PARA_CACHE = [
   "js/paginas/treino-exercicios-menu.js",
   "js/paginas/treino-exercicios.js",
   "js/paginas/treino-execucao.js",
-  "js/paginas/treino-exercicio-progresso.js"
+  "js/paginas/treino-exercicio-progresso.js",
+  "js/paginas/treino-novo.js"
 ];
 
 // cache.addAll é tudo-ou-nada: se um único arquivo falhar, nenhum entra no

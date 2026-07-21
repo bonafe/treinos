@@ -644,8 +644,9 @@ ainda...") e não renderiza as abas.
   nenhum exercício cadastrado para esse tipo).
 - Respeitar `superset`/`circuito` na execução guiada — por ora tudo é
   sequencial (seção 8.1).
-- Edição dos dados pela interface — o plano de treino continua editado
-  manualmente e fora do controle de versão; a biblioteca é versionada no
+- Edição de treino existente pela interface — só criação de treino novo
+  (seção 11). Aquecimento, cardio complementar e alternativas de um
+  treino continuam editáveis só no JSON; a biblioteca é versionada no
   repositório, também sem editor na interface.
 - Painel de totais/relatórios agregando *todos* os exercícios (volume
   semanal, recordes pessoais etc.) — a seção 9 cobre progresso de um
@@ -662,3 +663,78 @@ ainda...") e não renderiza as abas.
   8.6). Um reload no meio de uma série volta pro estado "▶ Começar
   série" daquele exercício, com o cronômetro zerado (a série anterior,
   se já tinha sido concluída, continua salva normalmente).
+
+## 11. Criar treino novo (`treino_novo.html`)
+
+Primeira tela de edição do plano pela interface: monta um treino do zero
+e anexa a `dados.treinos`. Acessível por um botão "+" no cabeçalho de
+`treino_exercicios_menu.html` (`.icon-btn`, mesma aparência do
+`voltar-icon`, alinhado à direita).
+
+### 11.1 Carregamento
+
+Como qualquer outra página, carrega o plano
+(`TreinosStorage.carregarDadosTreinos()`) e a biblioteca
+(`carregarBiblioteca()`) — sem plano carregado, mostra erro apontando
+pra `importar_dados.html` (não dá pra criar um treino "solto", sem
+`metadata`/`distribuicaoSemanal`/`orientacoesGerais` de um plano
+existente).
+
+### 11.2 Formulário
+
+- **Nome** (texto, obrigatório) e **Tipo** (select com os quatro valores
+  de `treino.tipo`, seção 4).
+- Lista dos exercícios já adicionados nesta sessão (em memória, só grava
+  no plano ao salvar): nome, resumo da prescrição
+  (`PrescricaoFormatadores.metrica`), marcador de superset/circuito se
+  houver. Cada item tem botões pra mover pra cima/baixo (recalcula
+  `ordem` em passos de 10), editar (reabre o formulário de prescrição
+  pré-preenchido) e remover.
+- Botão "+ Adicionar exercício" abre o modal de busca.
+
+### 11.3 Modal de busca e prescrição
+
+Dois passos dentro do mesmo `.overlay`:
+
+1. **Busca**: texto livre (nome/aliases/tags, normalizado — minúsculas e
+   sem acento) + três filtros de múltipla seleção (grupo muscular,
+   equipamento, categoria de `classificacao.categoria`, rótulos em
+   `LABEL_CATEGORIA_EXERCICIO` de `js/constantes.js`) — cada um é um botão
+   que revela um painel de checkboxes roláveis (não um `<select multiple>`:
+   esse exige ctrl/cmd+clique pra selecionar mais de um item, inviável por
+   toque no celular), combinando por OU dentro do mesmo filtro e por E
+   entre filtros diferentes. Botão "Limpar filtros" zera busca e todas as
+   seleções. Filtragem client-side contra toda a biblioteca. Clicar num
+   resultado abre o passo 2 pra aquele exercício.
+2. **Prescrição**: séries; métrica (tipo limitado a
+   `exercicio.metricas.permitidas`, modo faixa/fixo/máximo — unidade é
+   automática, não editável); descanso em segundos (opcional, vazio usa
+   o padrão do plano); isometria (checkbox que revela
+   duração/posição/momento/últimas séries); agrupamento (nenhum/superset/
+   circuito + número). Botão "Adicionar" empurra o item pra lista em
+   memória e volta pro passo 1 (permite adicionar vários sem fechar o
+   modal); editar um item já adicionado abre direto no passo 2, com o
+   botão virando "Salvar" e fechando o modal ao confirmar.
+
+### 11.4 Salvar
+
+Ao clicar "Salvar treino": valida nome preenchido, gera `id` (nome
+normalizado/sem acento, espaços viram hífen, dedupe contra
+`dados.treinos` existente com sufixo `-2`, `-3`...), monta o objeto do
+treino (`aquecimento: null`, `cardio: []`, `alternativas: []` em cada
+item — fora de escopo desta tela, editáveis só no JSON depois;
+`configuracaoCircuito` setado automaticamente se algum item usar
+`circuito`; `status: "ativo"` com pelo menos um exercício, `"rascunho"`
+sem nenhum), empurra em `dados.treinos` e regrava o plano inteiro com
+`TreinosStorage.definirDadosTreinos(dados)` — mesma função já usada por
+`importar-dados.js`, sem mudar assinatura. Redireciona pra
+`treino_exercicios.html?treino=<id>`.
+
+### 11.5 Fora de escopo desta tela
+
+- Editar um treino já existente — só criação nova.
+- Configurar aquecimento, cardio complementar e alternativas — ficam
+  vazios/nulos, editáveis só no JSON.
+- Cadastrar exercício novo na biblioteca — a tela só consulta
+  `biblioteca-exercicios.json`, nunca escreve nela.
+- Atribuir o treino num dia da semana (`distribuicaoSemanal`).

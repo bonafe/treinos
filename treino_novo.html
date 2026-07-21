@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Novo Treino</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/componentes.css" />
+  <link rel="stylesheet" href="css/paginas/treino-novo.css" />
+</head>
+<body>
+  <main>
+    <header class="top">
+      <a class="voltar-icon" href="treino_exercicios_menu.html" aria-label="Voltar">←</a>
+      <div>
+        <h1>Novo treino</h1>
+      </div>
+    </header>
+
+    <div id="carregando" class="estado">Carregando…</div>
+
+    <div id="erro" class="estado" hidden></div>
+
+    <form id="formTreino" hidden>
+      <div class="campo">
+        <label for="nomeInput">Nome</label>
+        <input type="text" id="nomeInput" placeholder="Ex.: Treino D" autocomplete="off" />
+      </div>
+
+      <div class="campo">
+        <label for="tipoInput">Tipo</label>
+        <select id="tipoInput">
+          <option value="musculacao">Musculação</option>
+          <option value="calistenia">Peso do corpo</option>
+          <option value="condicionamento">Funcional</option>
+          <option value="flexibilidade">Flexibilidade</option>
+        </select>
+      </div>
+
+      <section class="secao">
+        <h2>Exercícios</h2>
+        <div id="exercicioLista" class="exercicio-lista"></div>
+        <div id="exercicioVazio" class="estado">Nenhum exercício adicionado ainda.</div>
+        <button type="button" id="adicionarExercicioBtn" class="adicionar-exercicio">+ Adicionar exercício</button>
+      </section>
+
+      <button type="button" id="salvarBtn" class="primary">Salvar treino</button>
+
+      <div id="mensagem" class="mensagem" hidden></div>
+    </form>
+  </main>
+
+  <div id="pickerOverlay" class="overlay" hidden>
+    <div class="picker-card">
+      <div class="picker-cabecalho">
+        <button type="button" id="pickerVoltarBtn" class="picker-voltar" hidden>‹ Buscar</button>
+        <h2 id="pickerTitulo">Adicionar exercício</h2>
+        <button type="button" id="pickerFecharBtn" class="picker-fechar" aria-label="Fechar">✕</button>
+      </div>
+
+      <div id="pickerBusca">
+        <div class="picker-filtros">
+          <input type="text" id="pickerBuscaInput" class="picker-busca" placeholder="Buscar por nome…" autocomplete="off" />
+
+          <div class="filtro-grupo">
+            <button type="button" class="filtro-toggle" id="filtroGrupoBtn">Grupo muscular</button>
+            <div class="filtro-opcoes" id="filtroGrupoOpcoes" hidden></div>
+          </div>
+
+          <div class="filtro-grupo">
+            <button type="button" class="filtro-toggle" id="filtroEquipamentoBtn">Equipamento</button>
+            <div class="filtro-opcoes" id="filtroEquipamentoOpcoes" hidden></div>
+          </div>
+
+          <div class="filtro-grupo">
+            <button type="button" class="filtro-toggle" id="filtroCategoriaBtn">Categoria</button>
+            <div class="filtro-opcoes" id="filtroCategoriaOpcoes" hidden></div>
+          </div>
+
+          <button type="button" id="pickerLimparBtn" class="picker-limpar">Limpar filtros</button>
+        </div>
+        <div id="pickerResultados" class="picker-resultados"></div>
+      </div>
+
+      <div id="pickerPrescricao" class="picker-prescricao" hidden>
+        <div class="campo-linha">
+          <div class="campo">
+            <label for="prescricaoSeriesInput">Séries</label>
+            <input type="number" id="prescricaoSeriesInput" min="1" value="3" />
+          </div>
+          <div class="campo">
+            <label for="prescricaoMetricaTipoInput">Métrica</label>
+            <select id="prescricaoMetricaTipoInput"></select>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="prescricaoModoInput">Modo</label>
+          <select id="prescricaoModoInput">
+            <option value="faixa">Faixa</option>
+            <option value="fixo">Fixo</option>
+            <option value="maximo">Máximo</option>
+          </select>
+        </div>
+
+        <div id="prescricaoFaixaCampos" class="campo-linha">
+          <div class="campo">
+            <label for="prescricaoMinInput">Mínimo</label>
+            <input type="number" id="prescricaoMinInput" min="0" />
+          </div>
+          <div class="campo">
+            <label for="prescricaoMaxInput">Máximo</label>
+            <input type="number" id="prescricaoMaxInput" min="0" />
+          </div>
+        </div>
+
+        <div id="prescricaoFixoCampo" class="campo" hidden>
+          <label for="prescricaoValorInput">Valor</label>
+          <input type="number" id="prescricaoValorInput" min="0" />
+        </div>
+
+        <div class="campo">
+          <label for="prescricaoDescansoInput">Descanso (segundos) <span class="opcional">— opcional</span></label>
+          <input type="number" id="prescricaoDescansoInput" min="0" placeholder="Usa o padrão do plano" />
+        </div>
+
+        <div class="picker-checkbox">
+          <input type="checkbox" id="prescricaoIsometriaInput" />
+          <label for="prescricaoIsometriaInput">Aplicar técnica de isometria</label>
+        </div>
+
+        <div id="prescricaoIsometriaCampos" class="picker-isometria-campos" hidden>
+          <div class="campo-linha">
+            <div class="campo">
+              <label for="isometriaDuracaoInput">Duração (s)</label>
+              <input type="number" id="isometriaDuracaoInput" min="1" value="20" />
+            </div>
+            <div class="campo">
+              <label for="isometriaUltimasSeriesInput">Últimas séries</label>
+              <input type="number" id="isometriaUltimasSeriesInput" min="1" value="2" />
+            </div>
+          </div>
+          <div class="campo">
+            <label for="isometriaPosicaoInput">Posição</label>
+            <input type="text" id="isometriaPosicaoInput" placeholder="Ex.: 50% da amplitude" />
+          </div>
+          <div class="campo">
+            <label for="isometriaMomentoInput">Momento</label>
+            <select id="isometriaMomentoInput">
+              <option value="final-da-serie">Ao final da série</option>
+              <option value="inicio-da-serie">No início da série</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Agrupamento</label>
+          <div class="picker-agrupamento">
+            <select id="prescricaoAgrupamentoTipoInput">
+              <option value="">Nenhum</option>
+              <option value="superset">Superset</option>
+              <option value="circuito">Circuito</option>
+            </select>
+            <input type="number" id="prescricaoAgrupamentoNumeroInput" min="1" placeholder="Número" hidden />
+          </div>
+        </div>
+
+        <button type="button" id="prescricaoConfirmarBtn" class="primary">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/paginas/treino-novo.js"></script>
+</body>
+</html>

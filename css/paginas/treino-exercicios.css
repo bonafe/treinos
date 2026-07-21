@@ -193,6 +193,10 @@ h1 {
   margin-top: 10px;
 }
 
+.ver-video[hidden] {
+  display: none;
+}
+
 .ver-video,
 .ver-progresso {
   appearance: none;

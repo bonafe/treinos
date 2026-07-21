@@ -1,4 +1,5 @@
-.voltar-icon {
+.voltar-icon,
+.icon-btn {
   flex-shrink: 0;
   text-decoration: none;
   color: #cbd5e1;
@@ -13,11 +14,23 @@
   font-size: 1.2rem;
 }
 
+.icon-btn {
+  margin-left: auto;
+}
+
+.icon-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
 .top {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 18px;
+}
+
+.tag[hidden] {
+  display: none;
 }
 
 .tag {

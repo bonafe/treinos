@@ -18,6 +18,10 @@ h1 {
   font-weight: 1000;
 }
 
+.stepper[hidden] {
+  display: none;
+}
+
 .stepper {
   display: flex;
   align-items: center;
@@ -172,6 +176,12 @@ h1 {
 .campo-input input:focus {
   outline: none;
   border-color: #bef264;
+}
+
+button.primary[hidden],
+button.secondary[hidden],
+a.iniciar[hidden] {
+  display: none;
 }
 
 button.primary,

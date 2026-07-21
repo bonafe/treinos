@@ -16,6 +16,10 @@ p.subtitle {
   font-size: clamp(0.95rem, 3.5vw, 1.05rem);
 }
 
+.continuar[hidden] {
+  display: none;
+}
+
 .continuar {
   display: block;
   text-decoration: none;
