@@ -6,10 +6,12 @@ import { SinalSonoro } from "../sinal-sonoro.js";
 import { Cronometro } from "../cronometro.js";
 import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
 import { ligarImagemExercicio, prefetchImagensDoTreino } from "../imagem-exercicio.js";
+import { criarDetalhesModal } from "../detalhes-modal.js";
 
 class TreinoExecucaoController {
   #sinal = new SinalSonoro();
   #videoModal = criarVideoPlayerModal();
+  #detalhesModal = criarDetalhesModal();
   #verVideoToken = 0;
   #imagemToken = 0;
   #cronometroSerie = new Cronometro({ aoTick: () => this.#atualizarSerieTimerTela() });
@@ -36,6 +38,7 @@ class TreinoExecucaoController {
   #erroEl = document.getElementById("erro");
   #execucaoEl = document.getElementById("execucao");
   #exercicioNomeEl = document.getElementById("exercicioNome");
+  #infoExercicioBtnEl = document.getElementById("infoExercicioBtn");
   #exercicioGruposEl = document.getElementById("exercicioGrupos");
   #serieAtualLabelEl = document.getElementById("serieAtualLabel");
   #alvoRepeticoesEl = document.getElementById("alvoRepeticoes");
@@ -63,6 +66,10 @@ class TreinoExecucaoController {
   iniciar() {
     this.#comecarSerieEl.addEventListener("click", () => this.#alternarSerie());
     this.#concluirSerieEl.addEventListener("click", () => this.#concluirSerie());
+    this.#infoExercicioBtnEl.addEventListener("click", () => {
+      const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[this.#itemAtual().exercicioId];
+      if (exercicio) this.#detalhesModal.abrir(exercicio, this.#bibliotecaExercicios);
+    });
     this.#usarSubstitutoEl.addEventListener("click", () => this.#usarSubstituto());
     this.#iniciarSerieEl.addEventListener("click", () => this.#finalizarDescanso());
     this.#exercicioAnteriorEl.addEventListener("click", () => this.#irParaExercicio(this.#slotIndexAtual() - 1));

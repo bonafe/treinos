@@ -3,6 +3,7 @@ import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { LABEL_CATEGORIA_EXERCICIO } from "../constantes.js";
 import { normalizar, gerarIdUnico } from "../identificadores.js";
+import { criarDetalhesModal } from "../detalhes-modal.js";
 
 const LABEL_METRICA = {
   repeticoes: "Repetições",
@@ -15,6 +16,7 @@ class TreinoNovoController {
   #exercicios = [];
   #editandoIndex = null;
   #exercicioEscolhidoId = null;
+  #detalhesModal = criarDetalhesModal();
 
   #carregandoEl = document.getElementById("carregando");
   #erroEl = document.getElementById("erro");
@@ -29,6 +31,7 @@ class TreinoNovoController {
 
   #pickerOverlayEl = document.getElementById("pickerOverlay");
   #pickerTituloEl = document.getElementById("pickerTitulo");
+  #pickerInfoBtnEl = document.getElementById("pickerInfoBtn");
   #pickerVoltarBtnEl = document.getElementById("pickerVoltarBtn");
   #pickerFecharBtnEl = document.getElementById("pickerFecharBtn");
   #pickerBuscaEl = document.getElementById("pickerBusca");
@@ -68,6 +71,10 @@ class TreinoNovoController {
     this.#pickerFecharBtnEl.addEventListener("click", () => this.#fecharPicker());
     this.#pickerVoltarBtnEl.addEventListener("click", () => this.#abrirPickerBusca());
     this.#salvarBtnEl.addEventListener("click", () => this.#salvarTreino());
+    this.#pickerInfoBtnEl.addEventListener("click", () => {
+      const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[this.#exercicioEscolhidoId];
+      if (exercicio) this.#detalhesModal.abrir(exercicio, this.#bibliotecaExercicios);
+    });
 
     this.#pickerBuscaInputEl.addEventListener("input", () => this.#filtrarResultados());
     this.#pickerLimparBtnEl.addEventListener("click", () => this.#limparFiltros());
@@ -182,6 +189,7 @@ class TreinoNovoController {
   #abrirPickerBusca() {
     this.#editandoIndex = null;
     this.#pickerTituloEl.textContent = "Adicionar exercício";
+    this.#pickerInfoBtnEl.hidden = true;
     this.#pickerVoltarBtnEl.hidden = true;
     this.#pickerBuscaEl.hidden = false;
     this.#pickerPrescricaoEl.hidden = true;
@@ -252,15 +260,29 @@ class TreinoNovoController {
         this.#bibliotecaExercicios.gruposMusculares
       );
 
-      const botao = document.createElement("button");
-      botao.type = "button";
-      botao.className = "picker-resultado-item";
-      botao.innerHTML = `
-        <div class="picker-resultado-nome">${exercicio.nome}</div>
+      const item = document.createElement("div");
+      item.className = "picker-resultado-item";
+      item.tabIndex = 0;
+      item.setAttribute("role", "button");
+      item.innerHTML = `
+        <div class="picker-resultado-cabecalho">
+          <div class="picker-resultado-nome">${exercicio.nome}</div>
+          <button type="button" class="info-btn" aria-label="Ver detalhes">ⓘ</button>
+        </div>
         ${grupos.length ? `<div class="picker-resultado-grupos">${grupos.map((g) => `<span>${g}</span>`).join("")}</div>` : ""}
       `;
-      botao.addEventListener("click", () => this.#selecionarExercicio(exercicio.id));
-      this.#pickerResultadosEl.appendChild(botao);
+      item.addEventListener("click", () => this.#selecionarExercicio(exercicio.id));
+      item.addEventListener("keydown", (evento) => {
+        if (evento.key === "Enter" || evento.key === " ") {
+          evento.preventDefault();
+          this.#selecionarExercicio(exercicio.id);
+        }
+      });
+      item.querySelector(".info-btn").addEventListener("click", (evento) => {
+        evento.stopPropagation();
+        this.#detalhesModal.abrir(exercicio, this.#bibliotecaExercicios);
+      });
+      this.#pickerResultadosEl.appendChild(item);
     });
   }
 
@@ -269,6 +291,7 @@ class TreinoNovoController {
     this.#exercicioEscolhidoId = exercicioId;
 
     this.#pickerTituloEl.textContent = exercicio.nome;
+    this.#pickerInfoBtnEl.hidden = false;
     this.#pickerVoltarBtnEl.hidden = false;
     this.#pickerBuscaEl.hidden = true;
     this.#pickerPrescricaoEl.hidden = false;
@@ -402,7 +425,10 @@ class TreinoNovoController {
       div.className = "exercicio-item";
       div.innerHTML = `
         <div class="exercicio-item-info">
-          <div class="exercicio-item-nome">${nome}</div>
+          <div class="exercicio-item-nome-linha">
+            <div class="exercicio-item-nome">${nome}</div>
+            ${exercicio ? '<button type="button" class="info-btn" aria-label="Ver detalhes">ⓘ</button>' : ""}
+          </div>
           <div class="exercicio-item-resumo">${resumo}</div>
           ${marcador ? `<span class="exercicio-item-marcador">${marcador}</span>` : ""}
         </div>
@@ -418,6 +444,9 @@ class TreinoNovoController {
       div.querySelector('[data-acao="descer"]').addEventListener("click", () => this.#moverExercicio(index, 1));
       div.querySelector('[data-acao="editar"]').addEventListener("click", () => this.#editarExercicio(index));
       div.querySelector('[data-acao="remover"]').addEventListener("click", () => this.#removerExercicio(index));
+      if (exercicio) {
+        div.querySelector(".info-btn").addEventListener("click", () => this.#detalhesModal.abrir(exercicio, this.#bibliotecaExercicios));
+      }
 
       this.#exercicioListaEl.appendChild(div);
     });
@@ -445,6 +474,7 @@ class TreinoNovoController {
     this.#exercicioEscolhidoId = item.exercicioId;
 
     this.#pickerTituloEl.textContent = exercicio ? exercicio.nome : item.exercicioId;
+    this.#pickerInfoBtnEl.hidden = !exercicio;
     this.#pickerVoltarBtnEl.hidden = true;
     this.#pickerBuscaEl.hidden = true;
     this.#pickerPrescricaoEl.hidden = false;

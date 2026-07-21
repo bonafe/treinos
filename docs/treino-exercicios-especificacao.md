@@ -445,7 +445,15 @@ primeiro slot e salva esse estado inicial imediatamente.
 Para a opção atual do slot atual, mostrar:
 
 - Nome do exercício (com link para o vídeo, via
-  `bibliotecas.exercicios[exercicioId].midia`) e grupos musculares.
+  `bibliotecas.exercicios[exercicioId].midia`) e grupos musculares, com um
+  botão "ⓘ" ao lado do nome (`js/detalhes-modal.js#criarDetalhesModal`) que
+  abre um overlay com descrição (posição inicial/movimento/posição final),
+  grupos musculares detalhados (principais/secundários/estabilizadores),
+  equipamentos, instruções de execução, respiração, erros comuns, cuidados
+  e restrições do exercício atual — mesmo componente reaproveitado em
+  `treino_novo.html` (picker de busca e lista de exercícios já
+  adicionados) e no motor de alongamento
+  ([treino-alongamento-especificacao.md](./treino-alongamento-especificacao.md)).
 - Imagem do exercício (`#imagemExercicio`, `js/imagem-exercicio.js`),
   **sempre visível** na tela (não atrás de um botão, diferente do vídeo) —
   atualizada a cada troca de exercício/opção/slot e também na tela de
@@ -729,11 +737,11 @@ existente).
 - **Nome** (texto, obrigatório) e **Tipo** (select com os quatro valores
   de `treino.tipo`, seção 4).
 - Lista dos exercícios já adicionados nesta sessão (em memória, só grava
-  no plano ao salvar): nome, resumo da prescrição
-  (`PrescricaoFormatadores.metrica`), marcador de superset/circuito se
-  houver. Cada item tem botões pra mover pra cima/baixo (recalcula
-  `ordem` em passos de 10), editar (reabre o formulário de prescrição
-  pré-preenchido) e remover.
+  no plano ao salvar): nome (com botão "ⓘ" ao lado, ver seção 8.4) resumo
+  da prescrição (`PrescricaoFormatadores.metrica`), marcador de
+  superset/circuito se houver. Cada item tem botões pra mover pra
+  cima/baixo (recalcula `ordem` em passos de 10), editar (reabre o
+  formulário de prescrição pré-preenchido) e remover.
 - Botão "+ Adicionar exercício" abre o modal de busca.
 
 ### 11.3 Modal de busca e prescrição
@@ -748,25 +756,33 @@ Dois passos dentro do mesmo `.overlay`:
    esse exige ctrl/cmd+clique pra selecionar mais de um item, inviável por
    toque no celular), combinando por OU dentro do mesmo filtro e por E
    entre filtros diferentes. Botão "Limpar filtros" zera busca e todas as
-   seleções. Filtragem client-side contra toda a biblioteca. Clicar num
-   resultado abre o passo 2 pra aquele exercício.
+   seleções. Filtragem client-side contra toda a biblioteca. Cada
+   resultado tem um botão "ⓘ" (`js/detalhes-modal.js#criarDetalhesModal`,
+   `event.stopPropagation()` pra não selecionar o exercício) que mostra
+   descrição, grupos musculares detalhados, equipamentos, execução e
+   restrições antes de decidir adicionar. Clicar no resto do resultado
+   abre o passo 2 pra aquele exercício.
 2. **Prescrição**: séries; métrica (tipo limitado a
    `exercicio.metricas.permitidas`, modo faixa/fixo/máximo — unidade é
    automática, não editável); descanso em segundos (opcional, vazio usa
    o padrão do plano); isometria (checkbox que revela
    duração/posição/momento/últimas séries); agrupamento (nenhum/superset/
-   circuito + número). Botão "Adicionar" empurra o item pra lista em
+   circuito + número). O título deste passo (nome do exercício) também
+   tem o botão "ⓘ". Botão "Adicionar" empurra o item pra lista em
    memória e volta pro passo 1 (permite adicionar vários sem fechar o
    modal); editar um item já adicionado abre direto no passo 2, com o
    botão virando "Salvar" e fechando o modal ao confirmar.
 
 ### 11.4 Salvar
 
-Ao clicar "Salvar treino": valida nome preenchido, gera `id` (nome
-normalizado/sem acento, espaços viram hífen, dedupe contra
-`dados.treinos` existente com sufixo `-2`, `-3`...), monta o objeto do
-treino (`aquecimento: null`, `cardio: []`, `alternativas: []` em cada
-item — fora de escopo desta tela, editáveis só no JSON depois;
+Ao clicar "Salvar treino": valida nome preenchido, gera `id`
+(`js/identificadores.js#gerarIdUnico`, nome normalizado/sem acento,
+espaços viram hífen, dedupe contra `dados.treinos` existente com sufixo
+`-2`, `-3`...), monta o objeto do treino (`aquecimento: null`, `cardio: []`,
+`alongamento: []`, `alternativas: []` em cada item — anexar um treino de
+cardio/alongamento existente como complementar fica fora de escopo desta
+tela, editável só no JSON depois (seção 12.3 de
+[especificacao-biblioteca-exercicios.md](./especificacao-biblioteca-exercicios.md));
 `configuracaoCircuito` setado automaticamente se algum item usar
 `circuito`; `status: "ativo"` com pelo menos um exercício, `"rascunho"`
 sem nenhum), empurra em `dados.treinos` e regrava o plano inteiro com

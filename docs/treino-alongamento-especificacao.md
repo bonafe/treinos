@@ -98,6 +98,11 @@ prescrição), trocando a fonte do picker para `bibliotecas.alongamentos`:
 - Formulário de prescrição: série + métrica (mesmo controle de
   `treino_novo.html`, mas sem os campos de isometria/agrupamento —
   alongamento não usa técnica nem superset/circuito).
+- Botão "ⓘ" (`js/detalhes-modal.js`) ao lado do nome — em cada resultado
+  da busca, no título da prescrição depois de escolher um alongamento, e
+  em cada item já adicionado à lista — abre os detalhes (descrição,
+  grupos musculares, equipamentos, execução, restrições) sem precisar
+  adicionar o alongamento primeiro.
 - Ao salvar, gera um `id` único (`js/identificadores.js`, mesmo helper de
   `treino_novo.html`/`treino_bicicleta_novo.html`) e dá `push` em
   `dados.treinosAlongamento`, depois volta para
@@ -131,7 +136,10 @@ essas opções, seção 2):
   `treinoAlongamento.alongamentos` (ordenado por `ordem`) — um slot por
   alongamento, sem opções alternativas (diferente da musculação, aqui cada
   slot tem uma única opção).
-- Pra cada slot: nome do alongamento e grupos musculares (resolvidos via
+- Pra cada slot: nome do alongamento (com botão "ⓘ" ao lado, abrindo o
+  mesmo `js/detalhes-modal.js` da musculação — descrição, grupos
+  musculares detalhados, equipamentos, execução, restrições) e grupos
+  musculares (resolvidos via
   `bibliotecas.alongamentos[id]` + `bibliotecas.gruposMusculares`, mesmo
   padrão da musculação), "Série `serieAtual` de `prescricao.series`", alvo
   formatado com `PrescricaoFormatadores.metrica` (reaproveitado, já lida

@@ -54,6 +54,7 @@
       <div class="picker-cabecalho">
         <button type="button" id="pickerVoltarBtn" class="picker-voltar" hidden>‹ Buscar</button>
         <h2 id="pickerTitulo">Adicionar alongamento</h2>
+        <button type="button" id="pickerInfoBtn" class="info-btn" hidden aria-label="Ver detalhes">ⓘ</button>
         <button type="button" id="pickerFecharBtn" class="picker-fechar" aria-label="Fechar">✕</button>
       </div>
 
@@ -120,6 +121,14 @@
 
         <button type="button" id="prescricaoConfirmarBtn" class="primary">Adicionar</button>
       </div>
+    </div>
+  </div>
+
+  <div id="detalhesOverlay" class="overlay" hidden>
+    <div class="detalhes-card">
+      <button id="detalhesFechar" class="video-fechar" type="button" aria-label="Fechar detalhes">✕</button>
+      <h2 id="detalhesNome"></h2>
+      <div id="detalhesConteudo" class="detalhes-conteudo"></div>
     </div>
   </div>
 

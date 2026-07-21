@@ -3,6 +3,7 @@ import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { LABEL_TIPO_ALONGAMENTO } from "../constantes.js";
 import { normalizar, gerarIdUnico } from "../identificadores.js";
+import { criarDetalhesModal } from "../detalhes-modal.js";
 
 const LABEL_METRICA = {
   repeticoes: "Repetições",
@@ -18,6 +19,7 @@ class TreinoAlongamentoNovoController {
   #alongamentos = [];
   #editandoIndex = null;
   #alongamentoEscolhidoId = null;
+  #detalhesModal = criarDetalhesModal();
 
   #carregandoEl = document.getElementById("carregando");
   #erroEl = document.getElementById("erro");
@@ -32,6 +34,7 @@ class TreinoAlongamentoNovoController {
 
   #pickerOverlayEl = document.getElementById("pickerOverlay");
   #pickerTituloEl = document.getElementById("pickerTitulo");
+  #pickerInfoBtnEl = document.getElementById("pickerInfoBtn");
   #pickerVoltarBtnEl = document.getElementById("pickerVoltarBtn");
   #pickerFecharBtnEl = document.getElementById("pickerFecharBtn");
   #pickerBuscaEl = document.getElementById("pickerBusca");
@@ -61,6 +64,10 @@ class TreinoAlongamentoNovoController {
     this.#pickerFecharBtnEl.addEventListener("click", () => this.#fecharPicker());
     this.#pickerVoltarBtnEl.addEventListener("click", () => this.#abrirPickerBusca());
     this.#salvarBtnEl.addEventListener("click", () => this.#salvarTreino());
+    this.#pickerInfoBtnEl.addEventListener("click", () => {
+      const alongamento = this.#bibliotecaExercicios.bibliotecas.alongamentos[this.#alongamentoEscolhidoId];
+      if (alongamento) this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios);
+    });
 
     this.#pickerBuscaInputEl.addEventListener("input", () => this.#filtrarResultados());
     this.#pickerLimparBtnEl.addEventListener("click", () => this.#limparFiltros());
@@ -159,6 +166,7 @@ class TreinoAlongamentoNovoController {
   #abrirPickerBusca() {
     this.#editandoIndex = null;
     this.#pickerTituloEl.textContent = "Adicionar alongamento";
+    this.#pickerInfoBtnEl.hidden = true;
     this.#pickerVoltarBtnEl.hidden = true;
     this.#pickerBuscaEl.hidden = false;
     this.#pickerPrescricaoEl.hidden = true;
@@ -218,15 +226,29 @@ class TreinoAlongamentoNovoController {
         this.#bibliotecaExercicios.gruposMusculares
       );
 
-      const botao = document.createElement("button");
-      botao.type = "button";
-      botao.className = "picker-resultado-item";
-      botao.innerHTML = `
-        <div class="picker-resultado-nome">${alongamento.nome}</div>
+      const item = document.createElement("div");
+      item.className = "picker-resultado-item";
+      item.tabIndex = 0;
+      item.setAttribute("role", "button");
+      item.innerHTML = `
+        <div class="picker-resultado-cabecalho">
+          <div class="picker-resultado-nome">${alongamento.nome}</div>
+          <button type="button" class="info-btn" aria-label="Ver detalhes">ⓘ</button>
+        </div>
         ${grupos.length ? `<div class="picker-resultado-grupos">${grupos.map((g) => `<span>${g}</span>`).join("")}</div>` : ""}
       `;
-      botao.addEventListener("click", () => this.#selecionarAlongamento(alongamento.id));
-      this.#pickerResultadosEl.appendChild(botao);
+      item.addEventListener("click", () => this.#selecionarAlongamento(alongamento.id));
+      item.addEventListener("keydown", (evento) => {
+        if (evento.key === "Enter" || evento.key === " ") {
+          evento.preventDefault();
+          this.#selecionarAlongamento(alongamento.id);
+        }
+      });
+      item.querySelector(".info-btn").addEventListener("click", (evento) => {
+        evento.stopPropagation();
+        this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios);
+      });
+      this.#pickerResultadosEl.appendChild(item);
     });
   }
 
@@ -235,6 +257,7 @@ class TreinoAlongamentoNovoController {
     this.#alongamentoEscolhidoId = alongamentoId;
 
     this.#pickerTituloEl.textContent = alongamento.nome;
+    this.#pickerInfoBtnEl.hidden = false;
     this.#pickerVoltarBtnEl.hidden = false;
     this.#pickerBuscaEl.hidden = true;
     this.#pickerPrescricaoEl.hidden = false;
@@ -326,7 +349,10 @@ class TreinoAlongamentoNovoController {
       div.className = "exercicio-item";
       div.innerHTML = `
         <div class="exercicio-item-info">
-          <div class="exercicio-item-nome">${nome}</div>
+          <div class="exercicio-item-nome-linha">
+            <div class="exercicio-item-nome">${nome}</div>
+            ${alongamento ? '<button type="button" class="info-btn" aria-label="Ver detalhes">ⓘ</button>' : ""}
+          </div>
           <div class="exercicio-item-resumo">${resumo}</div>
         </div>
         <div class="exercicio-item-acoes">
@@ -341,6 +367,9 @@ class TreinoAlongamentoNovoController {
       div.querySelector('[data-acao="descer"]').addEventListener("click", () => this.#moverAlongamento(index, 1));
       div.querySelector('[data-acao="editar"]').addEventListener("click", () => this.#editarAlongamento(index));
       div.querySelector('[data-acao="remover"]').addEventListener("click", () => this.#removerAlongamento(index));
+      if (alongamento) {
+        div.querySelector(".info-btn").addEventListener("click", () => this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios));
+      }
 
       this.#alongamentoListaEl.appendChild(div);
     });
@@ -368,6 +397,7 @@ class TreinoAlongamentoNovoController {
     this.#alongamentoEscolhidoId = item.alongamentoId;
 
     this.#pickerTituloEl.textContent = alongamento ? alongamento.nome : item.alongamentoId;
+    this.#pickerInfoBtnEl.hidden = !alongamento;
     this.#pickerVoltarBtnEl.hidden = true;
     this.#pickerBuscaEl.hidden = true;
     this.#pickerPrescricaoEl.hidden = false;

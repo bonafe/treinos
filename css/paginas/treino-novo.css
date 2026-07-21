@@ -93,6 +93,12 @@ section.secao h2 {
   min-width: 0;
 }
 
+.exercicio-item-nome-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .exercicio-item-nome {
   font-weight: 850;
   font-size: 0.96rem;
@@ -368,6 +374,13 @@ button.primary:active {
 
 .picker-resultado-item:active {
   transform: translateY(1px) scale(0.995);
+}
+
+.picker-resultado-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .picker-resultado-nome {

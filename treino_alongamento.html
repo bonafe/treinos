@@ -29,7 +29,10 @@
     <div id="erro" class="estado" hidden></div>
 
     <section id="execucao" class="card-exercicio" hidden>
-      <h2 id="alongamentoNome"></h2>
+      <div class="titulo-com-info">
+        <h2 id="alongamentoNome"></h2>
+        <button type="button" id="infoAlongamentoBtn" class="info-btn" aria-label="Ver detalhes">ⓘ</button>
+      </div>
       <div id="alongamentoGrupos" class="item-grupos"></div>
 
       <div class="serie-info">
@@ -73,6 +76,14 @@
     <div class="video-card">
       <button id="videoFechar" class="video-fechar" type="button" aria-label="Fechar vídeo">✕</button>
       <video id="videoPlayer" controls playsinline></video>
+    </div>
+  </div>
+
+  <div id="detalhesOverlay" class="overlay" hidden>
+    <div class="detalhes-card">
+      <button id="detalhesFechar" class="video-fechar" type="button" aria-label="Fechar detalhes">✕</button>
+      <h2 id="detalhesNome"></h2>
+      <div id="detalhesConteudo" class="detalhes-conteudo"></div>
     </div>
   </div>
 

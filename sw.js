@@ -1,4 +1,4 @@
-const CACHE_NOME = "treinos-shell-v10";
+const CACHE_NOME = "treinos-shell-v11";
 
 const ARQUIVOS_PARA_CACHE = [
   "index.html",
@@ -44,6 +44,7 @@ const ARQUIVOS_PARA_CACHE = [
   "js/videos-torrent.js",
   "js/video-player-modal.js",
   "js/imagem-exercicio.js",
+  "js/detalhes-modal.js",
   "js/paginas/index.js",
   "js/paginas/sistema.js",
   "js/paginas/importar-dados.js",

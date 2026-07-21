@@ -6,6 +6,7 @@ import { SinalSonoro } from "../sinal-sonoro.js";
 import { Cronometro } from "../cronometro.js";
 import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
 import { ligarImagemExercicio, prefetchImagensDoTreino } from "../imagem-exercicio.js";
+import { criarDetalhesModal } from "../detalhes-modal.js";
 
 // Motor sequencial simplificado, modelado em treino-execucao.js (musculação)
 // — sem carga, repetições realizadas, ajuste de carga ou substituto, já
@@ -15,6 +16,7 @@ import { ligarImagemExercicio, prefetchImagensDoTreino } from "../imagem-exercic
 class TreinoAlongamentoController {
   #sinal = new SinalSonoro();
   #videoModal = criarVideoPlayerModal();
+  #detalhesModal = criarDetalhesModal();
   #verVideoToken = 0;
   #imagemToken = 0;
   #cronometroSerie = new Cronometro({ aoTick: () => this.#atualizarSerieTimerTela() });
@@ -40,6 +42,7 @@ class TreinoAlongamentoController {
   #erroEl = document.getElementById("erro");
   #execucaoEl = document.getElementById("execucao");
   #alongamentoNomeEl = document.getElementById("alongamentoNome");
+  #infoAlongamentoBtnEl = document.getElementById("infoAlongamentoBtn");
   #alongamentoGruposEl = document.getElementById("alongamentoGrupos");
   #serieAtualLabelEl = document.getElementById("serieAtualLabel");
   #alvoMetricaEl = document.getElementById("alvoMetrica");
@@ -64,6 +67,10 @@ class TreinoAlongamentoController {
     this.#iniciarSerieEl.addEventListener("click", () => this.#finalizarDescanso());
     this.#alongamentoAnteriorEl.addEventListener("click", () => this.#irParaAlongamento(this.#slotIndexAtual() - 1));
     this.#alongamentoProximoEl.addEventListener("click", () => this.#irParaAlongamento(this.#slotIndexAtual() + 1));
+    this.#infoAlongamentoBtnEl.addEventListener("click", () => {
+      const alongamento = this.#bibliotecaExercicios.bibliotecas.alongamentos[this.#itemAtual().alongamentoId];
+      if (alongamento) this.#detalhesModal.abrir(alongamento, this.#bibliotecaExercicios);
+    });
 
     this.#carregar();
   }
