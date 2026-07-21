@@ -87,6 +87,23 @@
   max-height: 80vh;
 }
 
+.imagem-card {
+  position: relative;
+  width: min(720px, 100%);
+  background: #000000;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.imagem-card img {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
 .video-fechar {
   position: absolute;
   top: 10px;

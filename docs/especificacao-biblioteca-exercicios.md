@@ -27,14 +27,26 @@
 - `midia.videoUrl` passou a ser admitido;
 - valores desconhecidos devem ser `null` ou omitidos, em vez de novos valores artificiais de enumeração.
 
-> **Modelo implementado pelo código.** `biblioteca-exercicios.json` fica na
-> raiz do repositório (versionado, buscado por `fetch` — não é dado
-> pessoal, ver seção 2.1) e o plano de treino é carregado manualmente em
+> **Modelo implementado pelo código.** `biblioteca-exercicios.json` fica em
+> `biblioteca-exercicios/biblioteca-exercicios.json` (versionado, buscado
+> por `fetch` — não é dado pessoal, ver seção 2.1; a mesma pasta
+> `biblioteca-exercicios/` guarda as imagens de exercício geradas em
+> `imagens-exercicios/`) e o plano de treino é carregado manualmente em
 > [importar_dados.html](../importar_dados.html) como sempre foi (dado
 > pessoal, só em `localStorage`). Ver
 > [treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md) e
 > [treino-bicicleta-especificacao.md](./treino-bicicleta-especificacao.md)
 > para a semântica de cada página.
+>
+> As imagens em `imagens-exercicios/` são geradas fora do site
+> (`src/python/gerar_imagens_treino.py`) e nomeadas por convenção —
+> `<exercicioId>__<genero>.png`, `genero` sendo `masculino` ou `feminino` —
+> em vez de referenciadas por um campo no JSON. Não existe registro de
+> quais exercícios já têm imagem gerada, então o código sempre tenta
+> carregar e trata a ausência como "sem imagem ainda" (`js/imagem-exercicio.js`).
+> A variante exibida vem da preferência `preferencias.generoImagem.v1`
+> (engrenagem de configurações em `sistema.html`), ver seção 2 de
+> [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md).
 
 ---
 
@@ -133,7 +145,7 @@ exercício ou modalidade é repetido aqui, só o `exercicioId`/`modalidadeId`:
   "schemaVersion": "1.2",
 
   "biblioteca": {
-    "arquivo": "biblioteca-exercicios.json"
+    "arquivo": "biblioteca-exercicios/biblioteca-exercicios.json"
   },
 
   "origem": {

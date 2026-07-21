@@ -4,6 +4,7 @@ import { PrescricaoFormatadores } from "../prescricao-formatadores.js";
 import { Formatadores } from "../formatadores.js";
 import { LABEL_TIPO } from "../constantes.js";
 import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
+import { criarImagemModal, ligarBotaoImagem } from "../imagem-exercicio.js";
 
 const MOMENTO_LABEL = {
   "final-da-serie": "ao final da série",
@@ -25,6 +26,7 @@ function formatarPosicaoIsometria(posicao) {
 
 class TreinoExerciciosController {
   #videoModal = criarVideoPlayerModal();
+  #imagemModal = criarImagemModal();
 
   #montarGuia(orientacoesGerais) {
     if (!orientacoesGerais) return "";
@@ -141,6 +143,7 @@ class TreinoExerciciosController {
       ${isometria ? `<div class="item-isometria-nota">${this.#notaIsometria(prescricao.tecnicas)}</div>` : ""}
       <div class="item-acoes">
         <button type="button" class="ver-video" hidden></button>
+        <button type="button" class="ver-imagem" hidden></button>
         <a class="ver-progresso" href="${progressoUrl}">Ver progresso →</a>
       </div>
     `;
@@ -156,6 +159,7 @@ class TreinoExerciciosController {
     });
 
     ligarBotaoVideo(div.querySelector(".ver-video"), exercicio && exercicio.midia, this.#videoModal);
+    ligarBotaoImagem(div.querySelector(".ver-imagem"), exercicioId, nome, this.#imagemModal);
 
     div.querySelector(".ver-progresso").addEventListener("click", (evento) => {
       evento.stopPropagation();

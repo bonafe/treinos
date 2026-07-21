@@ -5,11 +5,13 @@ import { Formatadores } from "../formatadores.js";
 import { SinalSonoro } from "../sinal-sonoro.js";
 import { Cronometro } from "../cronometro.js";
 import { criarVideoPlayerModal, ligarBotaoVideo } from "../video-player-modal.js";
+import { ligarImagemExercicio } from "../imagem-exercicio.js";
 
 class TreinoExecucaoController {
   #sinal = new SinalSonoro();
   #videoModal = criarVideoPlayerModal();
   #verVideoToken = 0;
+  #imagemToken = 0;
   #cronometroSerie = new Cronometro({ aoTick: () => this.#atualizarSerieTimerTela() });
   #cronometroDescanso = new Cronometro({ aoTick: (segundos) => this.#tickDescanso(segundos) });
 
@@ -47,6 +49,7 @@ class TreinoExecucaoController {
   #concluirSerieEl = document.getElementById("concluirSerie");
   #usarSubstitutoEl = document.getElementById("usarSubstituto");
   #verVideoEl = document.getElementById("verVideo");
+  #imagemExercicioEl = document.getElementById("imagemExercicio");
   #descansoEl = document.getElementById("descanso");
   #descansoTempoEl = document.getElementById("descansoTempo");
   #descansoMinEl = document.getElementById("descansoMin");
@@ -199,6 +202,16 @@ class TreinoExecucaoController {
     });
   }
 
+  // Imagem sempre visível na tela, independente de vídeo (que fica atrás de
+  // um botão): usa o mesmo padrão de token do vídeo pra um carregamento
+  // atrasado não sobrescrever a tela depois que o aluno já avançou pra
+  // outro exercício.
+  #atualizarImagemExercicio(exercicioId, nomeExercicio) {
+    this.#imagemToken += 1;
+    const token = this.#imagemToken;
+    ligarImagemExercicio(this.#imagemExercicioEl, exercicioId, nomeExercicio, () => token === this.#imagemToken);
+  }
+
   #itemAtual() {
     const slot = this.#slots[this.#slotIndexAtual()];
     return slot.opcoes.find((o) => o.exercicioId === this.#progresso.opcaoExercicioId);
@@ -236,7 +249,9 @@ class TreinoExecucaoController {
     const item = this.#itemAtual();
     const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[item.exercicioId];
 
-    this.#exercicioNomeEl.textContent = exercicio ? exercicio.nome : item.exercicioId;
+    const nomeExercicio = exercicio ? exercicio.nome : item.exercicioId;
+    this.#exercicioNomeEl.textContent = nomeExercicio;
+    this.#atualizarImagemExercicio(item.exercicioId, nomeExercicio);
 
     const grupos = exercicio
       ? PrescricaoFormatadores.gruposMusculares(exercicio.gruposMusculares, this.#bibliotecaExercicios.gruposMusculares)
@@ -308,8 +323,10 @@ class TreinoExecucaoController {
 
     const item = this.#itemAtual();
     const exercicio = this.#bibliotecaExercicios.bibliotecas.exercicios[item.exercicioId];
+    const nomeExercicio = exercicio ? exercicio.nome : item.exercicioId;
     this.#descansoProximoEl.textContent =
-      `Próximo: ${exercicio ? exercicio.nome : item.exercicioId} — série ${this.#progresso.serieAtual} de ${item.prescricao.series}`;
+      `Próximo: ${nomeExercicio} — série ${this.#progresso.serieAtual} de ${item.prescricao.series}`;
+    this.#atualizarImagemExercicio(item.exercicioId, nomeExercicio);
 
     if (this.#ajusteCargaAtual) {
       const emoji = this.#ajusteCargaAtual.direcao === "aumentar" ? "💪" : "⚠️";
@@ -461,6 +478,7 @@ class TreinoExecucaoController {
 
     this.#execucaoEl.hidden = true;
     this.#concluidoEl.hidden = false;
+    this.#imagemExercicioEl.hidden = true;
     this.#resumoConclusaoEl.textContent =
       `${this.#treino.nome} — ${this.#slots.length} exercícios em ${Formatadores.duracaoExtensa(duracaoSegundos)}.`;
   }
