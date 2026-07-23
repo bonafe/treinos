@@ -11,33 +11,33 @@
 <body>
   <main>
     <header class="top">
-      <a class="voltar-icon" href="planos.html" aria-label="Voltar">←</a>
+      <a id="voltarLink" class="voltar-icon" href="alunos.html" aria-label="Voltar">←</a>
       <div>
-        <h1>Novo plano</h1>
+        <h1 id="titulo">Novo plano</h1>
       </div>
     </header>
 
-    <div class="campo">
-      <label for="professorInput">Nome do professor</label>
-      <input type="text" id="professorInput" autocomplete="off" />
-    </div>
-    <div class="campo">
-      <label for="alunoInput">Nome do aluno</label>
-      <input type="text" id="alunoInput" autocomplete="off" />
-    </div>
-    <div class="campo-linha">
-      <div class="campo">
-        <label for="inicioInput">Início do ciclo</label>
-        <input type="date" id="inicioInput" />
-      </div>
-      <div class="campo">
-        <label for="fimInput">Fim do ciclo</label>
-        <input type="date" id="fimInput" />
-      </div>
-    </div>
+    <div id="erro" class="estado" hidden></div>
 
-    <button id="criarBtn" class="primary" type="button">Criar plano</button>
-    <div id="mensagem" class="mensagem" hidden></div>
+    <form id="formPlano">
+      <div class="campo">
+        <label for="professorInput">Nome do professor</label>
+        <input type="text" id="professorInput" autocomplete="off" />
+      </div>
+      <div class="campo-linha">
+        <div class="campo">
+          <label for="inicioInput">Início do ciclo</label>
+          <input type="date" id="inicioInput" />
+        </div>
+        <div class="campo">
+          <label for="fimInput">Fim do ciclo</label>
+          <input type="date" id="fimInput" />
+        </div>
+      </div>
+
+      <button id="criarBtn" class="primary" type="button">Criar plano</button>
+      <div id="mensagem" class="mensagem" hidden></div>
+    </form>
 
     <p class="rodape-apoio"><a href="index.html#apoio">❤️ Apoiar o Nosso Treino</a></p>
   </main>

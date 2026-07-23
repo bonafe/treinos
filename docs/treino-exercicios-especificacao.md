@@ -22,9 +22,10 @@ padrão de "motor genérico + JSON de dados" já usado no
   dado pessoal — é buscada por `fetch` (`js/biblioteca-exercicios.js#carregarBiblioteca()`),
   cacheada pelo service worker pra funcionar offline, e mantida em memória
   durante o carregamento da página (sem passar por `localStorage`).
-- **Plano de treino** (dado pessoal: nome do professor, do aluno, datas do
-  ciclo, os treinos prescritos): um navegador pode guardar vários planos,
-  escolhidos/criados/importados em [planos.html](../planos.html); "entrar"
+- **Plano de treino** (dado pessoal: nome do professor, datas do ciclo,
+  os treinos prescritos): um aluno pode ter vários planos ao longo do
+  tempo, escolhidos/criados em `planos.html?aluno=<id>` (o aluno em si
+  escolhido/criado/importado em [alunos.html](../alunos.html)); "entrar"
   num plano grava `TreinosStorage.definirDadosTreinos()`. Toda página lê
   com `TreinosStorage.carregarDadosTreinos()` (rejeita se nenhum plano
   estiver ativo ainda) — ver
@@ -254,10 +255,14 @@ aplicado a `historico.sessaoMusculacao.v1` em vez de
 total de treino de exercícios (qualquer `treino.tipo`, o histórico não
 distingue) por dia ou mês.
 
-- **Fonte dos dados**: `historico.sessaoMusculacao.v1`, lido direto com
-  `TreinosStorage.lerJSON(...)` — cada barra soma o `duracaoSegundos`
-  (seção 8.7) das sessões concluídas naquele dia/mês. Independe do plano
-  de treino estar carregado, mesma lógica da seção 5.1.1 da bike.
+- **Fonte dos dados**: `historico.sessaoMusculacao.v1`, lido com
+  `TreinosStorage.lerHistoricoAgregadoDoPlanoAtivo(...)` — soma o
+  histórico de todos os planos do aluno ativo, não só do ciclo atual
+  (seção 3.5 de
+  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)),
+  cada barra soma o `duracaoSegundos` (seção 8.7) das sessões concluídas
+  naquele dia/mês. Independe do plano de treino estar carregado, mesma
+  lógica da seção 5.1.1 da bike.
 - **Três períodos**, mesmos botões e mesmos defaults da bike: **7 dias**
   (padrão), **30 dias**, **Meses** (últimos 6 meses). Dias/meses sem
   sessão concluída aparecem como barra vazia — o eixo sempre cobre o
@@ -289,7 +294,7 @@ distingue) por dia ou mês.
     [treino-alongamento-especificacao.md](./treino-alongamento-especificacao.md)).
 - Se não houver `treino` na URL, o `id` não existir, o plano não estiver
   carregado, ou a biblioteca não puder ser buscada, mostra mensagem de
-  erro com link de volta para o menu (e para `planos.html`, se for o
+  erro com link de volta para o menu (e para `alunos.html`, se for o
   caso) — mesmo comportamento já adotado em `treino_bicicleta.html`.
 - Quando `treino.exercicios` tiver ao menos um item, mostra um botão que
   leva a `treino_execucao.html?treino=<id>` (seção 8). O texto do botão
@@ -638,12 +643,15 @@ tentar montar a fila de execução.
 
 Tela acessível pelo botão "Ver progresso" de qualquer card de exercício
 (seção 6.2). Mostra o histórico de séries de **um exercício específico**
-(`exercicioId`), agregando `historico.serieMusculacao.v1` de **todos os
-treinos** em que ele aparece — não só o treino a partir do qual o botão
-foi clicado (o parâmetro `?treino=<id>` na URL só serve para montar o
-link "Voltar"). Como o histórico já denormaliza `exercicioNome`, esta
-página só precisa da biblioteca (via `carregarBiblioteca()`) para o
-título — não depende do plano de treino estar carregado.
+(`exercicioId`), agregando `historico.serieMusculacao.v1` (via
+`TreinosStorage.lerHistoricoAgregadoDoPlanoAtivo(...)`, seção 3.5 de
+[armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md))
+de **todos os treinos em que ele aparece, em todos os planos do aluno
+ativo** — não só o treino/ciclo a partir do qual o botão foi clicado (o
+parâmetro `?treino=<id>` na URL só serve para montar o link "Voltar").
+Como o histórico já denormaliza `exercicioNome`, esta página só precisa
+da biblioteca (via `carregarBiblioteca()`) para o título — não depende
+do plano de treino estar carregado.
 
 ### 9.1 Agrupamento por sessão
 
@@ -737,7 +745,7 @@ e anexa a `dados.treinos`. Acessível por um botão "+" no cabeçalho de
 Como qualquer outra página, carrega o plano
 (`TreinosStorage.carregarDadosTreinos()`) e a biblioteca
 (`carregarBiblioteca()`) — sem plano ativo, mostra erro apontando pra
-`planos.html` (não dá pra criar um treino "solto", sem
+`alunos.html` (não dá pra criar um treino "solto", sem
 `metadata`/`distribuicaoSemanal`/`orientacoesGerais` de um plano
 existente).
 
@@ -799,8 +807,8 @@ tela, editável só no JSON depois (seção 12.3 de
 `circuito`; `status: "ativo"` com pelo menos um exercício, `"rascunho"`
 sem nenhum), empurra em `dados.treinos` e regrava o plano inteiro com
 `TreinosStorage.definirDadosTreinos(dados)` — mesma função já usada por
-`plano-novo.js`/`planos.js` pra criar/importar um plano, sem mudar
-assinatura. Redireciona pra `treino_exercicios.html?treino=<id>`.
+`plano-novo.js` (criar) e `alunos.js` (importar), sem mudar assinatura.
+Redireciona pra `treino_exercicios.html?treino=<id>`.
 
 ### 11.5 Fora de escopo desta tela
 

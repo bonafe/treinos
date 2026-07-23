@@ -1,118 +1,60 @@
 import { TreinosStorage } from "../storage.js";
 import { Formatadores } from "../formatadores.js";
 import { slugificar } from "../identificadores.js";
-import { carregarBiblioteca } from "../biblioteca-exercicios.js";
-import { VideosTorrent } from "../videos-torrent.js";
-
-// Mesmos campos exigidos de um plano avulso colado/importado (não um
-// backup) — ver seção 2.2 de especificacao-biblioteca-exercicios.md.
-const CAMPOS_OBRIGATORIOS_PLANO = ["schema", "metadata", "distribuicaoSemanal", "treinos"];
 
 class PlanosController {
+  #carregandoEl = document.getElementById("carregando");
+  #erroEl = document.getElementById("erro");
   #listaEl = document.getElementById("lista");
   #mensagemEl = document.getElementById("mensagem");
   #confirmOverlayEl = document.getElementById("confirmOverlay");
   #confirmTextoEl = document.getElementById("confirmTexto");
   #confirmOkEl = document.getElementById("confirmOk");
   #confirmCancelarEl = document.getElementById("confirmCancelar");
-  #arquivoInputEl = document.getElementById("arquivoInput");
-  #baixarBackupBtnEl = document.getElementById("baixarBackupBtn");
-  #avisoIaOverlayEl = document.getElementById("avisoIaOverlay");
-  #avisoIaAceitarEl = document.getElementById("avisoIaAceitar");
-  #avisoIaRecusarEl = document.getElementById("avisoIaRecusar");
+  #tituloEl = document.getElementById("titulo");
+  #voltarLinkEl = document.getElementById("voltarLink");
+  #novoPlanoLinkEl = document.getElementById("novoPlanoLink");
+  #duplicarOverlayEl = document.getElementById("duplicarOverlay");
+  #duplicarAlunoSelectEl = document.getElementById("duplicarAlunoSelect");
+  #duplicarNomeNovoCampoEl = document.getElementById("duplicarNomeNovoCampo");
+  #duplicarNomeNovoInputEl = document.getElementById("duplicarNomeNovoInput");
+  #duplicarCancelarEl = document.getElementById("duplicarCancelar");
+  #duplicarConfirmarEl = document.getElementById("duplicarConfirmar");
 
+  #alunoId = null;
   #idParaExcluir = null;
+  #idParaDuplicar = null;
 
   iniciar() {
+    this.#alunoId = new URLSearchParams(window.location.search).get("aluno");
+    const aluno = this.#alunoId && TreinosStorage.listarAlunos().find((a) => a.id === this.#alunoId);
+
+    if (!aluno) {
+      this.#mostrarErro("Nenhum aluno selecionado.");
+      return;
+    }
+
+    this.#carregandoEl.hidden = true;
+    this.#listaEl.hidden = false;
+
+    document.title = `${aluno.nome} — Meus Planos`;
+    this.#tituloEl.textContent = `Planos de ${aluno.nome}`;
+    this.#voltarLinkEl.href = "alunos.html";
+    this.#novoPlanoLinkEl.href = `plano_novo.html?aluno=${encodeURIComponent(this.#alunoId)}`;
+
     this.#confirmCancelarEl.addEventListener("click", () => this.#fecharConfirmacao());
     this.#confirmOkEl.addEventListener("click", () => this.#confirmarExclusao());
-    this.#arquivoInputEl.addEventListener("change", (evento) => this.#aoEscolherArquivo(evento));
-    this.#baixarBackupBtnEl.addEventListener("click", () => this.#aoBaixarBackup());
-    this.#avisoIaAceitarEl.addEventListener("click", () => this.#aoAceitarAvisoIa());
-    this.#avisoIaRecusarEl.addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
+    this.#duplicarAlunoSelectEl.addEventListener("change", () => this.#atualizarVisibilidadeNomeNovo());
+    this.#duplicarCancelarEl.addEventListener("click", () => this.#fecharDuplicacao());
+    this.#duplicarConfirmarEl.addEventListener("click", () => this.#confirmarDuplicacao());
+
     this.#renderizarLista();
-
-    if (!TreinosStorage.lerJSONGlobal(TreinosStorage.chaves.avisoIaAceito, false)) {
-      this.#avisoIaOverlayEl.hidden = false;
-    }
   }
 
-  #aoAceitarAvisoIa() {
-    TreinosStorage.salvarJSONGlobal(TreinosStorage.chaves.avisoIaAceito, true);
-    this.#avisoIaOverlayEl.hidden = true;
-  }
-
-  #validarPlano(dados) {
-    return dados && typeof dados === "object" && CAMPOS_OBRIGATORIOS_PLANO.every((campo) => campo in dados);
-  }
-
-  #aoEscolherArquivo(evento) {
-    const arquivo = evento.target.files[0];
-    if (!arquivo) return;
-
-    const leitor = new FileReader();
-    leitor.onload = () => this.#aoCarregarConteudo(leitor.result);
-    leitor.readAsText(arquivo);
-    evento.target.value = "";
-  }
-
-  #aoCarregarConteudo(texto) {
-    let dados;
-    try {
-      dados = JSON.parse(texto);
-    } catch (erro) {
-      this.#mostrarMensagem("Esse arquivo não é um JSON válido.", "erro");
-      return;
-    }
-
-    if (dados && dados.tipo === "backup-treinos") {
-      TreinosStorage.restaurarBackup(dados);
-      this.#prefetchVideosDaBiblioteca();
-      window.location.href = "sistema.html";
-      return;
-    }
-
-    if (!this.#validarPlano(dados)) {
-      this.#mostrarMensagem(
-        "Esse arquivo não parece ser um plano de treino nem um backup válido — faltam campos como treinos, metadata ou distribuicaoSemanal.",
-        "erro"
-      );
-      return;
-    }
-
-    const id = TreinosStorage.importarPlano(dados);
-    TreinosStorage.ativarPlano(id);
-    this.#prefetchVideosDaBiblioteca();
-    window.location.href = "sistema.html";
-  }
-
-  #prefetchVideosDaBiblioteca() {
-    carregarBiblioteca()
-      .then((bibliotecaExercicios) => VideosTorrent.prefetchTodosOsVideos(bibliotecaExercicios))
-      .catch(() => {
-        // Sem conexão — a biblioteca ainda não deve ter sido cacheada pelo
-        // service worker na primeira visita. O plano continua salvo normalmente.
-      });
-  }
-
-  #aoBaixarBackup() {
-    const backup = TreinosStorage.montarBackup();
-    if (!backup.planos.length) {
-      this.#mostrarMensagem("Crie ou importe pelo menos um plano antes de baixar um backup.", "erro");
-      return;
-    }
-
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `treinos-backup-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  #mostrarErro(mensagem) {
+    this.#carregandoEl.hidden = true;
+    this.#erroEl.hidden = false;
+    this.#erroEl.innerHTML = `${mensagem} Volte pra <a href="alunos.html">Alunos</a>.`;
   }
 
   #mostrarMensagem(texto, tipo) {
@@ -122,12 +64,11 @@ class PlanosController {
   }
 
   #renderizarLista() {
-    const planos = TreinosStorage.listarPlanos();
+    const planos = TreinosStorage.listarPlanosDoAluno(this.#alunoId);
     const ativoId = TreinosStorage.obterPlanoAtivoId();
 
     if (!planos.length) {
-      this.#listaEl.innerHTML =
-        '<div class="estado">Nenhum plano ainda — crie um pelo botão "+" acima ou importe um recebido pelo 📂.</div>';
+      this.#listaEl.innerHTML = '<div class="estado">Nenhum plano ainda — crie um pelo botão "+" acima.</div>';
       return;
     }
 
@@ -145,19 +86,18 @@ class PlanosController {
     card.className = "painel plano-card";
     card.dataset.id = plano.id;
 
-    const subLinhas = [];
-    if (plano.professor) subLinhas.push(`Professor: ${plano.professor}`);
     const dados = TreinosStorage.lerJSONDoPlano(plano.id, "dados.v1", null);
     const planejamento = dados && dados.metadata && dados.metadata.planejamento;
-    if (planejamento && (planejamento.inicio || planejamento.fim)) {
-      subLinhas.push(`Ciclo: ${planejamento.inicio || "?"} – ${planejamento.fim || "?"}`);
-    }
+    const titulo =
+      planejamento && (planejamento.inicio || planejamento.fim)
+        ? `Ciclo ${planejamento.inicio || "?"} – ${planejamento.fim || "?"}`
+        : `Plano criado em ${Formatadores.dataHora(plano.criadoEm)}`;
 
     card.innerHTML = `
       <div class="plano-card-topo">
         <div>
-          <h3>${plano.aluno || "Sem aluno definido"}</h3>
-          <p class="plano-card-sub">${subLinhas.join(" · ")}</p>
+          <h3>${titulo}</h3>
+          <p class="plano-card-sub">${plano.professor ? `Professor: ${plano.professor}` : ""}</p>
         </div>
         <span class="tag" ${ativo ? "" : "hidden"}>ativo agora</span>
       </div>
@@ -169,10 +109,6 @@ class PlanosController {
         <div class="campo">
           <label>Nome do professor</label>
           <input type="text" data-campo="professor" autocomplete="off" />
-        </div>
-        <div class="campo">
-          <label>Nome do aluno</label>
-          <input type="text" data-campo="aluno" autocomplete="off" />
         </div>
         <div class="campo-linha">
           <div class="campo">
@@ -232,7 +168,6 @@ class PlanosController {
       });
       TreinosStorage.atualizarMetadataPlano(id, {
         professor: valores.professor,
-        aluno: valores.aluno,
         inicio: valores.inicio,
         fim: valores.fim
       });
@@ -241,8 +176,7 @@ class PlanosController {
     }
 
     if (acao === "duplicar") {
-      TreinosStorage.duplicarPlano(id);
-      this.#renderizarLista();
+      this.#abrirDuplicacao(id);
       return;
     }
 
@@ -263,11 +197,10 @@ class PlanosController {
   }
 
   #abrirConfirmacaoExclusao(id) {
-    const plano = TreinosStorage.listarPlanos().find((p) => p.id === id);
     this.#idParaExcluir = id;
     this.#confirmTextoEl.textContent =
-      `Isso vai apagar o plano de "${(plano && plano.aluno) || "aluno sem nome"}" — composição, histórico e ` +
-      "progresso de execução. Não dá pra desfazer. Continuar?";
+      `Isso vai apagar o plano "${id}" — composição, histórico e progresso de execução. ` +
+      "Não dá pra desfazer. Continuar?";
     this.#confirmOverlayEl.hidden = false;
   }
 
@@ -284,6 +217,57 @@ class PlanosController {
     this.#fecharConfirmacao();
   }
 
+  // Duplicar sempre pergunta o aluno de destino — "este aluno" (novo
+  // ciclo, comportamento de sempre) ou outro já cadastrado/novo (manda
+  // a composição pra outro aluno sem precisar baixar/importar arquivo,
+  // já que os dois estão no mesmo navegador).
+  #abrirDuplicacao(id) {
+    this.#idParaDuplicar = id;
+    const outrosAlunos = TreinosStorage.listarAlunos().filter((a) => a.id !== this.#alunoId);
+
+    this.#duplicarAlunoSelectEl.innerHTML =
+      `<option value="${this.#alunoId}">Este aluno (novo ciclo)</option>` +
+      outrosAlunos.map((a) => `<option value="${a.id}">${a.nome}</option>`).join("") +
+      '<option value="__novo__">+ Novo aluno</option>';
+    this.#duplicarAlunoSelectEl.value = this.#alunoId;
+    this.#duplicarNomeNovoInputEl.value = "";
+    this.#atualizarVisibilidadeNomeNovo();
+    this.#duplicarOverlayEl.hidden = false;
+  }
+
+  #atualizarVisibilidadeNomeNovo() {
+    this.#duplicarNomeNovoCampoEl.hidden = this.#duplicarAlunoSelectEl.value !== "__novo__";
+  }
+
+  #fecharDuplicacao() {
+    this.#duplicarOverlayEl.hidden = true;
+    this.#idParaDuplicar = null;
+  }
+
+  #confirmarDuplicacao() {
+    const id = this.#idParaDuplicar;
+    if (!id) return;
+
+    let alunoIdDestino = this.#duplicarAlunoSelectEl.value;
+    if (alunoIdDestino === "__novo__") {
+      const nome = this.#duplicarNomeNovoInputEl.value.trim();
+      if (!nome) {
+        this.#mostrarMensagem("Preencha o nome do novo aluno.", "erro");
+        return;
+      }
+      alunoIdDestino = TreinosStorage.criarAluno(nome);
+    }
+
+    TreinosStorage.duplicarPlano(id, alunoIdDestino);
+    this.#fecharDuplicacao();
+
+    if (alunoIdDestino === this.#alunoId) {
+      this.#renderizarLista();
+    } else {
+      window.location.href = `planos.html?aluno=${encodeURIComponent(alunoIdDestino)}`;
+    }
+  }
+
   #abrirEdicao(id, card) {
     const dados = TreinosStorage.lerDadosDoPlano(id);
     const metadata = (dados && dados.metadata) || {};
@@ -291,17 +275,13 @@ class PlanosController {
 
     const painel = card.querySelector(".plano-card-editar");
     painel.querySelector('[data-campo="professor"]').value = metadata.professor || "";
-    painel.querySelector('[data-campo="aluno"]').value = metadata.aluno || "";
     painel.querySelector('[data-campo="inicio"]').value = planejamento.inicio || "";
     painel.querySelector('[data-campo="fim"]').value = planejamento.fim || "";
     painel.hidden = false;
   }
 
   #sufixoArquivo(id) {
-    const planos = TreinosStorage.listarPlanos();
-    const plano = planos.find((p) => p.id === id);
-    const nome = slugificar((plano && plano.aluno) || id);
-    return `${nome}-${new Date().toISOString().slice(0, 10)}.json`;
+    return `${slugificar(id)}-${new Date().toISOString().slice(0, 10)}.json`;
   }
 
   #baixarJSON(dados, nomeArquivo) {

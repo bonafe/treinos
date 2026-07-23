@@ -22,7 +22,7 @@ class TreinoExerciciosMenuController {
   }
 
   #iniciarGraficoHistorico() {
-    const historico = TreinosStorage.lerJSON(TreinosStorage.chaves.historicoSessaoMusculacao, []);
+    const historico = TreinosStorage.lerHistoricoAgregadoDoPlanoAtivo(TreinosStorage.chaves.historicoSessaoMusculacao);
     const grafico = new GraficoBarrasHistorico({
       seletor: "#graficoExercicios",
       historico,
@@ -103,7 +103,7 @@ class TreinoExerciciosMenuController {
       dados.treinos.forEach((treino) => this.#listaEl.appendChild(this.#cartaoTreino(treino, idTreinoHoje)));
     } catch (erro) {
       this.#listaEl.innerHTML =
-        '<div class="estado">Nenhum plano de treino carregado ainda neste navegador. <a href="planos.html">Escolha ou crie um plano</a> pra começar.</div>';
+        '<div class="estado">Nenhum plano de treino carregado ainda neste navegador. <a href="alunos.html">Escolha ou crie um aluno</a> pra começar.</div>';
     }
   }
 }

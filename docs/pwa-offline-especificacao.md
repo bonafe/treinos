@@ -4,7 +4,7 @@
 
 O site já funciona offline no que diz respeito aos **dados de treino**: eles
 vivem só em `localStorage`, escolhidos/criados manualmente em
-[planos.html](../planos.html) (ver
+[alunos.html](../alunos.html)/[planos.html](../planos.html) (ver
 [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)).
 Essa especificação cobre a segunda parte do problema: fazer as **páginas em
 si** (HTML/CSS/JS) carregarem mesmo sem internet, depois de um primeiro
@@ -56,6 +56,7 @@ if ("serviceWorker" in navigator) {
 ```js
 const ARQUIVOS_PARA_CACHE = [
   "index.html",
+  "alunos.html",
   "planos.html",
   "sistema.html",
   "treino_bicicleta_menu.html",

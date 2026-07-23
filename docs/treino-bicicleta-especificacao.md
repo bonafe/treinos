@@ -111,7 +111,7 @@ Isso quer dizer:
   fora de escopo (seção 8).
 - O plano vem de `TreinosStorage.carregarDadosTreinos()` (`localStorage`,
   sem `fetch` — o plano ativo é escolhido/criado em
-  [planos.html](../planos.html)); a biblioteca vem de
+  [alunos.html](../alunos.html)/[planos.html](../planos.html)); a biblioteca vem de
   `carregarBiblioteca()` (`fetch`, ver
   [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)).
   Ambos os documentos são carregados antes de montar a config do motor.
@@ -220,12 +220,14 @@ soma de `duracaoSegundos` (seção 6.1) das sessões daquele dia/mês, em
 minutos.
 
 - **Fonte dos dados**: `historico.sessaoBicicleta.v1` (seção 6.1), lido
-  direto com `TreinosStorage.lerJSON(...)` — independe do plano de treino
-  ou da biblioteca estarem carregados (histórico e dados de treino são
-  chaves separadas no `localStorage`, ver seção 1 de
-  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)).
-  Por isso o gráfico é montado mesmo que o carregamento do plano/biblioteca
-  (pra lista de treinos) falhe.
+  com `TreinosStorage.lerHistoricoAgregadoDoPlanoAtivo(...)` — soma o
+  histórico de **todos os planos do aluno ativo**, não só do ciclo
+  atual (seção 3.5 de
+  [armazenamento-local-especificacao.md](./armazenamento-local-especificacao.md)),
+  e independe do plano de treino ou da biblioteca estarem carregados
+  (histórico e dados de treino são chaves separadas no `localStorage`,
+  ver seção 1 do mesmo documento). Por isso o gráfico é montado mesmo
+  que o carregamento do plano/biblioteca (pra lista de treinos) falhe.
 - **Três períodos**, escolhidos por botões acima do gráfico:
   - **7 dias** (padrão ao abrir a tela) — uma barra por dia, últimos 7 dias
     corridos incluindo hoje.
@@ -350,7 +352,7 @@ isso é uma limitação aceita por ora (ver seção 7 de
 O motor faz `fetch()` da biblioteca de exercícios (`biblioteca-exercicios.json`,
 seção 4) — diferente do plano de treino, que continua vindo só do
 `localStorage`, escolhido/criado manualmente em
-[planos.html](../planos.html). Por isso o site precisa ser
+[alunos.html](../alunos.html)/[planos.html](../planos.html). Por isso o site precisa ser
 servido por HTTP (não `file://`) pra essa página funcionar, mesmo que só
 localmente — o service worker (`sw.js`) cacheia
 `biblioteca-exercicios.json` como parte do app shell depois da primeira

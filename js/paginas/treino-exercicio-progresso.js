@@ -138,7 +138,7 @@ class TreinoExercicioProgressoController {
     document.getElementById("titulo").textContent = nomeExercicio;
     document.getElementById("carregando").hidden = true;
 
-    const historico = TreinosStorage.lerJSON(TreinosStorage.chaves.historicoSerieMusculacao, []);
+    const historico = TreinosStorage.lerHistoricoAgregadoDoPlanoAtivo(TreinosStorage.chaves.historicoSerieMusculacao);
     const entradas = historico.filter((e) => e.exercicioId === exercicioId);
 
     if (!entradas.length) {

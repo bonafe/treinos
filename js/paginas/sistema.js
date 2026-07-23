@@ -2,8 +2,14 @@ import { TreinosStorage } from "../storage.js";
 import { carregarBiblioteca } from "../biblioteca-exercicios.js";
 import { VideosTorrent } from "../videos-torrent.js";
 
-if (!TreinosStorage.obterPlanoAtivoId()) {
-  window.location.href = "planos.html";
+const planoAtivoId = TreinosStorage.obterPlanoAtivoId();
+if (!planoAtivoId) {
+  window.location.href = "alunos.html";
+} else {
+  const aluno = TreinosStorage.obterAlunoDoPlano(planoAtivoId);
+  document.getElementById("voltarLink").href = aluno
+    ? `planos.html?aluno=${encodeURIComponent(aluno.alunoId)}`
+    : "alunos.html";
 }
 
 // Gatilho de reforço do pré-carregamento (seção 8 de

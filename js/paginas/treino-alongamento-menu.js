@@ -15,7 +15,7 @@ class TreinoAlongamentoMenuController {
   }
 
   #iniciarGraficoHistorico() {
-    const historico = TreinosStorage.lerJSON(TreinosStorage.chaves.historicoSessaoAlongamento, []);
+    const historico = TreinosStorage.lerHistoricoAgregadoDoPlanoAtivo(TreinosStorage.chaves.historicoSessaoAlongamento);
     const grafico = new GraficoBarrasHistorico({
       seletor: "#graficoAlongamento",
       historico,
@@ -50,7 +50,7 @@ class TreinoAlongamentoMenuController {
       dados = await TreinosStorage.carregarDadosTreinos();
     } catch (erro) {
       this.#listaEl.innerHTML =
-        '<div class="estado">Nenhum plano de treino carregado ainda neste navegador. <a href="planos.html">Escolha ou crie um plano</a> pra começar.</div>';
+        '<div class="estado">Nenhum plano de treino carregado ainda neste navegador. <a href="alunos.html">Escolha ou crie um aluno</a> pra começar.</div>';
       return;
     }
 

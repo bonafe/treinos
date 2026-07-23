@@ -1,7 +1,9 @@
-const CACHE_NOME = "treinos-shell-v15";
+const CACHE_NOME = "treinos-shell-v16";
 
 const ARQUIVOS_PARA_CACHE = [
   "index.html",
+  "alunos.html",
+  "aluno_novo.html",
   "planos.html",
   "plano_novo.html",
   "sistema.html",
@@ -25,6 +27,7 @@ const ARQUIVOS_PARA_CACHE = [
   "css/graficos.css",
   "css/paginas/index.css",
   "css/paginas/sistema.css",
+  "css/paginas/alunos.css",
   "css/paginas/planos.css",
   "css/paginas/treino-bicicleta-menu.css",
   "css/paginas/treino-bicicleta.css",
@@ -51,6 +54,8 @@ const ARQUIVOS_PARA_CACHE = [
   "js/dados-apoio.js",
   "js/paginas/index.js",
   "js/paginas/sistema.js",
+  "js/paginas/alunos.js",
+  "js/paginas/aluno-novo.js",
   "js/paginas/planos.js",
   "js/paginas/plano-novo.js",
   "js/paginas/treino-bicicleta-menu.js",

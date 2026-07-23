@@ -109,6 +109,44 @@ function restaurarExportacaoCompletaDoPlano(id, exportacao) {
   });
 }
 
+// Cria um Aluno pra cada nome distinto encontrado em `planos` que ainda
+// não tenha `alunoId` (formato anterior a existir a entidade Aluno —
+// `plano.aluno` era texto livre), preenchendo `alunoId` em cada plano e
+// removendo o texto livre. Muta `planos` in place. Usada tanto na
+// migração automática (garantirAlunosMigrados) quanto ao restaurar um
+// backup salvo antes desta mudança (sem `alunos` no JSON).
+function migrarAlunosApartirDePlanos(planos) {
+  const alunos = [];
+  const nomeParaId = new Map();
+
+  planos.forEach((plano) => {
+    if (plano.alunoId) return;
+
+    const nome = (plano.aluno || "").trim();
+    const chaveNome = nome.toLowerCase();
+    let alunoId = nomeParaId.get(chaveNome);
+    if (!alunoId) {
+      alunoId = gerarIdUnico(nome || "aluno", new Set(alunos.map((a) => a.id)), "aluno");
+      const agora = plano.criadoEm || new Date().toISOString();
+      alunos.push({ id: alunoId, nome, criadoEm: agora, atualizadoEm: agora });
+      nomeParaId.set(chaveNome, alunoId);
+    }
+
+    plano.alunoId = alunoId;
+    delete plano.aluno;
+  });
+
+  return alunos;
+}
+
+function garantirAlunosMigrados() {
+  if (lerBruto("alunos.v1", null)) return;
+  const planos = lerBruto("planos.v1", []);
+  const alunos = migrarAlunosApartirDePlanos(planos);
+  salvarBruto("alunos.v1", alunos);
+  salvarBruto("planos.v1", planos);
+}
+
 export class TreinosStorage {
   static chaves = {
     dadosTreinos: "dados.v1",
@@ -195,9 +233,80 @@ export class TreinosStorage {
     listarChavesComPrefixo("execucao.alongamento.").forEach((chave) => removerChave(chave));
   }
 
+  // --- Gestão de alunos (alunos.html) ---
+
+  static listarAlunos() {
+    garantirAlunosMigrados();
+    return lerBruto("alunos.v1", []);
+  }
+
+  static criarAluno(nome) {
+    const alunos = TreinosStorage.listarAlunos();
+    const id = gerarIdUnico(nome, new Set(alunos.map((a) => a.id)), "aluno");
+    const agora = new Date().toISOString();
+    alunos.push({ id, nome, criadoEm: agora, atualizadoEm: agora });
+    salvarBruto("alunos.v1", alunos);
+    return id;
+  }
+
+  static atualizarAluno(id, nome) {
+    const alunos = TreinosStorage.listarAlunos();
+    const entrada = alunos.find((a) => a.id === id);
+    if (!entrada) return;
+    entrada.nome = nome;
+    entrada.atualizadoEm = new Date().toISOString();
+    salvarBruto("alunos.v1", alunos);
+  }
+
+  // Cascata: apaga também todos os planos daquele aluno (composição,
+  // histórico, progresso em andamento) — não deixa plano órfão.
+  static excluirAluno(id) {
+    TreinosStorage.listarPlanosDoAluno(id).forEach((plano) => TreinosStorage.excluirPlano(plano.id));
+    const alunos = TreinosStorage.listarAlunos().filter((a) => a.id !== id);
+    salvarBruto("alunos.v1", alunos);
+  }
+
+  static listarPlanosDoAluno(alunoId) {
+    return TreinosStorage.listarPlanos().filter((p) => p.alunoId === alunoId);
+  }
+
+  // Resolve {alunoId, nome} a partir de um plano — usado por sistema.js
+  // (montar o link de volta) e pelas telas de gráfico/estatística
+  // (agregar por aluno).
+  static obterAlunoDoPlano(planoId) {
+    const plano = TreinosStorage.listarPlanos().find((p) => p.id === planoId);
+    if (!plano) return null;
+    const aluno = TreinosStorage.listarAlunos().find((a) => a.id === plano.alunoId);
+    return { alunoId: plano.alunoId, nome: aluno ? aluno.nome : "" };
+  }
+
+  // Soma o histórico (mesma chave relativa de sempre) de todos os planos
+  // do aluno — não só o ativo no momento. Base do "acompanhamento em
+  // vários treinos": um exercício ou um tipo de sessão continua a mesma
+  // linha do tempo mesmo depois de o professor criar um plano novo pro
+  // próximo ciclo.
+  static lerHistoricoAgregadoDoAluno(alunoId, chave) {
+    return TreinosStorage.listarPlanosDoAluno(alunoId).flatMap((plano) =>
+      TreinosStorage.lerJSONDoPlano(plano.id, chave, [])
+    );
+  }
+
+  // Atalho usado pelas telas de gráfico/estatística: resolve o aluno do
+  // plano ativo agora e já devolve o histórico agregado dele. Cai pro
+  // histórico só do plano ativo se, por algum motivo, não der pra
+  // resolver o aluno (não deveria acontecer — essas telas já exigem um
+  // plano ativo carregado antes de chegar aqui).
+  static lerHistoricoAgregadoDoPlanoAtivo(chave) {
+    const planoAtivoId = obterPlanoAtivoIdBruto();
+    const aluno = planoAtivoId && TreinosStorage.obterAlunoDoPlano(planoAtivoId);
+    if (!aluno) return lerJSON(chave, []);
+    return TreinosStorage.lerHistoricoAgregadoDoAluno(aluno.alunoId, chave);
+  }
+
   // --- Gestão de planos (planos.html) ---
 
   static listarPlanos() {
+    garantirAlunosMigrados();
     return lerBruto("planos.v1", []);
   }
 
@@ -209,19 +318,20 @@ export class TreinosStorage {
     salvarBruto("planoAtivoId.v1", id);
   }
 
-  static criarPlano({ professor, aluno, inicio, fim }) {
+  static criarPlano({ alunoId, professor, inicio, fim }) {
     const planos = TreinosStorage.listarPlanos();
-    const id = gerarIdUnico(aluno || professor || "plano", new Set(planos.map((p) => p.id)), "plano");
+    const id = gerarIdUnico(alunoId || professor || "plano", new Set(planos.map((p) => p.id)), "plano");
     const agora = new Date().toISOString();
-    planos.push({ id, professor, aluno, criadoEm: agora, atualizadoEm: agora });
+    planos.push({ id, alunoId, professor, criadoEm: agora, atualizadoEm: agora });
     salvarBruto("planos.v1", planos);
 
+    const aluno = TreinosStorage.listarAlunos().find((a) => a.id === alunoId);
     TreinosStorage.ativarPlano(id);
     TreinosStorage.definirDadosTreinos({
       schema: "plano-de-treino",
       schemaVersion: "1.3",
       biblioteca: { arquivo: "biblioteca-exercicios/biblioteca-exercicios.json" },
-      metadata: { professor, aluno, planejamento: { inicio, fim }, objetivos: [] },
+      metadata: { professor, aluno: aluno ? aluno.nome : "", planejamento: { inicio, fim }, objetivos: [] },
       distribuicaoSemanal: [
         "domingo",
         "segunda-feira",
@@ -248,30 +358,35 @@ export class TreinosStorage {
     }
   }
 
-  static duplicarPlano(id) {
+  // Cópia zerada (sem histórico/progresso) pro aluno de destino indicado
+  // — dentro do mesmo aluno (atalho pra começar um ciclo novo) ou pra um
+  // aluno diferente (mesmo caminho, só muda `alunoIdDestino`): já que os
+  // dois alunos estão no mesmo navegador, não precisa passar por
+  // baixar/importar arquivo pra isso.
+  static duplicarPlano(id, alunoIdDestino) {
     const planos = TreinosStorage.listarPlanos();
     const origem = planos.find((p) => p.id === id);
     const dadosOriginais = TreinosStorage.lerJSONDoPlano(id, "dados.v1", null);
     if (!origem || !dadosOriginais) return null;
 
-    const novoId = gerarIdUnico(`${origem.professor || "plano"}-copia`, new Set(planos.map((p) => p.id)), "plano");
+    const novoId = gerarIdUnico(`${alunoIdDestino}-ciclo`, new Set(planos.map((p) => p.id)), "plano");
     const agora = new Date().toISOString();
-    planos.push({ id: novoId, professor: origem.professor, aluno: "", criadoEm: agora, atualizadoEm: agora });
+    planos.push({ id: novoId, alunoId: alunoIdDestino, professor: origem.professor, criadoEm: agora, atualizadoEm: agora });
     salvarBruto("planos.v1", planos);
 
+    const alunoDestino = TreinosStorage.listarAlunos().find((a) => a.id === alunoIdDestino);
     const novosDados = structuredClone(dadosOriginais);
-    novosDados.metadata = { ...novosDados.metadata, aluno: "" };
+    novosDados.metadata = { ...novosDados.metadata, aluno: alunoDestino ? alunoDestino.nome : "" };
     TreinosStorage.salvarJSONDoPlano(novoId, "dados.v1", novosDados);
 
     return novoId;
   }
 
-  static atualizarMetadataPlano(id, { professor, aluno, inicio, fim }) {
+  static atualizarMetadataPlano(id, { professor, inicio, fim }) {
     const planos = TreinosStorage.listarPlanos();
     const entrada = planos.find((p) => p.id === id);
     if (!entrada) return;
     entrada.professor = professor;
-    entrada.aluno = aluno;
     entrada.atualizadoEm = new Date().toISOString();
     salvarBruto("planos.v1", planos);
 
@@ -280,20 +395,30 @@ export class TreinosStorage {
       dados.metadata = {
         ...dados.metadata,
         professor,
-        aluno,
         planejamento: { ...(dados.metadata && dados.metadata.planejamento), inicio, fim }
       };
       TreinosStorage.salvarJSONDoPlano(id, "dados.v1", dados);
     }
   }
 
-  static importarPlano(dadosPlano) {
+  // Plano avulso recebido de fora (colado/escolhido em alunos.html) — o
+  // aluno de destino é decidido por quem chama (tela de confirmação de
+  // importação, seção 3.1 de armazenamento-local-especificacao.md), não
+  // adivinhado a partir de `dadosPlano.metadata.aluno`: o mesmo arquivo
+  // pode ser reaproveitado como template pra um aluno diferente do que
+  // está gravado no JSON (ex.: baixar o plano de um aluno e importar pra
+  // outro).
+  static importarPlano(dadosPlano, alunoId) {
     const planos = TreinosStorage.listarPlanos();
-    const aluno = (dadosPlano.metadata && dadosPlano.metadata.aluno) || "";
-    const professor = (dadosPlano.metadata && dadosPlano.metadata.professor) || "";
-    const id = gerarIdUnico(aluno || professor || "plano", new Set(planos.map((p) => p.id)), "plano");
+    const id = gerarIdUnico(alunoId, new Set(planos.map((p) => p.id)), "plano");
     const agora = new Date().toISOString();
-    planos.push({ id, professor, aluno, criadoEm: agora, atualizadoEm: agora });
+    planos.push({
+      id,
+      alunoId,
+      professor: (dadosPlano.metadata && dadosPlano.metadata.professor) || "",
+      criadoEm: agora,
+      atualizadoEm: agora
+    });
     salvarBruto("planos.v1", planos);
     TreinosStorage.salvarJSONDoPlano(id, "dados.v1", dadosPlano);
     return id;
@@ -315,7 +440,7 @@ export class TreinosStorage {
     return montarExportacaoCompletaDoPlano(id);
   }
 
-  // --- Backup completo (todos os planos) ---
+  // --- Backup completo (todos os alunos e planos) ---
 
   static montarBackup() {
     const planos = TreinosStorage.listarPlanos();
@@ -326,16 +451,20 @@ export class TreinosStorage {
 
     return {
       tipo: "backup-treinos",
-      versao: 1,
+      versao: 2,
       exportadoEm: new Date().toISOString(),
       planoAtivoId: obterPlanoAtivoIdBruto(),
+      alunos: TreinosStorage.listarAlunos(),
       planos,
       dadosPorPlano
     };
   }
 
   static restaurarBackup(backup) {
-    salvarBruto("planos.v1", backup.planos || []);
+    const planos = backup.planos || [];
+    const alunos = backup.alunos || migrarAlunosApartirDePlanos(planos);
+    salvarBruto("alunos.v1", alunos);
+    salvarBruto("planos.v1", planos);
     salvarBruto("planoAtivoId.v1", backup.planoAtivoId || null);
     Object.entries(backup.dadosPorPlano || {}).forEach(([id, exportacao]) => {
       restaurarExportacaoCompletaDoPlano(id, exportacao);

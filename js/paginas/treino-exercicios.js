@@ -405,7 +405,7 @@ class TreinoExerciciosController {
       dados = await TreinosStorage.carregarDadosTreinos();
     } catch (erro) {
       this.#mostrarErro(
-        'Nenhum plano de treino carregado ainda neste navegador. <a href="planos.html">Escolha ou crie um plano</a> pra começar.'
+        'Nenhum plano de treino carregado ainda neste navegador. <a href="alunos.html">Escolha ou crie um aluno</a> pra começar.'
       );
       return;
     }

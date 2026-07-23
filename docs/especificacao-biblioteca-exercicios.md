@@ -36,8 +36,8 @@
 > ver `docs/estrutura-biblioteca-alongamentos.md`); subpastas separadas
 > porque os dois catálogos podem ter ids repetidos entre si) e o plano de
 > treino é escolhido/criado manualmente em
-> [planos.html](../planos.html) como sempre foi (dado
-> pessoal, só em `localStorage`). Ver
+> [alunos.html](../alunos.html)/[planos.html](../planos.html) como sempre foi
+> (dado pessoal, só em `localStorage`). Ver
 > [treino-exercicios-especificacao.md](./treino-exercicios-especificacao.md),
 > [treino-bicicleta-especificacao.md](./treino-bicicleta-especificacao.md) e
 > [treino-alongamento-especificacao.md](./treino-alongamento-especificacao.md)
